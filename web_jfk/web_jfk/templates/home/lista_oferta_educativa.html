@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Ofertas educativas
+{% endblock %}
+
+{% block content %}
+	
+	<div class="container">
+		<div class="row">
+			<h1 class="title" align="center"><span class="label label-primary">Lista de ofertas educativas</span></h1>
+			{% if user.is_authenticated%}
+				<p ><a href="/lista_ofertas" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Panel de control para ofertas educativas</a></p>	
+			{% endif %}
+			<form action="." method="POST" class="form-horizontal">	
+				{% csrf_token %}
+				<h4 class="title" align="center"><span class="label label-info">Seleccione los criterios de busqueda deseados</span></h4>
+				<div class="col-sm-12 col-md-5">
+					<select class="form-control" id="filtro_sede" name="sede_select">
+						<option value="0">Seleccione la sede deseada</option>
+						<option value="John F. Kennedy">Sede John F. Kennedy</option>
+					 	<option value="Jose Maria Obando">Sede Jose Maria Obando</option>
+						<option value="Nueva Esperanza" >Sede Nueva Esperanza</option>
+										
+					</select>
+				</div>
+				<div class="col-sm-12 col-md-5">
+					<select class="form-control" id="filtro_jornada" name="jornada_select">
+						<option value="0">Seleccione la jornada deseada</option>
+						<option value="Mañana" >Jornada Mañana</option>
+						<option value="Tarde" >Jornada Tarde</option>
+					</select>
+				</div>
+				<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search "  aria-hidden="true"></span> Consultar </button>
+			</form>
+			{% if ofertas%}
+			<div class="table-responsive col-sm-12">
+			  	<table class="table table-hover" >
+			  		<thead>
+			  			<tr>
+			  				<th>#</th>
+			  				<th>Sede</th>
+			  				<th>Jornada</th>
+			  				<th>Nivel Educativo</th>
+			  				<th>Grado</th>
+			  				<th>Cupos</th>
+			  				<th>Fecha Cierre</th>
+			  				<th>Preincribirse</th>
+			  			</tr>
+			  		</thead>
+			  		<tbody id="tabla">
+			  			{% for p in ofertas%}
+						<tr>
+							<td>{{forloop.counter}}</td>
+							<td>{{p.sede}}</td>
+							<td>{{p.jornada}}</td>
+							<td>{{p.nivel}}</td>
+							<td>{{p.grado}}</td>
+							<td>{{p.cupos_disponibles}}</td>
+							<td>{{p.fecha_cierre}}</td>
+							<td><a href="#" class="btn btn-primary click"  data-toggle="modal" data-target="#modal-form" data-valor="{{p.id}}">Preinscribirse</a></td>
+						</tr>
+			  			{% endfor %}
+			  		</tbody>
+			    </table>
+			</div>
+			{% endif %}
+			{% if men %}
+				<h2 class="titulo" align="center"><span class="label label-warning">{{men}}</span></h2>
+			{% endif %}
+		</div>
+	
+		<div class="modal fade" tabindex="-1" role="dialog" id="modal-form">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content padding-text">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3 align="center"><span class="label label-primary">Preincripcion en oferta educativa </span></h3>
+						
+					</div>
+					<div class="modal-body">
+						<form  id="form" method="POST" enctype="multipart/form-data" class="form-horizontal" onsubmit="return validar_registro()">
+							{% csrf_token %}
+							<div class="form-group" id="group_nombres_a">
+							    <label for="nombres_a" class="col-sm-2 control-label">Nombres del estudiante</label>
+							    <div class="col-sm-10">
+							   		<input type="text" class="form-control" id="nombres_a" placeholder="Nombres del estudiante" name="nombres_a">
+						    	</div>
+							</div>
+							<div class="form-group" id="group_apellidos_a">
+							    <label for="apellidos" class="col-sm-2 control-label">Apellidos del estudiante</label>
+							    <div class="col-sm-10">
+							   		<input type="text" class="form-control" id="apellidos_a" placeholder="Apellidos del estudiante" name="apellidos_a">
+						    	</div>
+							</div><div class="form-group" id="group_edad">
+							    <label for="edad" class="col-sm-2 control-label">Edad del estudiante</label>
+							    <div class="col-sm-10">
+							   		<input type="text" class="form-control" id="edad" placeholder="Edad del estudiante" name="edad">
+						    	</div>
+							</div>
+							<div class="form-group" id="group_identificacion">
+							    <label for="identificacion" class="col-sm-2 control-label">Identificacion del estudiante</label>
+							    <div class="col-sm-10">
+							   		<input type="text" class="form-control" id="identificacion" placeholder="Identificacion del estudiante" name="identificacion">
+						    	</div>
+							</div>
+							
+							<div class="form-group" id="group_nombres">
+							    <label for="nombres" class="col-sm-2 control-label">Nombres del acudiente</label>
+							    <div class="col-sm-10">
+							   		<input type="text" class="form-control" id="nombres" placeholder="Nombres" name="nombres">
+						    	</div>
+							</div>
+							<div class="form-group" id="group_apellidos">
+							    <label for="apellidos" class="col-sm-2 control-label">Apellidos del acudiente</label>
+							    <div class="col-sm-10">
+							   		<input type="text" class="form-control" id="apellidos" placeholder="Apellidos" name="apellidos">
+						    	</div>
+							</div>
+							<div class="form-group" id="group_telefono">
+							    <label for="telefono" class="col-sm-2 control-label">Telefono de contacto</label>
+							    <div class="col-sm-10">
+							   		<input type="text" class="form-control" id="telefono" placeholder="Telefono" name="telefono">
+						    	</div>
+							</div>
+							<div class="form-group" id="group_celular">
+							    <label for="celular" class="col-sm-2 control-label">Celular de contacto</label>
+							    <div class="col-sm-10">
+							   		<input type="text" class="form-control" id="celular" placeholder="Celular" name="celular">
+						    	</div>
+							</div>
+							<div class="form-group" id="group_direccion">
+							    <label for="direccion" class="col-sm-2 control-label">Direccion</label>
+							    <div class="col-sm-10">
+							   		<input type="text" class="form-control" id="direccion" placeholder="Direccion" name="direccion">
+						    	</div>
+							</div>
+							<div class="form-group" id="group_barrio">
+							    <label for="barrio" class="col-sm-2 control-label">Barrio</label>
+							    <div class="col-sm-10">
+							   		<input type="text" class="form-control" id="barrio" placeholder="Barrio" name="barrio">
+						    	</div>
+							</div>
+							
+							<div id="alerta" class='alerta  alert alert-danger col-sm-12' align="center" role='alert'><strong>Por favor completa los campos resaltados correctamente</strong></div>
+													
+							<p align="center"><button class="btn btn-primary" type="submit">Inscribirse</button> <button class="btn btn-danger" class="close" data-dismiss="modal" aria-hidden="true">Cerrar</button></p>
+						</form>
+					</div>
+					
+				</div>
+			</div>
+			
+		</div>
+	
+	</div>
+
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Lista docentes
+{% endblock %}
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<h1 class="title" align="center"><span class="label label-primary">Lista de docentes</span></h1>
+			<form action="." method="POST" class="form-horizontal">
+				{% csrf_token %}
+				<div class="col-sm-12 col-md-5">
+					<select class="form-control" id="filtro_sede" name="sede_select">
+						<option value="0">Seleecione la sede de consulta</option>
+						{% for p in sedes %}
+							<option value="{{p}}">{{p.nombre}}</option>
+						{% endfor %}
+										
+					</select>
+				</div>
+				<div class="col-sm-12 col-md-5">
+					<select class="form-control" id="filtro_jornada" name="jornada_select">
+						<option value="0">Seleecione la jornada de consulta</option>
+						<option value="Mañana">Mañana</option>
+						<option value="Tarde">Tarde</option>
+										
+					</select>
+				</div>
+				<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search "  aria-hidden="true"></span> Consultar </button>
+			</form>
+			{% if docentes %}
+			<div class="col-sm-12 col-md-8 col-md-offset-2">
+				<table class="table table-hover text-center" >
+				
+					<thead >
+						<tr>
+							<th class="th-align">#</th>
+							<th class="th-align">Nombres</th>
+							<th class="th-align">Apellidos</th>
+							<th class="th-align">Curso</th>
+						</tr>
+					</thead>
+					<tbody >
+						{% for p in docentes %}
+						<tr>
+							<td><strong>{{forloop.counter}}</strong></td>
+							<td>{{p.nombres}}</td>
+							<td>{{p.apellidos}}</td>
+							<td>{{p.curso}}</td>
+							<td><button type="button" class="btn btn-info " data-toggle="modal" data-target="#modal{{p.id}}">Ver</button></td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+		
+	<!--- Modal -->
+	{% if docentes %}
+	{% for p in docentes%}
+	<div class="modal fade " id="modal{{p.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog " role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title text-center" id="myModalLabel"><strong>Docente</strong></h4>
+			  	</div>
+			  	<div class="modal-body">
+					<div class="row">
+						<div class="col-sm-12 text-center">
+							<img class="img_info_docente img-circle" src="/media/{{p.foto}}">
+						</div>
+						<div class="col-sm-12 col-md-6 col-md-offset-1">
+							<p><strong>Nombres: </strong>{{p.nombres}}</p>
+							<p><strong>Correo: </strong>{{p.correo}}</p>
+							<p><strong>Jornada: </strong>{{p.jornada}}</p>
+							{% if p.user%}
+							<p><strong>Usuario: </strong>{{p.user.username}}</p>
+							{% endif %}
+						</div>
+
+						<div class="col-sm-12 col-md-5">
+							<p><strong>Apellidos: </strong>{{p.apellidos}}</p>
+							<p><strong>Sede: </strong>{{sede}}</p>
+							<p><strong>Curso: </strong>{{p.curso}}</p>
+							
+						</div>
+					</div>
+			  	</div>
+			  	<div class="modal-footer">
+					<a href="#" class="btn btn-success">Editar</a>
+					<a href="#" class="btn btn-danger">Eliminar</a>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+	  	</div>
+	</div>
+	{% endfor%}
+	{% endif %}
+
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	{% if evento%}
+	Editar evento
+	{% else %}
+	Agregar nuevo evento
+	{% endif %}
+
+{% endblock %}
+{% block extras%}
+		<link href="/media/bootstrap/calendario/css/bootstrap-datepicker.min.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+	<script  src="/media/bootstrap/calendario/js/bootstrap-datepicker.min.js"></script>
+	<div class="container">
+		<div class="row ">
+			{% if evento%}
+			<h1 class="title text-center"><span class="label label-primary">Editar evento</span></h1>
+			{% else %}
+			<h1 class="title text-center"><span class="label label-primary">Agregar nuevo evento</span></h1>
+			{% endif %}
+			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
+				{% csrf_token %}
+				<div class="form-group">
+				    <label for="titulo" class="col-sm-2 control-label">Titulo</label>
+				    <div class="col-sm-10">
+				     	<input type="text" class="form-control" id="titulo" placeholder="Titulo" name="titulo" value="{{evento.titulo}}">
+				    </div>
+				</div>
+				
+				<div class="form-group">
+				    <label for="descripcion" class="col-sm-2 control-label">Descripcion</label>
+				    <div class="col-sm-10">
+						<textarea class="form-control" rows="6" placeholder="Ingrese la descripcion del evento" name="descripcion">{{evento.descripcion}}</textarea>
+				    </div>
+				</div>	
+				
+				<div class="form-group">
+					<label for="evento" class="col-sm-2 control-label">Fecha del evento</label>
+					<div class="input-group date">
+  						<input type="text" class="form-control" readonly name="fecha"><span class="input-group-addon"><i class="glyphicon glyphicon-th" value="{{p.fecha}}"></i></span>
+					</div>
+				</div>
+				
+				<div class="form-group">
+				    <label for="imagen" class="col-sm-2 control-label">Imagen</label>
+				   	<div class="col-sm-10">
+					    <input type="file" id="imagen" class="form-control" name="imagen">
+					    <p class="help-block">Selecciona una imagen de tu equipo preferiblemente que sea formato jpg.</p>
+					</div>
+				</div>
+				{% if evento %}				
+				<div align="center">
+					<h4><span class="label label-primary">Imagen actual</span></h4>
+					<img src="/media/{{evento.imagen}}" class="img-noticia">
+				</div>
+				{% endif %}
+				<p align="center">
+					<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
+					<button type="reset" class="btn btn-danger">Limpiar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></button>
+				</p>
+				
+				
+			</form>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$('.date').datepicker({
+		    format: "yyyy-mm-dd",
+		    todayBtn: true,
+		    language: "es",
+		    orientation: "auto left",
+		    todayHighlight: true
+		});
+	</script>
+{% endblock %}

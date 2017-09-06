@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Inicio - John F. Kennedy
+{% endblock %}
+
+{% block content %}
+
+	<div class="container">
+		<div class="row">	
+			
+			<!--Slider show-->
+			<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+			  <!-- Indicators -->
+			  	<ol class="carousel-indicators">
+			  		{%for p in total %}
+			  			{%if forloop.counter <= total %}	
+			  				{%if forloop.first%}	
+							<li data-target="#carousel-example-generic" data-slide-to="{{p}}" class="active"></li>
+							{% else %}
+							<li data-target="#carousel-example-generic" data-slide-to="{{p}}"></li>
+							{% endif%}
+						{% endif %}
+			  		{% endfor %}
+					
+			    </ol>
+				<div class="carousel-inner" role="listbox" align="center">
+					{% for p in slider%}	
+						{%if p.id == id_slider%}				
+						<div class="item active" >
+						{% else %}
+						<div class="item " >
+						{% endif%}
+							<img src="/media/{{p.imagen}}" alt="Imagen 1" class="img-1">
+												
+						</div>
+					{% endfor %}
+			    </div>
+			    <a class="left carousel-control controls-background-reset" href="#carousel-example-generic" role="button" data-slide="prev">
+					<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+					<span class="sr-only">Previous</span>
+			    </a>
+			    <a class="right carousel-control controls-background-reset" href="#carousel-example-generic" role="button" data-slide="next">
+					<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<span class="sr-only">Next</span>
+			   </a>
+			</div>
+			{% if user.is_authenticated%}
+			<p ><a href="/lista_items_carrousel" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Panel de control del carousel</a></p>
+			{% endif %}
+		</div>
+		<!-- Carousel noticias -->
+		<br> 
+			<div class="row"> 
+				<div class="col-md-8">
+					<div class="visible-xs" align="center">
+						<h6><span class="label milabel">Ultimas Noticias</span></h6>
+					</div>
+					<nav> 
+						<ul class="pager nav-noticias">
+							<li class="previous"><a href="#carousel-noticia" data-slide="prev">&larr; Anterior </a></li>
+							<li class="hidden-xs"><span class="label milabel">Ultimas Noticias	</span></li>
+							<li class="next"><a href="#carousel-noticia" data-slide="next">Siguiente &rarr;</a></li>
+						</ul>
+					</nav>
+					
+					<div id="carousel-noticia" class="carousel slide " data-ride="carousel">
+					  	<div class="carousel-inner " role="listbox" align="center">
+							{% for p in noticias %}
+							{% if p.id == id %}
+							<div class="item active" >
+							{% else %}
+								<div class="item" >
+							{% endif %}
+									<img src="/media/{{p.imagen}}" alt="Imagen 1" class="img-noticia">
+									<h3 align="left"><span class="label label-primary">	{{p.titulo}}</span></h3>
+									<article class="text-justify"><b>{{p.introduccion}}</b></article>
+									<article class="text-justify">{{p.cuerpo}}</article>
+									<p align="right">
+										<a href="#" class="btn-danger btn" data-toggle="modal" data-target="#modal-{{p.id}}">Ver mas...</a>
+										
+									</p>
+								</div>
+							{% endfor %}
+							
+					    	</div>				    
+						</div>	
+					
+					</div>	
+					<section>
+						<div class="col-md-4"> 
+							<h3 align="center"><span class="label label-primary">Proximos eventos</span></h3>
+							{% for p in eventos%}
+							<div class="thumbnail border-calendario"> 
+								<img src="/media/{{p.imagen}}" style="height: 100px !important;">
+								<h4 align="center"><span class="label label-primary">{{p.titulo}}	</span></h4>
+								<p class="text-justify text-muted">{{p.descripcion}}</p>
+								<h5 align="right"><span class="label label-success">{{p.fecha}}</span></h5>
+							</div>
+							{% endfor%}
+							<p align="center">
+								<a href="/eventos" class="btn btn-danger">Ver calendario completo</a>
+							</p>
+						</div>
+					</section>
+				</div>	
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal -->
+	{% for p in noticias_aux%}
+		<div class="modal fade" tabindex="-1" role="dialog" id="modal-{{p.id}}">
+			<!--modal {{p.id}} -->
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content padding-text">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3 align="center" class="titulo-noticia"><span class="label label-primary">{{p.titulo}} </span></h3>
+						
+					</div>
+					<div class="modal-body">
+						<div align="center">
+						<img src="/media/{{p.imagen}}" class="img-modal">
+						</div>
+						<p class="text-info"><b>{{p.subtitulo}}</b></p>
+						<article class="text-justify text-warning">{{p.cuerpo}}</article>
+					</div>
+					<div class="modal-footer">
+						<ul class="list-inline">
+							<li><p>{{p.autor}} {{p.fecha}}</p></li>
+							<li><button class="btn btn-primary" class="close" data-dismiss="modal" aria-hidden="true">Cerrar</button></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	{% endfor %}
+	
+	
+{% endblock %}

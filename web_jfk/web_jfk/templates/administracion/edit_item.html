@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Editar imagen
+{% endblock %}
+
+{% block content %}
+	
+	<div class="container">
+		<div class="row" align="center">
+			<h1 class="title"><span class="label label-primary">Editar Imagen</span></h1>
+			<img src="/media/{{item.imagen}} " class="img-thumbnail img-noticia">
+			<h4><span class="label label-success">Imagen actual</span></h4>
+			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
+				{% csrf_token %}
+				<br>
+				<div class="form-group jumbotron">
+				    <label for="imagen" class="col-sm-2 control-label">Nueva imagen</label>
+				   	<div class="col-sm-8">
+					    <input type="file" id="imagen" class="form-control" name="imagen">
+					    <p class="help-block">Selecciona una imagen de tu equipo preferiblemente que sea formato jpg.</p>
+					</div>
+					<div class="col-sm-2">
+						<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
+					</div>
+					<div class="col-sm-3 col-sm-offset-5">
+						<a href="/list-slider" class="btn btn-danger">Cancelar <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

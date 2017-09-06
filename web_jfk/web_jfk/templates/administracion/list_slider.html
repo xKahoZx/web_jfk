@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title%}
+	Lista de items
+{% endblock %}
+{% block extras%}
+	<link href="/media/bootstrap/fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+
+{% endblock%}
+{% block js%}
+	<script src="/media/bootstrap/fileinput/js/fileinput.js"></script>
+
+{% endblock%}
+{% block content %}
+	<div class="container">
+		<div class="row">
+
+			<h1 class="title" align="center"><span class="label label-primary">Lista de imagenes</span></h1>
+			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal jumbotron">
+				{% csrf_token %}
+					<div class="form-group  " id="group_img">
+					    <label for="imagen" class="col-sm-2 control-label">Nueva imagen</label>
+					   	<div class="col-sm-10">
+					   		<input type="file" id="imagen" name="imagen" class="file-loading">
+							<p class="help-block">Selecciona una imagen de tu ordenador.</p>    
+						</div>
+					</div>
+					<div class="text-center">
+						<button type="submit" class="btn btn-primary">Agregar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
+					</div>
+			</form>
+			<div class="col-md-12">
+				{% for p in items %}				
+					<div class="thumbnail col-md-3 padding-thumbnail" align="center">
+						<a href="#" class="hover-noticia" data-toggle="modal" data-target="#modal-{{p.id}}">
+							<img src="/media/{{p.imagen}}" class="img-noticia efecto">
+						</a>
+
+						{% if p.estado%}
+							<p><span class="label label-success">Visible</span></p>
+							<a href="/modificar/{{p.id}}/desactivar" class="btn btn-warning">Desactivar</a>
+						{% else %}
+							<p  align="center"><span class="label label-danger">No visible</span></p>
+							<a href="/modificar/{{p.id}}/activar" class="btn btn-success">Activar</a>
+						{% endif %}
+						<a href="/del-item/{{p.id}}" class="btn btn-danger">Eliminar</a>					
+						<a href="/edit-item/{{p.id}}" class="btn btn-primary">Editar</a>
+
+					</div>
+				
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	
+	{% for p in items %}	
+		<div class="modal fade mimodal" tabindex="-1" role="dialog" id="modal-{{p.id}}">			
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="cerrar">&times;</button>	
+			<img src="/media/{{p.imagenes}}" class="img-1">
+		</div>
+	{% endfor %}
+
+	<script type="text/javascript">
+		$('#imagen').fileinput({
+			showUpload: false
+		});
+	</script>
+	
+{% endblock %}

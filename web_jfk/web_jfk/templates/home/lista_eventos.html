@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Calendario de eventos - Jhon F. Kennedy
+{% endblock %}
+
+{% block content %}
+	
+	<div class="container">
+		<h1 class="title text-center"><span class="label label-primary">Calendario de eventos</span></h1>
+		{% if user.is_authenticated%}
+		<a href="/add-evento" class="btn btn-primary">Crear nuevo evento</a>
+		{% endif %}
+		<div class="row text-center">
+			<br>
+			{% for p in calendario_aux%}
+				<div class="thumbnail col-md-3 col-sm-6 padding-thumbnail">
+					<h4 class="title text-center"><span class="label label-primary">{{p.titulo}}</span></h4>
+					<img src="/media/{{p.imagen}}" class="img_calendario">
+					<p>{{p.descripcion}}</p>
+					{% if p.estado %}
+					<h4 class="text-center"><span class="label label-success">{{p.fecha}}</span></h4>
+					{% else %}
+					<h4 class="text-center"><span class="label label-warning">{{p.fecha}}</span></h4>
+					{% endif %}
+					<button type="button" class="btn btn-info " data-toggle="modal" data-target="#modal{{p.id}}">Ver mas</button>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+	<!--- Modal -->
+	{% if calendario %}
+	{% for p in calendario%}
+	<div class="modal fade " id="modal{{p.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content padding-text">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h2 class="modal-title text-center" id="myModalLabel"><span class="label label-info"><strong>{{p.titulo}}</strong></span></h2>
+			  	</div>
+			  	<div class="modal-body">
+					<div class="row" align="center">
+						<img class="img-modal" src="/media/{{p.imagen}}">
+						<article class="text-justify" style="padding-top: 10px;">
+							{{p.descripcion}}
+						</article>
+					</div>
+			  	</div>
+			  	<div class="modal-footer">
+					<a href="/edit_evento/{{p.id}}" class="btn btn-success">Editar</a>
+					<a href="/del_evento/{{p.id}}" class="btn btn-danger">Eliminar</a>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+	  	</div>
+	</div>
+	{% endfor%}
+	{% endif %}
+
+
+{% endblock %}
+
+
+
+

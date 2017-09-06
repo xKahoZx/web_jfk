@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Lista de ofertas educativas
+{% endblock %}
+{% block extras%}
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+
+{% endblock%}
+{% block js%}
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+
+{% endblock%}
+
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<h1 class="title" align="center"><span class="label label-primary">Panel de control ofertas educativas</span></h1>
+			{% if user.is_authenticated and user.is_superuser%}
+			<p align="center"><a href="/add_oferta" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Crear nueva oferta educativa</a></p>
+			<form action="." method="POST" class="form-horizontal" >
+				{% csrf_token %}
+				<div class="col-sm-12 col-md-5 col-md-offset-2">					
+					<select class='form-control selectpicker ' id='filtro_sede' name='sede_select' title="listar oferta por sede" >
+						<option value="John F. Kennedy">Sede John F. Kennedy</option>
+						 <option value="Jose Maria Obando">Sede Jose Maria Obando</option>
+						<option value="Nueva Esperanza" >Sede Nueva Esperanza</option>
+						<option value="Todas" >Todas las sedes</option>
+					</select>	
+				</div>
+				<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search "  aria-hidden="true"></span> Filtrar </button>			
+			</form>
+			{% endif %}
+			{% if not ofertas %}
+			<h2 class="titulo" align="center"><span class="label label-info">No existen ofertas educativas registradas actualmente</span></h2>
+			{% else %}
+			<div class="table-responsive">
+			  	<table class="table table-hover" >
+			  		<thead>
+			  			<tr>
+			  				<th>#</th>
+			  				<th>Sede</th>
+			  				<th>Jornada</th>
+			  				<th>Nivel Educativo</th>
+			  				<th>Grado</th>
+			  				<th>Opciones de control</th>
+			  				
+			  			</tr>
+			  		</thead>
+			  		<tbody id="tabla">
+			  			{% for p in ofertas%}
+						<tr>
+							<td>{{forloop.counter}}</td>
+							<td>{{p.sede.nombre}}</td>
+							<td>{{p.jornada}}</td>
+							<td>{{p.nivel}}</td>
+							<td>{{p.grado}}</td>
+							<td>{% if user.is_authenticated%}
+								<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modal-{{p.id}}"><span class="glyphicon glyphicon-search "  aria-hidden="true"></span> ver</a>
+								{% if user.is_authenticated and user.is_superuser%}
+								<a href="/edit_oferta/{{p.id}}" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span> Editar</a>
+								<a href="/delete_oferta/{{p.id}}" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Eliminar</a>
+								{% endif %}
+								{% endif %}
+							</td>
+							
+						</tr>
+			  			{% endfor %}
+			  		</tbody>
+			    </table>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+	
+	{% for p in ofertas%}
+	
+		<div class="modal fade" tabindex="-1" role="dialog" id="modal-{{p.id}}">
+			<div class="modal-dialog " role="document">
+				<div class="modal-content padding-text">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3 align="center"><span class="label label-primary">Información de la oferta educativa</span></h3>
+						<div class="col-xs-6">
+							<p><strong>Sede: </strong>{{p.sede}}</p>
+							<p><strong>Nivel Educativo: </strong>{{p.nivel}}</p>
+							<p><strong>Cupos disponibles: </strong>{{p.cupos_disponibles}}</p>
+							{% if p.estado%}
+								<p><strong>Estado: </strong>Abierto</p>
+							{% else %}
+								<p><strong>Estado: </strong>Cerrado</p>
+							{% endif %}
+							<p><strong>Fecha Cierre: </strong>{{p.fecha_cierre}}</p>
+						</div>
+						<div class="col-xs-6">
+							<p><strong>Jornada: </strong>{{p.jornada}}</p>
+							<p><strong>Grado: </strong>{{p.grado}}</p>
+							<p>	<strong>Cupos ofertados: </strong>{{p.cupos}}</p>
+							<p><strong>Fecha Apertura: </strong>{{p.fecha_apertura}}</p>
+						</div>
+						<div class="col-sm-12" align="center">
+							<ul class="list-inline">
+								<li><a href="/reporte/{{p.id}}" class="btn btn-success"><span class="glyphicon glyphicon-list "  aria-hidden="true"></span> Ver Reporte de inscripciones</a></li>
+								<li><button class="btn btn-primary" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove "  aria-hidden="true"></span> Cerrar</button></li>
+							</ul>
+						</div>
+						
+					</div>
+					
+					
+				</div>
+			</div>
+			
+		</div>
+	{% endfor %}
+{% endblock%}

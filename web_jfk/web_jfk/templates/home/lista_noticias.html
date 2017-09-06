@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Lista de noticias
+{% endblock%}
+
+
+{% block content  %}
+	<div class="container">
+		<div class="row">
+			<h1 class="title" align="center"><span class="label label-primary">Lista de noticias publicadas.</span></h1>
+			<p align="center"><a href="/add-noticia" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Agregar nueva noticia</a></p>
+			{% if not noticias%}
+				<h2 class="titulo" align="center"><span class="label label-info">No existen noticias registradas actualmente</span></h2>
+			{% endif %}
+			{% for p in noticias %}
+			<div class="col-sm-4 thumbnail padding-thumbnail">
+				<img src="/media/{{p.imagen}}" class="img-4">
+				<h5 align="center" class="text-orange"><strong>{{p.titulo}}</strong></h5>
+				<p align="center">{{p.cuerpo}}</p>
+				{% if p.estado %}
+				<h4 align="center"><span class="label label-success">Estado: Visible</span></h4>
+				{% else %}
+				<h4 align="center"><span class="label label-danger">Estado: No Visible</span></h4>
+				{% endif %}
+				<h4 align="center"><span class="label label-info">Fecha de publicación: {{p.fecha}}</span></h4>
+				<p align="center">
+					<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#modal-{{p.id}}">Ver <span class="glyphicon glyphicon-search "  aria-hidden="true"></span></a>
+					
+					<a href="/edit-noticia/{{p.id}}" class="btn btn-info">Editar <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+					<a href="/del-noticia/{{p.id}}" class="btn btn-danger">Eliminar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></a>
+				</p>
+			</div>
+			{% endfor %}
+
+		</div>
+		<div align="center">
+			<nav >
+				<ul class="pagination pagination-sm">
+				    {% if noticias.has_previous %}
+						<li ><a href="/lista_noticias/page/{{noticias.previous_page_number}}">&laquo;</a></li>
+				    	
+				    {% else %}
+				    	<li class="disabled"><a>&laquo;</a></li>
+					{% endif%}
+					{% for p in paginas%}
+					<li><a href="/lista_noticias/page/{{p}}">{{p}}</a></li>
+					{% endfor %}
+					{% if noticias.has_next %}
+					   	<li ><a href="/lista_noticias/page/{{noticias.next_page_number}}">&raquo;</a></li>
+				    	
+				    {% else %}			    	
+						<li class="disabled"><a>&raquo;</a></li>
+						
+				    {% endif %}	
+				</ul>
+			</nav>
+		</div>
+	</div>
+
+
+	{% for p in noticias_aux %}
+		<div class="modal fade" tabindex="-1" role="dialog" id="modal-{{p.id}}">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content padding-text">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3 align="center"><span class="label label-primary">{{p.titulo}} </span></h3>
+						
+					</div>
+					<div class="modal-body">
+						<div align="center">
+							<img src="/media/{{p.imagen}}" class="img-modal">
+						</div>
+						<p class="text-info"><b>{{p.subtitulo}}</b></p>
+						<article class="text-justify text-warning">{{p.cuerpo}}</article>
+					</div>
+					<div class="modal-footer">
+						<ul class="list-inline">
+							<li><p>{{p.autor}} {{p.fecha}}</p></li>
+							<li><button class="btn btn-primary" class="close" data-dismiss="modal" aria-hidden="true">Cerrar</button></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	{% endfor %}
+{% endblock %}

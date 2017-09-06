@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Area Academica
+{% endblock %}
+
+{% block content %}
+	
+	<div class="container">
+		<div class="row">
+			<h1 class="title" align="center"><span class="label label-primary">Area Academica</span></h1>
+			{% if user.is_authenticated%}
+				<p ><a href="/listar-ofertas" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Panel de control para area academica</a></p>	
+			{% endif %}
+			<form action="." method="POST" class="form-horizontal">	
+				{% csrf_token %}
+				<h4 class="title" align="center"><span class="label label-info">Seleccione los criterios de busqueda deseados</span></h4>
+				<div class="col-sm-12 col-md-5">
+					<select class="form-control" id="filtro_grado" name="grado_select">
+						<option value="0">Seleccione el grado</option>
+						<option value="Sexto">Sexto</option>
+						<option value="Septimo">Septimo</option>
+						<option value="Octavo">Octavo</option>
+						<option value="Noveno">Noveno</option>
+						<option value="Decimo">Decimo</option>
+						<option value="Once">Once</option>
+					 	
+										
+					</select>
+				</div>
+				<div class="col-sm-12 col-md-5">
+					<select class="form-control" id="fitro_materia" name="materia_select" >
+						<option value="0">Seleccione la materia</option>
+						<option value="Matematicas" >Matematicas</option>
+						<option value="Fisica" >Fisica</option>
+						<option value="Educacion fisica" >Educacion fisica</option>
+						<option value="Biologia" >Biologia</option>
+						<option value="Quimica" >Quimica</option>
+						<option value="Informatica" >Informatica</option>
+						<option value="Filosofia" >Filosofia</option>
+						
+					</select>
+				</div>
+				<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search "  aria-hidden="true"></span> Consultar </button>
+			</form>
+			<div class="col-sm-12" align="center">
+				{% for p in documentos%}
+				<div class="thumbnail col-sm-4 padding-thumbnail">
+					<h3 class="title text-center"><span class="label label-primary">{{p.titulo}}</span></h3>
+					<img src="/media/images/documento.png" class="img-list-noticia">
+					<p class="text-justify">{{p.descripcion}}</p>				
+					<h4 class="text-center"><span class="label label-success">Fecha de publicacion {{p.fecha}}</span></h4>
+					<h4 class="text-center"><span class="label label-warning">Publicado por {{p.autor.docente.nombres}} {{p.autor.docente.apellidos}}</span></h4>
+					<a href="/edit_evento/{{p.id}}" class="btn btn-info">Descargar</a>
+				</div>
+				{% endfor%}
+			</div>
+		</div>
+	</div>
+{% endblock %}

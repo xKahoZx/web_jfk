@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Lista Administradores
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<h1 class="title" align="center"><span class="label label-primary">Lista de administradores</span></h1>
+			{% if administradores %}
+			<div class="col-sm-12">
+				<table class="table table-hover text-center" >
+				
+					<thead >
+						<tr>
+							<th class="th-align">#</th>
+							<th class="th-align">Nombres</th>
+							<th class="th-align">Apellidos</th>
+							<th class="th-align">Correo</th>
+							<th class="th-align">Tipo Administrador</th>
+							<th class="th-align">Nombre Usuario</th>
+							<th class="th-align">Estado</th>
+
+						</tr>
+					</thead>
+					<tbody >
+						{% for p in administradores %}
+						<tr>
+							<td><strong>{{forloop.counter}}</strong></td>
+							<td>{{p.nombres}}</td>
+							<td>{{p.apellidos}}</td>
+							<td>{{p.correo}}</td>
+							<td>{{p.tipo_usuario}}</td>
+							<td>{{p.user.username}}</td>
+							{% if p.user.is_active%}
+								<td><strong>Activo</strong></td>
+							{% else %}
+								<td><strong>Inactivo</strong></td>
+							{% endif %}
+							<td><a href="#" class="btn btn-success">Editar</a> <a href="#" class="btn btn-danger">Eliminar</a></td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

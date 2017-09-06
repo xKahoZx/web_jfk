@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Lista de sedes
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<h1 class="title" align="center"><span class="label label-primary">Lista de sedes</span></h1>
+
+			{% if sedes %}
+			<div class="col-sm-12 col-md-8 col-md-offset-2">
+				<table class="table table-hover text-center" >
+				
+					<thead >
+						<tr>
+							<th class="th-align">#</th>
+							<th class="th-align">Nombre</th>
+							<th class="th-align">Telefono</th>
+							<th class="th-align">Direccion</th>
+							<th class="th-align">Correo</th>
+						</tr>
+					</thead>
+					<tbody >
+						{% for p in sedes %}
+						<tr>
+							<td><strong>{{forloop.counter}}</strong></td>
+							<td>{{p.nombre}}</td>
+							<td>{{p.telefono_1}}</td>
+							<td>{{p.direccion}}</td>
+							<td>{{p.correo}}</td>
+							<td><button type="button" class="btn btn-info " data-toggle="modal" data-target="#modal{{p.id}}">Ver</button></td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+	<!--- Modal -->
+	{% if sedes %}
+	{% for p in sedes%}
+	<div class="modal fade " id="modal{{p.id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog " role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title text-center " id="myModalLabel"><strong>Sede {{p.nombre}}</strong></h4>
+			  	</div>
+			  	<div class="modal-body">
+					<div class="row">
+						{% for i in p.coordinadores.all%}
+						<div class="col-sm-12 col-md-6">	
+							{% if i.jornada == "Tarde" %}
+								<h4 align="center"><span class="label label-primary">Coordinador Jornada Tarde</span></h4>
+							{% else %}
+								<h4 align="center"><span class="label label-primary">Coordinador Jornada Mañana</span></h4>
+							{% endif%}	
+							<center>	
+								<img class="img_info_docente img-circle" src="/media/{{i.foto}}">
+							</center>
+							<p><strong>Nombres: </strong>{{i.nombres}}</p>
+							<p><strong>Apellidos: </strong>{{i.apellidos}}</p>
+							<p><strong>Correo: </strong>{{i.correo}}</p>
+						</div>
+						{% endfor %}
+						<h3 align="center"><span class="label label-primary">Informacion Sede</span></h3>
+						<div class="col-sm-12 col-md-6 ">	
+							<p><strong>Telefono 1: </strong>{{p.telefono_1}}</p>
+							<p><strong>Telefono 2: </strong>{{p.telefono_2}}</p>
+							<p><strong>Nit: </strong>{{p.nit}}</p>
+						</div>
+						<div class="col-sm-12 col-md-6">	
+							<p><strong>Direccion: </strong>{{p.direccion}}</p>
+							<p><strong>Correo: </strong>{{p.correo}}</p>
+
+						</div>
+					</div>
+			  	</div>
+			  	<div class="modal-footer">
+					<a href="#" class="btn btn-success">Editar</a>
+					<a href="#" class="btn btn-danger">Eliminar</a>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+	  	</div>
+	</div>
+	{% endfor%}
+	{% endif %}
+
+{% endblock %}

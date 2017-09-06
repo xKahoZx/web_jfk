@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Generar reporte de inscripciones
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="row col-xs-12">
+			<h1 class="title" align="center"><span class="label label-primary">Reporte de incripciones</span></h1>
+			{% if reporte%}
+			<br>
+			<div>
+				<h4><span class="label label-success">Inscripcciones {{reporte.sede}} jornada {{reporte.jornada}} grado {{reporte.grado}}</span></h4>
+			</div>
+			
+			<br>
+			<div class="table-responsive">
+			  	<table class="table table-hover" >
+			  		<thead >
+			  			<tr>
+			  				<th>#</th>
+			  				<th>Apellidos Estudiante</th>
+			  				<th>Nombres Estudiante</th>
+			  				<th>Edad</th>
+			  				<th>Nombes y Apellidos del Familiar </th>
+			  				<th>Telefono 1</th>
+			  				<th>Telefono 2</th>
+			  				<th>Ver</th>
+			  				
+			  			</tr>
+			  		</thead>
+			  		<tbody id="tabla">
+			  			{% for p in reporte.inscripciones.all%}
+						<tr>
+							<td>{{forloop.counter}}</td>
+							<td>{{p.nombres_alumno}}</td>
+							<td>{{p.apellidos_alumno}}</td>
+							<td>{{p.edad}}</td>
+							<td>{{p.nombres}} {{p.apellidos}}</td>
+							<td>{{p.telefono_1}}</td>
+							<td>{{p.telefono_2}}</td>
+							<td><a href="#" class="btn btn-primary"  data-toggle="modal" data-target="#modal-{{p.id}}">Ver</a></td>
+						{% endfor%}
+			  		</tbody>
+			    </table>
+			    {% for p in reporte.inscripciones.all %}
+			    	<div class="modal fade" tabindex="-1" role="dialog" id="modal-{{p.id}}">
+			    		<div class="modal-dialog " role="document">
+			    			<div class="modal-content padding-text">
+			    				<div class="modal-header">
+			    					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			    					<h3 align="center"><span class="label label-primary">Detalles de inscripcion </span></h3>
+			    					<div class="col-xs-6">
+			    						<p><strong>Nombres Estudiante</strong></p>
+			    						<p><strong>Apellidos Estudiante</strong></p>
+			    						<p><strong>Edad Estudiante</strong></p>
+			    						<p><strong>Nombres Familiar</strong></p>
+			    						<p><strong>Apellidos Familiar</strong></p>
+			    						<p><strong>Identificacion</strong></p>
+			    						<p><strong>Direccion</strong></p>
+			    						<p><strong>Barrio</strong></p>
+			    						<p><strong>Telefono 1</strong></p>
+			    						<p><strong>Telefono 2</strong></p>
+			    						<p><strong>Fecha Inscripcion</strong></p>
+			    					</div>
+			    					<div class="col-xs-6">
+			    						<p>{{p.nombres_alumno}}</p>
+			    						<p>{{p.apellidos_alumno}}</p>
+			    						<p>{{p.edad}}</p>
+			    						<p>{{p.nombres}}</p>
+			    						<p>{{p.apellidos}}</p>
+			    						<p>{{p.identificacion}}</p>
+			    						<p>{{p.direccion}}</p>
+			    						<p>Las brisas</p>
+			    						<p>{{p.telefono_1}}</p>
+			    						<p>{{p.telefono_2}}</p>
+			    						<p>{{p.fecha_inscripcion}}</p>
+			    					</div>
+			    					<p class="text-right">
+			    						<button class="btn btn-primary" class="close" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+			    					</p>
+			    				</div>
+			    				
+			    				
+			    			</div>
+			    		</div>
+			    		
+			    	</div>
+			    {% endfor %}
+			<div align="center">
+				<a href="/reporte-pdf/{{reporte.id}}" class="btn btn-primary">Generar PDF</a>
+			</div>
+			{% else %}
+			<h4 align="center"><span class="label label-danger">No existen inscripciones registradas para esta oferta</span></h4>
+			{% endif%}
+		</div>
+	</div>
+	
+{% endblock %}

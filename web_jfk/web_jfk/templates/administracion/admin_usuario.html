@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title%}
+	Registrar Nuevo Usuario
+{% endblock %}
+{% block extras%}
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+	<link href="/media/bootstrap/fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+
+{% endblock%}
+{% block js%}
+	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+	<script src="/media/bootstrap/fileinput/js/fileinput.js"></script>
+
+{% endblock%}
+{% block content %}
+
+	<div class="container">
+		<div class="row">
+			<h1 class="title" align="center"><span class="label label-info">Registrar nuevo usuario</span></h1>
+			
+			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal jumbotron">
+				{% csrf_token %}
+				<div class="form-group">
+					<label for="tipo_select" class="col-sm-2 control-label">Tipo usuario</label>
+					<div class="col-sm-10">
+						<select class='form-control selectpicker' id='tipo_persona' name='tipo_select' title="Seleccione el tipo de usuario">							<option value="Docente">Docente</option>
+							<option value="Administrador">Administrador</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group forms_persona" id="group_nombres">
+				    <label for="nombres" class="col-sm-2 control-label">Nombres</label>
+				    <div class="col-sm-10">
+				     	<input type="text" class="form-control" id="nombres" placeholder="Nombres completos del docente" name="nombres">
+				    </div>
+				</div>
+				<div class="form-group forms_persona" id="group_apellidos">
+				    <label for="apellidos" class="col-sm-2 control-label">Apellidos</label>
+				    <div class="col-sm-10">
+				     	<input type="text" class="form-control" id="apellidos" placeholder="Apellidos completos del docente" name="apellidos">
+				    </div>
+				</div>
+				<div class="form-group forms_persona" id="group_sede">
+					<label for="sede_select" class="col-sm-2 control-label">Sede</label>
+					<div class="col-sm-10">
+						<select class='form-control selectpicker' id='sede_docente' name='sede_select' title="Seleccion de sede de trabajo del nuevo docente">
+							{% for p in sedes %}
+								<option value="{{p}}">{{p.nombre}}</option>
+						  	{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="form-group forms_persona" id="group_jornada">
+					<label for="jornada_select" class="col-sm-2 control-label">Jornada</label>
+					<div class="col-sm-10">
+						<select class='form-control selectpicker' id='jornada_docente' name='jornada_select' title="Seleccion de jornada de trabajo del nuevo docente">
+							<option value="Mañana">Mañana</option>
+							<option value="Tarde" >Tarde</option> 						  
+						</select>
+					</div>
+				</div>
+				<div class="form-group forms_persona" id="group_curso_a">
+					<label for="curso_select" class="col-sm-2 control-label">Curso</label>
+					<div class="col-sm-10" >
+						<select class='form-control selectpicker' id='curso_docente' name='curso_select' multiple  title="Seleccion de grado o materias">	
+						</select>
+						
+					</div>
+				</div>
+				
+				<div class="form-group forms_persona" id="group_curso_b">
+					<label for="curso_select" class="col-sm-2 control-label">Curso</label>
+					<div class="col-sm-10" >
+						<select class='form-control selectpicker' id='curso_docente' name='curso_select_b' multiple title="Seleccione las materias asignadas al nuevo docente">
+							<option value='Quimica'>Quimica</option> 
+							<option value='Fisica'>Fisica</option> 
+							<option value='Biologia'>Biologia</option> 
+							<option value='Español'>Español</option> 
+							<option value='Matematicas'>Matematicas</option> 
+							<option value='Informatica'>Informatica</option> 
+							<option value='Preescolar'>Preescolar</option> 
+						</select>
+						
+					</div>
+				</div>
+				<div class="form-group forms_persona" id="group_curso_c">
+					<label for="curso_select" class="col-sm-2 control-label">Curso</label>
+					<div class="col-sm-10" >
+						<select class='form-control selectpicker' id='curso_docente' name='curso_select_c' title="Seleccione el grado correspondiente al nuevo docente" >
+							<option value='Primero A'>Primero A</option>  
+							<option value='Primero B'>Primero B</option>  
+							<option value='Segundo A'>Segundo A</option>  
+							<option value='Segundo B'>Segundo B</option>  
+							<option value='Tercero A'>Tercero A</option>  
+							<option value='Tercero B'>Tercero B</option>  
+							<option value='Cuarto A'>Cuarto A</option>  
+							<option value='Cuarto B'>Cuarto B</option>  
+							<option value='Quinto A'>Quinto A</option>
+							<option value='Quinto B'>Quinto B</option>
+						</select>
+						
+					</div>
+				</div>
+				<div class="form-group forms_persona" id="group_correo">
+				    <label for="correo" class="col-sm-2 control-label">Correo Electronico</label>
+				    <div class="col-sm-10">
+				     	<input type="text" class="form-control" id="correo" placeholder="Correo electronico institucional del docente" name="correo">
+				    </div>
+				</div>
+				<div class="form-group forms_persona" id="group_img">
+				    <label for="imagen" class="col-sm-2 control-label">Foto</label>
+				   	<div class="col-sm-10">
+				   		<input type="file" id="imagen" name="foto" class="file-loading">
+					    
+					</div>
+				</div>
+				<div class="form-group forms_persona" id="group_rol">
+					<label for="rol_select" class="col-sm-2 control-label">Tipo Administrador</label>
+					<div class="col-sm-10">
+						<select class='form-control selectpicker' id='rol_user' name='rol_select' title="Seleccione el tipo de administrador del nuevo usuario" >
+							<option value="Administrador Noticias">Administrador Noticias</option>
+							<option value="Administrador Galeria">Administrador Galeria</option>
+							<option value="Administrador Oferta Educativa">Administrador Oferta Educativa</option>
+							<option value="Administrador Eventos - Slider-Bar">Administrador Eventos - Slider-Bar</option>
+							<option value="Administrador General">Administrador General</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group forms_persona" id="group_username">
+				   	<label for="username" class="col-sm-2 control-label">Usuario</label>
+				   	<div class="col-sm-10">
+				   		<input type="text" class="form-control" id="username" placeholder="Ingrese su usuario" name="username">
+				   	</div>
+				</div>
+				<div class="form-group forms_persona" id="group_password">
+				   	<label for="contraseña" class="col-sm-2 control-label">Contraseña</label>
+				   	<div class="col-sm-10">
+				   		<input type="password" class="form-control" id="password" placeholder="Ingrese la contraseña del nuevo usuario" name="password">
+				   	</div>
+				</div>
+				<div class="form-group forms_persona" id="group_password_conf">
+				   	<label for="contraseña" class="col-sm-2 control-label">Repita Contraseña</label>
+				   	<div class="col-sm-10">
+				   		<input type="password" class="form-control" id="password" placeholder="Repita la contraseña de usuario" name="password2">
+				   	</div>
+				</div>
+				
+				<p align="center" class="col-xs-12 forms_persona" id="group_btn" >
+					<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
+					<button type="reset" class="btn btn-danger">Limpiar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></button>
+				</p>
+			</form>
+		
+		</div>
+	</div>
+	<script type="text/javascript">
+		$('#imagen').fileinput({
+			showUpload: false
+		});
+	</script>
+{% endblock %}

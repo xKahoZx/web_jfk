@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Inicio de sesion
+{% endblock %}
+
+
+{% block content %}
+	<div class="container">
+		<div class="row" align="center">
+			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
+				{% csrf_token %}
+				<h1 class="titulo"><span class="label label-primary">Inicio de sesion</span></h1>
+				<br>
+				<div class="jumbotron col-sm-8  col-sm-offset-2">
+					<div class="form-group">
+				    	<label for="username" class="col-sm-2 control-label">Usuario</label>
+				    	<div class="col-sm-10">
+				     		<input type="text" class="form-control" id="username" placeholder="Ingrese su usuario" name="username">
+				    	</div>
+					</div>
+					<div class="form-group">
+				    	<label for="contraseña" class="col-sm-2 control-label">Contraseña</label>
+				    	<div class="col-sm-10">
+				     		<input type="password" class="form-control" id="password" placeholder="Ingrese su contraseña" name="password">
+				    	</div>
+					</div>
+					{% if men == True %}
+						<h4><span class="label label-warning">Clave y/o contraseña incorrecta</span></h4>
+					{% endif %}
+					<button type="submit" class="btn btn-primary"> <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Iniciar sesion</button>
+					<a href="/add_estudiante" class="btn btn-info"> <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Registrarse</a>
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	{% if noticia %}
+	Editar noticia
+	{% else %}
+	Agregar nueva noticia
+	{% endif %}
+{% endblock %}
+
+{% block extras%}
+	<link href="/media/bootstrap/fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+
+{% endblock%}
+{% block js%}
+	<script src="/media/bootstrap/fileinput/js/fileinput.js"></script>
+{% endblock%}
+
+{% block content %}
+	
+
+	<div class="container">
+		<div class="row col-xs-12">
+			{% if noticia %}
+			<h1 align="center" class="title" ><span id="indicador" class="label label-primary">Editar Noticia</span></h1>
+			{% else %}
+			<h1 align="center" class="title" ><span id="indicador" class="label label-primary">Agregar Nueva Noticia</span></h1>
+			{% endif %}
+			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal jumbotron" onsubmit="return validar_noticia()">
+				{% csrf_token %}
+				<div class="form-group" id="group_titulo">
+				    <label for="titulo" class="col-sm-2 control-label">Titulo</label>
+				    <div class="col-sm-10">
+				     	<input type="text" class="form-control" id="titulo" placeholder="Titulo" name="titulo" value="{{noticia.titulo}}">
+				    </div>
+				</div>
+				<div class="form-group" id="group_subtitulo">
+				    <label for="subititulo" class="col-sm-2 control-label">Subtitulo</label>
+				    <div class="col-sm-10">
+						<textarea class="form-control" rows="3" placeholder="Ingrese el Subtitulo de la noticia" name="subtitulo" id="subtitulo">{{noticia.subtitulo}}</textarea>
+				    </div>
+				</div>			
+				
+				<div class="form-group" id="group_cuerpo">
+				    <label for="cuerpo" class="col-sm-2 control-label">Cuerpo</label>
+				    <div class="col-sm-10">
+						<textarea class="form-control" rows="6" placeholder="Ingrese el cuerpo de la noticia" name="cuerpo" id="cuerpo">{{noticia.cuerpo}}</textarea>
+				    </div>
+				</div>	
+				<div class="form-group" id="group_autor">
+				    <label for="autor" class="col-sm-2 control-label">Autor</label>
+				    <div class="col-sm-10">
+				     	<input type="text" class="form-control" id="autor" placeholder="Nombre del autor" name="autor" value="{{noticia.autor}}" id="autor">
+				    </div>
+				</div>
+				<div class="form-group  " id="group_img">
+				    <label for="imagen" class="col-sm-2 control-label">Imagen</label>
+				   	<div class="col-sm-10">
+				   		<input type="file" id="imagen" name="imagen" class="file-loading">
+						<p class="help-block">Selecciona una imagen de tu ordenador.</p>    
+					</div>
+				</div>
+				{% if noticia %}
+				
+				<div align="center">
+					<h4><span class="label label-primary">Imagen actual</span></h4>
+					<img src="/media/{{noticia.imagen}}" class="img-noticia">
+				</div>
+				{% endif %}
+				<div id="alerta" class='alert alert-danger col-sm-6 col-sm-offset-4 alerta' align="center" role='alert'><strong>Por favor completa los campos resaltados</strong></div>
+				<p align="center" class="col-xs-12">
+					<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
+					<button type="reset" class="btn btn-danger">Limpiar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></button>
+				</p>
+				
+				
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$('#imagen').fileinput({
+			showUpload: false
+		});
+	</script>
+{% endblock %}

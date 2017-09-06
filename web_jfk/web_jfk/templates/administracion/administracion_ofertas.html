@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	{% if oferta%}
+	Editar oferta educativa
+	{% else %}
+	Agregar nueva oferta educativa
+	{% endif %}
+{% endblock %}
+{% block extras%}
+		<link href="/media/bootstrap/calendario/css/bootstrap-datepicker.min.css" rel="stylesheet">
+{% endblock %}
+{% block js%}
+		<script  src="/media/bootstrap/calendario/js/bootstrap-datepicker.min.js"></script>	
+{% endblock %}
+{% block content %}
+	<div class="container">
+		<div class="row col-xs-12">
+			{% if oferta %}
+			<h1 class="title" align="center"><span class="label label-primary">Editar oferta educativa</span></h1>
+			<div class="col-sm-12">
+				<div class="col-sm-6 thumbnail col-sm-offset-3">
+					<h3 align="center"><span class="label label-info">Informacion actual de la oferta educativa</span></h3>
+					<div class="col-sm-6">
+						<p><strong>Jornada: </strong>{{oferta.jornada}}</p>
+						 
+						<p><strong>Sede: </strong>{{oferta.sede}}</p> 
+						<p><strong>Nivel Educativo: </strong>{{oferta.nivel}}</p> 
+						<p><strong>Grado : </strong>{{oferta.grado}}</p> 
+					</div>
+					<div class="col-sm-6">
+						<p><strong>Cupos Ofertados : </strong>{{oferta.cupos}}</p> 
+						<p><strong>Cupos Disponibles : </strong>{{oferta.cupos_disponibles}}</p> 
+						<p><strong>Fecha Apertura : </strong>{{oferta.fecha_apertura}}</p> 
+						<p><strong>Fecha Cierre : </strong>{{oferta.fecha_cierre}}</p> 
+						
+					</div>
+				</div>
+				
+			</div>
+			
+			{% else %}
+			<h1 class="title" align="center"><span class="label label-primary">Agregar nueva oferta educativa</span></h1>
+			{% endif %}
+			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
+				{% csrf_token%}
+				{% if oferta %}
+				<p class="text-warning">En la anterior tabla se muestran los datos actuales de la oferta educativa, por favor completa el siguiente formulario de acuerdo a los cambios que desee realizar en la oferta educativa.</p>
+				{% endif %}
+				<div class="form-group">
+					<label for="jornada" class="col-sm-2 control-label">Jornada</label>
+					<div class="col-sm-10">
+						<select class="form-control" id="jornada" name="jornada" >
+							<option value="0">--- Seleciona la jornada de estudio de la oferta ---</option>
+ 							<option value="Mañana">Mañana</option>
+							<option value="Tarde" >Tarde</option>
+							
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="sede" class="col-sm-2 control-label">Sede</label>
+					<div class="col-sm-10">
+						<select class="form-control" id="sede" name="sede" >
+							<option value="0">--- Seleciona la sede de la oferta ---</option>
+ 							<option value="John F. Kennedy" id="jfk" disabled>John F. Kennedy</option>
+							<option value="Jose Maria Obando" id="jmo" disabled>Jose Maria Obando</option>
+							<option value="Nueva Esperanza" id="ne" disabled>Nueva Esperanza</option>
+							
+						</select>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<label for="nivel" class="col-sm-2 control-label">Nivel educativo</label>
+					<div class="col-sm-10">
+						<select class="form-control" id="tipo" name="nivel">
+							<option value="0">--- Seleciona un tipo de educacion ---</option>
+ 							<option value="Preescolar" id="pree" disabled>Preescolar</option>
+							<option value="Basica Primaria" id="pri" disabled>Basica Primaria</option>
+							<option value="Basica Secundaria" id="sec" disabled>Basica Secundaria</option>
+							<option value="Educacion Media" id="med" disabled>Educacion Media</option>
+						  
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="nivel" class="col-sm-2 control-label">Grado</label>
+					<div class="col-sm-10">
+						<select class="form-control" id="grado" name="grado">
+							<option value="0">--- Seleccione el grado escolar de la oferta ---</option>
+
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="cupos" class="col-sm-2 control-label">Cupos</label>
+					<div class="col-sm-10">
+						<input type="text" name="cupos" class="form-control" id="cupos" placeholder="Ingrese el numero de cupos disponibles para la oferta" >
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="inicio" class="col-sm-2 control-label">Fecha de apertura</label>
+					<div class="input-group date">
+  						<input type="text" class="form-control" readonly name="fecha_inicio"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="inicio" class="col-sm-2 control-label">Fecha de cierre</label>
+					<div class="input-group date">
+  						<input type="text" class="form-control" readonly name="fecha_fin"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+					</div>
+				</div>
+				
+				<p align="center">
+					<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
+					<button type="reset" class="btn btn-danger">Limpiar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></button>
+				</p>
+			</form>
+
+
+		</div>
+	</div>
+	<script type="text/javascript">
+		$('.date').datepicker({
+		    format: "yyyy-mm-dd",
+		    todayBtn: true,
+		    language: "es",
+		    orientation: "auto left",
+		    todayHighlight: true
+		});
+	</script>
+{% endblock %}

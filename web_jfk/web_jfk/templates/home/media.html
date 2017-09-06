@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Galeria de imagenes- John F. Kennedy
+{% endblock %}
+
+
+{% block content %}
+	<div class="container">
+		<h1 align="center" class="title"><span class="label label-primary">Galeria de imágenes</span></h1>
+		{% if user.is_authenticated%}
+		<p>
+			<a href="/crear_album" class="btn btn-primary">Crear nuevo album</a>
+		</p>
+		{% endif %}
+		<div class="row">
+			{% for p in album_aux%}
+			<div class="col-sm-12 col-md-6 thumbnail padding-thumbnail">
+				<h4 align="center"><span class="label label-primary">{{p.titulo}}</span> </h4>
+				{% for i in p.imagenes.all%}
+					{% if forloop.counter < 7%}
+						<div class="thumbnail col-xs-4">
+							<img src="/media/{{i.imagen}}" class="adaptar-thumbnails">
+						</div>
+					{% endif %}
+				{% endfor %}
+				<article>{{p.descripcion}}</article>
+				<p class="text-right">
+					{%if user.is_authenticated %}
+					<a href="/edit-album/{{p.id}}" class="btn btn-warning">Editar</a>
+					{% endif %}
+					<a href="#"  class="btn btn-danger" data-toggle="modal" data-target="#modal-{{p.id}}" class="modal-thumbnail" id="{{p.id}}">Ver pantalla completa</a>
+					
+				</p>				
+			</div>
+			{% endfor %}
+			
+		</div>
+		<div align="center">
+			<nav >
+				<ul class="pagination pagination-sm">
+					<li ><a href="#">&laquo;</a></li>
+					<li class="active"><a href="">1</a></li>
+					<li><a href="">2</a></li>
+					<li><a href="">3</a></li>
+					<li><a href="">4</a></li>
+					<li><a href="">5</a></li>
+					<li><a href="#">&raquo;</a></li>
+				</ul>
+			</nav>
+		</div>
+					
+	
+	</div>
+	
+	<!-- bootstrap modal -->
+	{% for p in album%}
+		<div class="modal fade" tabindex="-1" role="dialog" id="modal-{{p.id}}">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content padding-text">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h3 align="center"><span class="label label-primary">{{p.titulo}} </span></h3>
+						
+					</div>
+					<div class="modal-body">
+						<div id="carousel-{{p.id}}" class="carousel slide" data-ride="carousel">
+			  			
+							<div class="carousel-inner" role="listbox" align="center">
+								{% for i in p.imagenes.all%}	
+									{%if forloop.counter == 1%}		
+										<div class="item active" >
+									{% else %}
+								<div class="item" >
+								{% endif%}
+									<img src="/media/{{i.imagen}}" alt="Imagen 1" class="img-2">
+								</div>
+								{% endfor %}
+			    			</div>
+						    <a class="left carousel-control controls-background-reset" href="#carousel-{{p.id}}" role="button" data-slide="prev">
+								<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+								<span class="sr-only">Previous</span>
+						    </a>
+						    <a class="right carousel-control controls-background-reset" href="#carousel-{{p.id}}" role="button" data-slide="next">
+								<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+								<span class="sr-only">Next</span>
+						   </a>
+
+						</div>
+					</div>
+					<div class="modal-footer">
+					   <article class="text-left text-justify">
+					   		{{p.descripcion}}
+					   </article>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	{% endfor %}
+	</div>
+
+{% endblock %}

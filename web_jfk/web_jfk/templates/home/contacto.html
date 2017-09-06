@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+	Contactanos - John F. Kennedy
+{% endblock %}
+
+{%block content %}
+	
+	<div class="container">
+		<div class="row">
+			<h1 class="title" align="center"><span class="label label-primary">Contactanos</span></h1>
+			<div class="col-md-7">
+				<form action="." method="POST" class="form-horizontal">
+					{% csrf_token %}
+					<h2 align="center" class="title"><span class="label label-info">Formulario de contacto</span></h2>
+					<div class="form-group">
+						<label for="jornada" class="col-sm-2 control-label">Sede de contacto</label>
+						<div class="col-sm-10">
+							<select class="form-control" id="jornada" name="jornada" >
+								<option value="0">--- Seleciona la sede con la cual desea contactarse ---</option>
+	 							<option value="Mañana">Jose Maria Obando</option>
+								<option value="Tarde" >John F. Kennedy</option>
+								<option value="Tarde" >Nueva Esperanza</option>
+								
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+					    <label for="nombres" class="col-sm-2 control-label">Nombres</label>
+					    <div class="col-sm-10">
+					     	<input type="text" class="form-control" id="nombres" placeholder="Sus Nombres completos" name="nombres">
+					    </div>
+					</div>
+					<div class="form-group">
+					    <label for="email" class="col-sm-2 control-label">Correo</label>
+					    <div class="col-sm-10">
+					     	<input type="text" class="form-control" id="email" placeholder="Correo electronico" name="email">
+					    </div>
+					</div>
+					<div class="form-group">
+					    <label for="telefono" class="col-sm-2 control-label">Telefono</label>
+					    <div class="col-sm-10">
+					     	<input type="text" class="form-control" id="telefono" placeholder="Telefono de contacto" name="telefono">
+					    </div>
+					</div>
+					<div class="form-group">
+					    <label for="asunto" class="col-sm-2 control-label">Asunto</label>
+					    <div class="col-sm-10">
+					     	<input type="text" class="form-control" id="asunto" placeholder="Asunto" name="asunto">
+					    </div>
+					</div>
+					<div class="form-group">
+					    <label for="descripcion" class="col-sm-2 control-label">Descripcion</label>
+					    <div class="col-sm-10">
+							<textarea class="form-control" rows="6" placeholder="Ingrese el mensaje o motivo de contacto" name="descripcion"></textarea>
+					    </div>
+					</div>
+					<p align="center">
+						<button type="submit" class="btn btn-primary">Enviar <span class="glyphicon glyphicon-send" aria-hidden="true"></span></button>
+						<button type="reset" class="btn btn-danger">Limpiar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></button>
+					</p>
+					
+				</form>
+			</div>
+			<div class="col-sm-12" align="center">
+				<div class="col-md-4 col-sm-12">
+					<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7972.379931663258!2d-76.61743733777972!3d2.4437053793026915!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x309394f20d153368!2sInstituci%C3%B3n+Educativa+John+F+Kennedy!5e0!3m2!1sen!2sco!4v1490297457057" width="300" height="200" frameborder="0" style="border:0" allowfullscreen></iframe>
+					<address>
+						<br>
+						<strong>Jose Maria Obando</strong><br>
+					 	Carrera 33 #20-23 <br>
+					 	Las Brisas de occidente <br>
+					  	jmobando@jfkennedy.edu.co<br>
+					  	<abbr title="Telefono">Telefonos</abbr> 3196688928 - 3167646987
+					</address>
+				</div>
+				<div class="col-md-4 col-sm-12">
+					<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7972.379931663258!2d-76.61743733777972!3d2.4437053793026915!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x309394f20d153368!2sInstituci%C3%B3n+Educativa+John+F+Kennedy!5e0!3m2!1sen!2sco!4v1490297457057" width="300" height="200" frameborder="0" style="border:0" allowfullscreen></iframe>
+					<address>
+						<br>
+						<strong>Jose Maria Obando</strong><br>
+					 	Carrera 33 #20-23 <br>
+					 	Las Brisas de occidente <br>
+					  	jmobando@jfkennedy.edu.co<br>
+					  	<abbr title="Telefono">Telefonos</abbr> 3196688928 - 3167646987
+					</address>
+				</div>
+				<div class="col-md-4 col-sm-12">
+					<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7972.379931663258!2d-76.61743733777972!3d2.4437053793026915!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x309394f20d153368!2sInstituci%C3%B3n+Educativa+John+F+Kennedy!5e0!3m2!1sen!2sco!4v1490297457057" width="300" height="200" frameborder="0" style="border:0" allowfullscreen></iframe>
+					<address>
+						<br>
+						<strong>Jose Maria Obando</strong><br>
+					 	Carrera 33 #20-23 <br>
+					 	Las Brisas de occidente <br>
+					  	jmobando@jfkennedy.edu.co<br>
+					  	<abbr title="Telefono">Telefonos</abbr> 3196688928 - 3167646987
+					</address>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

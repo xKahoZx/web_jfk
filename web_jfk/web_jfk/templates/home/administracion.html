@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Administracion
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<h1 class="title text-center"><span class="label label-primary">Menu Administracion</span></h1>
+			<div class="panel-group col-sm-6 col-md-offset-3 text-center" id="accordion" role="tablist" aria-multiselectable="true">
+				<div class="panel panel-default">
+					<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#usuarios" aria-expanded="false" aria-controls="usuarios">
+						<div class="panel-heading menu_administracion" role="tab" id="headingThree">
+					  		<h4 class="panel-title">
+						  		Usuarios
+					  		</h4>
+						</div>
+					</a>
+					<div id="usuarios" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+						<div class="panel-body">
+							<div class="list-group">
+							  	<a href="/lista_docentes" class="list-group-item">Lista Docentes</a>
+							  	<a href="/lista_administradores" class="list-group-item">Lista Administradores</a>
+							  	<a href="/add_usuario" class="list-group-item">Crear nuevo usuario</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#institucion" aria-expanded="false" aria-controls="institucion">
+						<div class="panel-heading menu_administracion" role="tab" id="headingThree">
+					  		<h4 class="panel-title">
+						  		Institucion
+					  		</h4>
+						</div>
+					</a>
+					<div id="institucion" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+						<div class="panel-body">
+							<div class="list-group">
+							  	<a href="/crear_institucion" class="list-group-item">Ver institucion</a>
+							  	<a href="/lista_sedes" class="list-group-item">Listar sedes</a>
+							  	<a href="/crear_sede" class="list-group-item">Crear nueva sede</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#pei" aria-expanded="false" aria-controls="pei">
+						<div class="panel-heading menu_administracion" role="tab" id="headingThree">
+					  		<h4 class="panel-title">
+						  		Proyecto Educativo Institucional (PEI)
+					  		</h4>
+						</div>
+					</a>
+					<div id="pei" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+						<div class="panel-body">
+							<div class="list-group">
+							  	<a href="#" class="list-group-item">Mision - Vision</a>
+							  	<a href="#" class="list-group-item">Valores - Metas</a>
+							  	<a href="#" class="list-group-item">Simbolos</a>
+							  	<a href="#" class="list-group-item">Historia</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
