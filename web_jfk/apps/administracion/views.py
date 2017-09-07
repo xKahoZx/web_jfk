@@ -224,16 +224,13 @@ def add_oferta_view(request):
 			oferta.estado = False
 		oferta.save()
 		return HttpResponseRedirect('/lista_ofertas')
-	return render_to_response('administracion/administracion_ofertas.html', context_instance=RequestContext(request))
+	return render_to_response('administracion/crear_oferta.html', context_instance=RequestContext(request))
 
 def edit_oferta_view(request, id_oferta):
 
 	oferta = oferta_educativa.objects.get(pk = id_oferta)
 	if request.method == "POST":
 		
-		oferta.jornada = request.POST['jornada']
-		oferta.nivel = request.POST['nivel']
-		oferta.grado = request.POST['grado']	
 		cupos = oferta.cupos	
 		oferta.cupos = request.POST['cupos']
 		oferta.fecha_apertura = request.POST['fecha_inicio']
@@ -256,17 +253,17 @@ def edit_oferta_view(request, id_oferta):
 		return HttpResponseRedirect('/lista_ofertas')
 	
 	ctx = {'oferta': oferta}
-	return render_to_response('administracion/administracion_ofertas.html', ctx, context_instance=RequestContext(request))
+	return render_to_response('administracion/editar_oferta.html', ctx, context_instance=RequestContext(request))
 
 def delete_oferta_view(request, id_oferta):
 	if request.user.is_authenticated:
 		oferta = oferta_educativa.objects.get(id = id_oferta)
-		
-		for p in oferta.inscripciones.all():
+		inscripciones = inscripcion.objects.filter(oferta__id = id_oferta)
+		for p in inscripciones:
 			p.delete()
 		oferta.delete()
 
-	return HttpResponseRedirect('/listar-ofertas')
+	return HttpResponseRedirect('/lista_ofertas')
 
 def verificar_fecha():
 
@@ -300,7 +297,6 @@ def inscripcion_view(request, id_oferta):
 		oferta_ed = oferta_educativa.objects.get(id = id_oferta)
 		oferta_ed.cupos_disponibles = oferta_ed.cupos_disponibles - 1		
 		if oferta_ed.cupos_disponibles == 0:
-			print "Entre"
 			oferta_ed.estado = False
 		oferta_ed.save()
 		registro.oferta = oferta_ed

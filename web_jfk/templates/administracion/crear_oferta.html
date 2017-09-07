@@ -1,11 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-	{% if oferta%}
-	Editar oferta educativa
-	{% else %}
 	Agregar nueva oferta educativa
-	{% endif %}
 {% endblock %}
 {% block extras%}
 		<link href="/media/bootstrap/calendario/css/bootstrap-datepicker.min.css" rel="stylesheet">
@@ -16,37 +12,11 @@
 {% block content %}
 	<div class="container">
 		<div class="row col-xs-12">
-			{% if oferta %}
-			<h1 class="title" align="center"><span class="label label-primary">Editar oferta educativa</span></h1>
-			<div class="col-sm-12">
-				<div class="col-sm-6 thumbnail col-sm-offset-3">
-					<h3 align="center"><span class="label label-info">Informacion actual de la oferta educativa</span></h3>
-					<div class="col-sm-6">
-						<p><strong>Jornada: </strong>{{oferta.jornada}}</p>
-						 
-						<p><strong>Sede: </strong>{{oferta.sede}}</p> 
-						<p><strong>Nivel Educativo: </strong>{{oferta.nivel}}</p> 
-						<p><strong>Grado : </strong>{{oferta.grado}}</p> 
-					</div>
-					<div class="col-sm-6">
-						<p><strong>Cupos Ofertados : </strong>{{oferta.cupos}}</p> 
-						<p><strong>Cupos Disponibles : </strong>{{oferta.cupos_disponibles}}</p> 
-						<p><strong>Fecha Apertura : </strong>{{oferta.fecha_apertura}}</p> 
-						<p><strong>Fecha Cierre : </strong>{{oferta.fecha_cierre}}</p> 
-						
-					</div>
-				</div>
-				
-			</div>
 			
-			{% else %}
 			<h1 class="title" align="center"><span class="label label-primary">Agregar nueva oferta educativa</span></h1>
-			{% endif %}
-			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
+			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal jumbotron">
 				{% csrf_token%}
-				{% if oferta %}
-				<p class="text-warning">En la anterior tabla se muestran los datos actuales de la oferta educativa, por favor completa el siguiente formulario de acuerdo a los cambios que desee realizar en la oferta educativa.</p>
-				{% endif %}
+				
 				<div class="form-group">
 					<label for="jornada" class="col-sm-2 control-label">Jornada</label>
 					<div class="col-sm-10">

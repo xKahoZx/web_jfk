@@ -18,11 +18,13 @@ def reporte_view(request,id):
 	
 	try:
 		reporte = oferta_educativa.objects.get(id = id)
+		inscripciones = inscripcion.objects.filter(oferta__id = id)
 		
-		ctx = {'reporte':reporte}
 	except oferta_educativa.DoesNotExist:
 		reporte = []
-	ctx = {'reporte':reporte}
+		inscripciones = []
+	ctx = {'reporte':reporte, 'inscripciones':inscripciones}
+	
 	return render_to_response('reporte/reporte.html',ctx, context_instance = RequestContext(request))
 
 def generar_pdf(request, id):
@@ -93,14 +95,14 @@ def generar_pdf(request, id):
 	#QUERY
 	
 	reporte = oferta_educativa.objects.get(id = id)
-
+	inscripciones = inscripcion.objects.filter(oferta__id = id)
 	
 	high = 650
 	number = 0
 	data = my_table()
 	bandera = True
 	
-	for p in reporte.inscripciones.all():
+	for p in inscripciones:
 		bandera = True
 		number = number + 1
 		nombres = p.nombres + " " + p.apellidos

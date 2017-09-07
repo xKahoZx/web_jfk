@@ -103,7 +103,6 @@ def oferta_view(request):
 	if request.method == "POST":
 		var_sede = request.POST['sede_select']
 		var_jornada = request.POST['jornada_select']
-
 		if var_sede != 0 and var_jornada != 0:
 			ofertas = oferta_educativa.objects.filter(estado = True, sede__nombre = var_sede, jornada = var_jornada)
 			
