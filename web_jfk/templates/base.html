@@ -51,6 +51,9 @@
 										<li><a href="#">Simbolos </a></li>
 										<li><a href="/docentes">Docentes</a></li>
 										<li><a href="/academico">Aula Virtual</a></li>
+										{% if user.is_authenticated and user.is_superuser%}
+										<li><a href="/administracion">Administracion</a></li>
+										{% endif %}
 									</ul>
 								</li>
 								<li><a href="/contacto">Contactanos</a></li>

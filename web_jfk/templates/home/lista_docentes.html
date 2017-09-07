@@ -53,6 +53,8 @@
 					</tbody>
 				</table>
 			</div>
+			{% else%}
+			<h2 class="titulo" align="center"><span class="label label-info">No existen docentes registrados con los filtros deseados</span></h2>
 			{% endif %}
 		</div>
 	</div>
@@ -90,7 +92,7 @@
 					</div>
 			  	</div>
 			  	<div class="modal-footer">
-					<a href="#" class="btn btn-success">Editar</a>
+					<a href="/edit_usuario/{{p.id}}" class="btn btn-success">Editar</a>
 					<a href="#" class="btn btn-danger">Eliminar</a>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 				</div>

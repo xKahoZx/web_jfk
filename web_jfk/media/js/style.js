@@ -164,7 +164,7 @@ $(document).ready(function(){
 			if(($("#jornada_docente").val() != "0" && $("#sede_docente").val() != "0")){
 				$("#group_curso_a").hide();
 				$("#group_curso_b").hide();
-				$("#group_curso_c").show();		
+				$("#group_curso_c").show();	
 							
 			}
 

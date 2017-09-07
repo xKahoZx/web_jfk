@@ -373,7 +373,18 @@ def add_usuario_view(request):
 		return HttpResponseRedirect('/administracion')
 	ctx = {'sedes' : sedes}
 
-	return render_to_response('administracion/admin_usuario.html', ctx, context_instance=RequestContext(request))
+	return render_to_response('administracion/crear_usuario.html', ctx, context_instance=RequestContext(request))
+
+def edit_usuario_view(request, id_user):
+	try:
+		usuario = docente.objects.get(id = id_user)
+	except:
+		usuario = administrador.objects.get(id = id_user)
+	sedes = sede.objects.all()
+	ctx = {'user':usuario,'sedes':sedes}
+
+
+	return  render_to_response('administracion/edit_usuario.html', ctx, context_instance = RequestContext(request))
 
 def add_alumno_view(request):
 	if request.method == "POST":
