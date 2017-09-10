@@ -68,8 +68,8 @@ class documento(models.Model):
 	
 	titulo			= models.CharField(max_length = 100)
 	documento		= models.FileField(upload_to = url)
-	materia 		= models.CharField(max_length = 20)
-	grado 			= models.CharField(max_length = 20)
+	materia 		= models.CharField(max_length = 20 , blank = True)
+	grado 			= models.CharField(max_length = 20, blank = True)
 	fecha 			= models.DateField()
 	descripcion		= models.TextField(max_length = 5000)
 	autor			= models.ForeignKey(User)
@@ -92,7 +92,6 @@ class persona(models.Model):
 
 class estudiante(persona):
 	identificacion	= models.CharField(max_length = 100, unique = True)
-	grado 			= models.CharField(max_length = 100)
 	def __unicode__(self):
 		return self.nombres + str(" ") + self.apellidos
 
@@ -139,6 +138,7 @@ class docente(persona):
 	curso 			= models.CharField(max_length = 100)
 	jornada 		= models.CharField(max_length = 100)
 	sede 			= models.ForeignKey(sede)
+	tipo 			= models.CharField(max_length = 10, default = "Docente")
 	def __unicode__(self):
 		return self.nombres + str(" ") + self.apellidos
 
@@ -169,8 +169,6 @@ class inscripcion(models.Model):
 	identificacion	= models.CharField(max_length = 15)
 	telefono_1		= models.CharField(max_length = 15)
 	telefono_2		= models.CharField(max_length = 15, blank = True)
-	direccion		= models.CharField(max_length = 50)
-	barrio			= models.CharField(max_length = 50)
 	fecha_inscripcion= models.DateField()
 	oferta 			= models.ForeignKey(oferta_educativa)
 	

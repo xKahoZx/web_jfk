@@ -290,8 +290,6 @@ def inscripcion_view(request, id_oferta):
 		registro.identificacion = request.POST['identificacion']
 		registro.telefono_1 = request.POST['telefono']
 		registro.telefono_2 = request.POST['celular']
-		registro.direccion = request.POST['direccion']
-		registro.barrio = request.POST['barrio']
 		registro.edad = request.POST['edad']	
 		registro.fecha_inscripcion = date.today()
 		oferta_ed = oferta_educativa.objects.get(id = id_oferta)
@@ -311,8 +309,12 @@ def add_documento_view(request):
 		new_documento = documento()
 		new_documento.titulo = request.POST['titulo']
 		new_documento.descripcion = request.POST['descripcion']
-		new_documento.materia = request.POST['materia']
-		new_documento.grado = request.POST['grado']
+		try:
+			if request.user.docente.jornada == "Tarde" and request.user.docente.sede.nombre == "John F. Kennedy":
+ 				new_documento.materia = request.POST['materia']
+				new_documento.grado = request.POST['grado']
+		except:
+			pass
 		new_documento.fecha = date.today()
 		new_documento.autor =  request.user
 		new_documento.documento = request.FILES['documento']
@@ -347,15 +349,7 @@ def add_usuario_view(request):
 
 			new_usuario.jornada = request.POST['jornada_select']
 			if(request.POST['jornada_select'] == "Tarde" and request.POST['sede_select'] == "John F. Kennedy"):
-				materias = ""
-				for p in request.POST.getlist('curso_select_b'):
-					materias = materias +', ' + str(p)
-
-				materias = materias.lstrip(", ")
-				print materias					
-				
-				new_usuario.curso = materias
-
+				new_usuario.curso = request.POST['curso_select_b']
 			else:
 				new_usuario.curso = request.POST['curso_select_c']
 			new_usuario.user = u	
@@ -389,6 +383,13 @@ def edit_usuario_view(request, id_user):
 def add_alumno_view(request):
 	if request.method == "POST":
 		identificacion = request.POST['identificacion']
+		try:
+			men = "El numero de identificacion ingresado ya se encuentra registrado"
+			query_studiante = estudiante.objects.get(identificacion = request.POST['identificacion'])
+			ctx = {'men':men }
+			return render_to_response('administracion/registro_estudiante.html', ctx, context_instance=RequestContext(request))	
+		except:
+			pass
 		#abrir el archivo excel
 		document = openpyxl.load_workbook('%s/Libro1.xlsx' % MEDIA_ROOT)
 		#acceder a una hoja del documento
@@ -399,25 +400,25 @@ def add_alumno_view(request):
 		for valor in range(100):
 			num_identificacion = hoja.cell(row = row, column = 1).value
 			#si encuentra que las identificacion son iguales entra a la siguiente condicion
-			print num_identificacion
 			if num_identificacion == long(identificacion):
-				if hoja.cell(row = row, column = 4).value == None:	
-					u = User.objects.create_user(username = request.POST['username'], password=request.POST['password'])
-					u.save()
-					new_estudiante = estudiante()	
-					new_estudiante.user = u
-					new_estudiante.correo = request.POST['email']
-					new_estudiante.nombres = hoja.cell(row = row, column = 2).value
-					new_estudiante.apellidos = hoja.cell(row = row, column = 4).value
-					new_estudiante.grado = "Noveno"
-					break
-				else:
-					break
-			if hoja.cell(row = row + 1 , column = 1).value == None:
+				u = User.objects.create_user(username = request.POST['username'], password=request.POST['password'])
+				u.save()
+				new_estudiante = estudiante()	
+				new_estudiante.user = u
+				new_estudiante.correo = request.POST['email']
+				new_estudiante.nombres = hoja.cell(row = row, column = 2).value
+				new_estudiante.apellidos = hoja.cell(row = row, column = 3).value
+				new_estudiante.identificacion = num_identificacion
+				new_estudiante.save()
 				break
+			if hoja.cell(row = row + 1 , column = 1).value == None:
+				men = "El numero de identificacion ingresado no se encuentra registrado en nuestra base de datos."
+				ctx = {'men':men }
+				return render_to_response('administracion/registro_estudiante.html', ctx, context_instance=RequestContext(request))	
+
 			else:
 				row = row + 1
-		return HttpResponseRedirect('/add_estudiante')
+		return HttpResponseRedirect('/login')
 	return render_to_response('administracion/registro_estudiante.html', context_instance=RequestContext(request))	
 
 	

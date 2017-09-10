@@ -3,14 +3,7 @@
 {% block title %}
 	Lista de ofertas educativas
 {% endblock %}
-{% block extras%}
-	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
 
-{% endblock%}
-{% block js%}
-	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
-
-{% endblock%}
 
 {% block content %}
 	<div class="container">
@@ -21,7 +14,7 @@
 			<form action="." method="POST" class="form-horizontal" >
 				{% csrf_token %}
 				<div class="col-sm-12 col-md-5 col-md-offset-2">					
-					<select class='form-control selectpicker ' id='filtro_sede' name='sede_select' title="listar oferta por sede" >
+					<select class='form-control ' id='filtro_sede' name='sede_select' title="listar oferta por sede" >
 						<option value="John F. Kennedy">Sede John F. Kennedy</option>
 						 <option value="Jose Maria Obando">Sede Jose Maria Obando</option>
 						<option value="Nueva Esperanza" >Sede Nueva Esperanza</option>

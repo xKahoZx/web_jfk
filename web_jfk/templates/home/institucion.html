@@ -8,15 +8,19 @@
 	<div class="container">
 		<div class="row">
 			<h1 class="title text-center" ><span class="label label-primary">Institucion Educativa {{institucion.nombre}}</span></h1>
-			<div class="col-sm-4">
+			<div class="col-sm-5">
 				<h2 class="title text-center"><span class="label label-info">Informacion Rector</span></h2>
-				<ul class="list-group">
-					<li class="list-group-item">Cras justo odio</li>
-				  	<li class="list-group-item">Dapibus ac facilisis in</li>
-				  	<li class="list-group-item">Morbi leo risus</li>
-				  	<li class="list-group-item">Porta ac consectetur ac</li>
-				  	<li class="list-group-item">Vestibulum at eros</li>
+				<ul>
+					<li class="list-group-item"><strong>Nombres:</strong> {{institucion.rector.nombres}}</li>
+					<li class="list-group-item"><strong>Apellidos:</strong> {{institucion.rector.apellidos}}</li>
+					<li class="list-group-item"><strong>Correo:</strong> {{institucion.rector.correo}}</li>
+					<li class="list-group-item"><strong>Nombre usuario:</strong> {{institucion.rector.user.username}}</li>
+					<li class="list-group-item text-center"><img src="/media/{{institucion.rector.foto}}" class="img-5"></li>
+				  	
 				</ul>
+			</div>
+			<div class="col-sm-7 text-center">
+				<img src="/media/{{institucion.escudo}}" class="img-2">
 			</div>
 		</div>
 	</div>

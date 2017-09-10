@@ -14,8 +14,8 @@ urlpatterns = patterns('web_jfk.apps.home.views',
 	url(r'^ofertas_educativas/$','oferta_view', name = 'vista_ofertas'),
 	url(r'^lista_ofertas/$','lista_ofertas_view', name = 'vista_listas_ofertas'),
 	
-
-	url(r'^academico/$','academico_view', name = 'vista_academico'),
+	#aula virtual
+	url(r'^aula_virtual/$','documentos_view', name = 'vista_academico'),
 
 	#Contacto
 	url(r'^contacto/$', 'contacto_view', name='vista_contacto'),

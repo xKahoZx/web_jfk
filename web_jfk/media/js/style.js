@@ -180,6 +180,7 @@ $(document).ready(function(){
 
 $(document).ready(function(){
 	$("#sede_docente").change(function(){
+		document.getElementById("jornada_docente").selectedIndex = "0";
 		$("#group_curso_a").show();
 		$("#group_curso_b").hide();
 		$("#group_curso_c").hide();

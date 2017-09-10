@@ -104,7 +104,7 @@ def oferta_view(request):
 		var_sede = request.POST['sede_select']
 		var_jornada = request.POST['jornada_select']
 		if var_sede != 0 and var_jornada != 0:
-			ofertas = oferta_educativa.objects.filter(estado = True, sede__nombre = var_sede, jornada = var_jornada)
+			ofertas = oferta_educativa.objects.filter(estado = True, sede__id = var_sede, jornada = var_jornada)
 			
 		if (len(ofertas) == 0) :
 			mensaje = "No hay ofertas educativas disponibles relacionadas con la anterior busqueda"
@@ -143,21 +143,38 @@ def lista_ofertas_view(request):
 		return HttpResponseRedirect('/login')
 
 #aula virtual
-def academico_view(request):
+def documentos_view(request):
 
-	documentos = []
-	mensaje = ""
-	if request.method == "POST":
-		var_grado = request.POST['grado_select']
-		var_materia = request.POST['materia_select']
-		if var_grado != 0 and var_materia != 0:
-			documentos = documento.objects.filter(materia = var_materia, grado = var_grado)
-		if (len(documentos) == 0) :
-			mensaje = "No existen documentos relacionado con la busqueda ingresada"
-	
-	ctx = {'documentos':documentos}
-
-	return render_to_response('home/academico.html', ctx, context_instance = RequestContext(request))
+	if request.user.is_authenticated:
+		if request.method == "POST":
+			var_grado = request.POST['grado_select']
+			var_materia = request.POST['materia_select']
+			if var_grado != 0 and var_materia != 0:
+				documentos = documento.objects.filter(materia = var_materia, grado = var_grado)
+				ctx = {'documentos':documentos}
+				return render_to_response('home/academico.html', ctx, context_instance = RequestContext(request))
+		else:
+			if request.user.is_superuser:
+				documentos = documento.objects.all().exclude(autor__docente__tipo = "Docente")
+				ctx = {'documentos':documentos}
+				return render_to_response('home/academico.html', ctx, context_instance = RequestContext(request))
+			else:
+				try:
+					query_jornada = docente.objects.get(user = request.user.id).jornada
+					query_sede = docente.objects.get(user = request.user.id).sede.id
+				except:
+					query_jornada = funcionario.objects.get(user = request.user.id).jornada
+					query_sede = sede.objects.get(coordinadores = request.user.funcionario.id).id
+				try:
+					documentos_sede = documento.objects.filter(autor__funcionario__sede__id = query_sede, autor__funcionario__jornada = query_jornada)
+					documentos_rector = documento.objects.filter(autor__funcionario__tipo_funcionario = "Rector")
+				except:
+					documentos_sede = documento.objects.filter(autor__docente__sede = query_sede)
+					documentos_rector = documento.objects.filter(autor__funcionario__tipo_funcionario = "Rector")
+				ctx = {'documentos':documentos_sede, 'documentos_rector':documentos_rector}
+				return render_to_response('home/academico.html', ctx, context_instance = RequestContext(request))
+		
+	return render_to_response('home/academico.html', context_instance = RequestContext(request))
 
 
 #Contacto

@@ -40,7 +40,6 @@ urlpatterns = patterns('web_jfk.apps.administracion.views',
 	#institucion
 	url(r'^crear_institucion/$','add_institucion_view', name = 'vista_agregar_institucion'),
 	url(r'^crear_sede/$','add_sede_view', name = 'vista_agregar_sede'),
-
 	url(r'^crear_coordinador/(?P<jornada>.*)/$','add_coordinador_view', name = 'vista_crear_coordinador'),
 	
 

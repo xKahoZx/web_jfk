@@ -17,6 +17,12 @@
 				    	</div>
 					</div>
 					<div class="form-group">
+				    	<label for="email" class="col-sm-2 control-label">Correo electronico</label>
+				    	<div class="col-sm-10">
+				     		<input type="text" class="form-control" id="email" placeholder="Ingrese su correo electronico" name="email">
+				    	</div>
+					</div>
+					<div class="form-group">
 				    	<label for="username" class="col-sm-2 control-label">Nombre de usuario</label>
 				    	<div class="col-sm-10">
 				     		<input type="text" class="form-control" id="username" placeholder="Ingrese su nuevo nombre de usuario" name="username">
@@ -34,13 +40,12 @@
 				     		<input type="password" class="form-control" id="repassword" placeholder="Repita la contraseña" name="repassword">
 				    	</div>
 					</div>
-					<div class="form-group">
-				    	<label for="email" class="col-sm-2 control-label">Correo electronico</label>
-				    	<div class="col-sm-10">
-				     		<input type="text" class="form-control" id="email" placeholder="Ingrese su correo electronico" name="username">
-				    	</div>
+					{% if men  %}
+					<div id="alerta" class='alert alert-danger col-sm-12' align="center" role='alert'>
+						<strong>{{men}}</strong>
 					</div>
 					
+					{% endif %}
 					<button type="submit" class="btn btn-primary">Registrar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
 					<button type="reset" class="btn btn-danger">Limpiar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></button>			
 				</div>	

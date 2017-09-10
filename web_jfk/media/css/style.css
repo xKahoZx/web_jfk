@@ -4,10 +4,6 @@
 	color: #fff;
 }
 
-#anuncio{
-	border-radius: 10px;
-	margin-bottom: 10px;
-}
 
 .th-align{
 	text-align: center !important;
@@ -37,6 +33,33 @@
 	height: 500px !important;
 	max-width: 100%;
 }
+.img-2{
+	height: 400px !important;
+	max-width: 100%;
+
+}
+.img-3{
+	width: 58px !important;
+	height: 58px !important;
+}
+
+.img-4{
+	height: 150px !important;
+	max-width: 100% !important;
+	margin-bottom: 1%;
+}
+.img-5{
+	height: 200px !important;
+
+}
+.img-edit{
+	height: 100px !important;
+}
+
+.img-modal{
+	height:  300px !important;
+	max-width: 100%;
+}
 
 .p-footer{
 	margin: 0px ;
@@ -51,21 +74,12 @@
 .text-orange{ 
 	color : #aa6708;
 }
-.img-3{
-	width: 58px !important;
-	height: 58px !important;
 
-}
 
 .alerta{
 	display: none;
 }
 
-.img-4{
-	height: 150px !important;
-	max-width: 100% !important;
-	margin-bottom: 1%;
-}
 
 body{
 	margin-top: 60px;
@@ -102,11 +116,7 @@ body{
 	padding-top: 4%;
 }
 
-.img-2{
-	height: 400px !important;
-	max-width: 100%;
 
-}
 
 .logo{
 	max-height: 100px;
@@ -154,13 +164,8 @@ div p {
 	padding-right: 1%;
 }
 
-.img-modal{
-	height:  300px !important;
-	max-width: 100%;
-}
-.img-edit{
-	height: 100px !important;
-}
+
+
 a .thumbnail{
 	color: #000;
 }

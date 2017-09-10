@@ -10,8 +10,9 @@
 		<div class="row">
 			<h1 class="title" align="center"><span class="label label-primary">Area Academica</span></h1>
 			{% if user.is_authenticated%}
-				<p ><a href="/listar-ofertas" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Panel de control para area academica</a></p>	
+				<p ><a href="/add_documento" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Panel de control para area academica</a></p>	
 			{% endif %}
+			{% if user.estudiante%}
 			<form action="." method="POST" class="form-horizontal">	
 				{% csrf_token %}
 				<h4 class="title" align="center"><span class="label label-info">Seleccione los criterios de busqueda deseados</span></h4>
@@ -43,8 +44,21 @@
 				</div>
 				<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search "  aria-hidden="true"></span> Consultar </button>
 			</form>
+			{% endif%}
+
 			<div class="col-sm-12" align="center">
 				{% for p in documentos%}
+				<div class="thumbnail col-sm-4 padding-thumbnail">
+					<h3 class="title text-center"><span class="label label-primary">{{p.titulo}}</span></h3>
+					<img src="/media/images/documento.png" class="img-list-noticia">
+					<p class="text-justify">{{p.descripcion}}</p>				
+					<h4 class="text-center"><span class="label label-success">Fecha de publicacion {{p.fecha}}</span></h4>
+					<h4 class="text-center"><span class="label label-warning">Publicado por {{p.autor.docente.nombres}} {{p.autor.docente.apellidos}}</span></h4>
+					<a href="/edit_evento/{{p.id}}" class="btn btn-info">Descargar</a>
+				</div>
+				{% endfor%}
+
+				{% for p in documentos_rector%}
 				<div class="thumbnail col-sm-4 padding-thumbnail">
 					<h3 class="title text-center"><span class="label label-primary">{{p.titulo}}</span></h3>
 					<img src="/media/images/documento.png" class="img-list-noticia">
