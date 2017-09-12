@@ -4,12 +4,10 @@
 	Editar usuario
 {% endblock %}
 {% block extras%}
-	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
 	<link href="/media/bootstrap/fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
 
 {% endblock%}
 {% block js%}
-	<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 	<script src="/media/bootstrap/fileinput/js/fileinput.js"></script>
 
 {% endblock%}
@@ -37,6 +35,7 @@
 					<label for="sede_select" class="col-sm-2 control-label">Sede</label>
 					<div class="col-sm-10">
 						<select class='form-control selectpicker' id='sede_docente' name='sede_select' title="{{user.sede}}">
+							<option value="0">Seleccione la sede de trabajo del docente</option>
 							{% for p in sedes %}
 								<option value="{{p}}">{{p.nombre}}</option>
 						  	{% endfor %}
@@ -47,6 +46,7 @@
 					<label for="jornada_select" class="col-sm-2 control-label">Jornada</label>
 					<div class="col-sm-10">
 						<select class='form-control selectpicker' id='jornada_docente' name='jornada_select' title="{{user.jornada}}">
+							<option value="0">Seleccione la jornada de trabajo del docente</option>
 							<option value="Mañana">Mañana</option>
 							<option value="Tarde" >Tarde</option> 						  
 						</select>
@@ -55,7 +55,8 @@
 				<div class="form-group forms_persona" id="group_curso_a">
 					<label for="curso_select" class="col-sm-2 control-label">Curso</label>
 					<div class="col-sm-10" >
-						<select class='form-control selectpicker' id='curso_docente' name='curso_select' multiple  title="Seleccione el grado o materias correspondiente al docente">	
+						<select class='form-control selectpicker' id='curso_docente' name='curso_select'  >
+						<option value="0">Seleccione el grado o materias correspondiente al docente </option>
 						</select>
 						
 					</div>
@@ -64,7 +65,8 @@
 				<div class="form-group forms_persona" id="group_curso_b">
 					<label for="curso_select" class="col-sm-2 control-label">Curso</label>
 					<div class="col-sm-10" >
-						<select class='form-control selectpicker' id='curso_docente' name='curso_select_b' multiple title="{{user.curso}}">
+						<select class='form-control selectpicker' id='curso_docente_a' name='curso_select_b' title="{{user.curso}}">
+							<option value='0'>Seleccione la materia que dicta el docente</option> 
 							<option value='Quimica'>Quimica</option> 
 							<option value='Fisica'>Fisica</option> 
 							<option value='Biologia'>Biologia</option> 
@@ -79,7 +81,8 @@
 				<div class="form-group forms_persona" id="group_curso_c">
 					<label for="curso_select" class="col-sm-2 control-label">Curso</label>
 					<div class="col-sm-10" >
-						<select class='form-control selectpicker' id='curso_docente' name='curso_select_c' title="{{user.curso}}" >
+						<select class='form-control selectpicker' id='curso_docente_b' name='curso_select_c' title="{{user.curso}}" >
+							<option value='0'>Seleccione el grado que dicta el docente</option> 
 							<option value='Primero A'>Primero A</option>  
 							<option value='Primero B'>Primero B</option>  
 							<option value='Segundo A'>Segundo A</option>  
@@ -101,6 +104,7 @@
 				     	<input type="text" class="form-control" id="correo" placeholder="Correo electronico institucional del docente" name="correo"  value="{{user.correo}}">
 				    </div>
 				</div>
+				{% if user.sede %}
 				<div class="form-group" id="group_img">
 				    <label for="imagen" class="col-sm-2 control-label">Foto</label>
 				   	<div class="col-sm-10">
@@ -108,6 +112,11 @@
 					    
 					</div>
 				</div>
+				<div align="center">
+					<h4><span class="label label-primary">Foto actual</span></h4>
+					<img src="/media/{{user.foto}}" class="img-noticia">
+				</div>
+				{% endif %}
 				{% if user.tipo_usuario%}
 				<div class="form-group" id="group_rol">
 					<label for="rol_select" class="col-sm-2 control-label">Tipo Administrador</label>
@@ -132,11 +141,23 @@
 	<script type="text/javascript">
 		$('#imagen').fileinput({
 			showUpload: false
+		});		
+		$(document).ready(function(){
+			if("{{user.tipo}}" == "Docente"){
+			    $('#sede_docente > option[value="{{user.sede.nombre}}"]').attr('selected','selected');
+			    $('#jornada_docente > option[value="{{user.jornada}}"]').attr('selected', 'selected');
+				if(("{{user.jornada}}" == "Tarde") && ("{{user.sede.nombre}}" == "John F. Kennedy")){
+					$("#group_curso_b").show();
+			    	$('#curso_docente_a > option[value="{{user.curso}}"]').attr('selected', 'selected');
+				}else{
+					$("#group_curso_c").show();
+					$('#curso_docente_b > option[value="{{user.curso}}"]').attr('selected', 'selected');
+				}
+			}else{
+				$("#rol_user").show();
+				$('#rol_user > option[value="{{user.tipo_usuario}}"]').attr('selected','selected');
+			}
 		});
-		if($("#sede_docente").attr('title') == "John F. Kennedy"){
-			$("#group_curso_b").show();
-		}
-		
 
 	</script>
 

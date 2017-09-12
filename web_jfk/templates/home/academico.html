@@ -3,13 +3,11 @@
 {% block title %}
 	Area Academica
 {% endblock %}
-
 {% block content %}
-	
 	<div class="container">
 		<div class="row">
-			<h1 class="title" align="center"><span class="label label-primary">Area Academica</span></h1>
-			{% if user.is_authenticated%}
+			<h1 class="title" align="center"><span class="label label-primary">Aula Virtual</span></h1>
+			{% if user.is_authenticated and user.docente or user.funcionario or user.is_superuser%}
 				<p ><a href="/add_documento" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Panel de control para area academica</a></p>	
 			{% endif %}
 			{% if user.estudiante%}
@@ -36,9 +34,11 @@
 						<option value="Fisica" >Fisica</option>
 						<option value="Educacion fisica" >Educacion fisica</option>
 						<option value="Biologia" >Biologia</option>
+						<option value="Español" >Español</option>
 						<option value="Quimica" >Quimica</option>
 						<option value="Informatica" >Informatica</option>
 						<option value="Filosofia" >Filosofia</option>
+						<option value="Ingles" >Ingles</option>
 						
 					</select>
 				</div>
@@ -48,25 +48,28 @@
 
 			<div class="col-sm-12" align="center">
 				{% for p in documentos%}
-				<div class="thumbnail col-sm-4 padding-thumbnail">
-					<h3 class="title text-center"><span class="label label-primary">{{p.titulo}}</span></h3>
-					<img src="/media/images/documento.png" class="img-list-noticia">
-					<p class="text-justify">{{p.descripcion}}</p>				
-					<h4 class="text-center"><span class="label label-success">Fecha de publicacion {{p.fecha}}</span></h4>
-					<h4 class="text-center"><span class="label label-warning">Publicado por {{p.autor.docente.nombres}} {{p.autor.docente.apellidos}}</span></h4>
-					<a href="/edit_evento/{{p.id}}" class="btn btn-info">Descargar</a>
-				</div>
+				<a href="/media/{{p.documento}}" download class="aula" title="persiona clic izquiero para descargar">
+					<div class="col-sm-6">
+						<blockquote>
+							<p class="text-warning text-title"><strong><em>{{p.titulo}}</em></strong></p>
+						  	<p class="text text-left text-justify">{{p.descripcion}}</p>
+						  	<small>Publicado por <cite>{{p.autor.docente.nombres}} {{p.autor.docente.apellidos}} {{p.autor.funcionario.nombres}} {{p.autor.funcionario.apellidos}}</cite> </small>
+						  	<small>Fecha publicacion <cite>{{p.fecha}}</cite></small>
+						</blockquote>
+					</div>
+				</a>
 				{% endfor%}
-
 				{% for p in documentos_rector%}
-				<div class="thumbnail col-sm-4 padding-thumbnail">
-					<h3 class="title text-center"><span class="label label-primary">{{p.titulo}}</span></h3>
-					<img src="/media/images/documento.png" class="img-list-noticia">
-					<p class="text-justify">{{p.descripcion}}</p>				
-					<h4 class="text-center"><span class="label label-success">Fecha de publicacion {{p.fecha}}</span></h4>
-					<h4 class="text-center"><span class="label label-warning">Publicado por {{p.autor.docente.nombres}} {{p.autor.docente.apellidos}}</span></h4>
-					<a href="/edit_evento/{{p.id}}" class="btn btn-info">Descargar</a>
-				</div>
+				<a href="/media/{{p.documento}}" download class="aula" title="persiona clic izquiero para descargar">
+					<div class="col-sm-6">
+						<blockquote>
+							<p class="text-warning text-title"><strong><em>{{p.titulo}}</em></strong></p>
+						  	<p class="text text-left text-justify">{{p.descripcion}}</p>
+						  	<small>Publicado por<cite> {{p.autor.funcionario.nombres}} {{p.autor.funcionario.apellidos}}</cite> </small>
+						  	<small>Fecha publicacion <cite>{{p.fecha}}</cite></small>
+						</blockquote>
+					</div>
+				</a>
 				{% endfor%}
 			</div>
 		</div>

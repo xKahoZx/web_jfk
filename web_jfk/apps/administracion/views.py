@@ -369,15 +369,49 @@ def add_usuario_view(request):
 
 	return render_to_response('administracion/crear_usuario.html', ctx, context_instance=RequestContext(request))
 
-def edit_usuario_view(request, id_user):
-	try:
-		usuario = docente.objects.get(id = id_user)
-	except:
-		usuario = administrador.objects.get(id = id_user)
+def edit_usuario_view(request, tipo_usuario, id_user):
+
+	if tipo_usuario == "Docente":
+		try:
+			usuario = docente.objects.get(id = id_user)
+		except:
+			return HttpResponseRedirect('/administracion')
+	else:
+		if tipo_usuario == "Administrador":
+			try:
+				usuario = administrador.objects.get(id = id_user)
+			except:
+				return HttpResponseRedirect('/administracion')
+		else:
+			return HttpResponseRedirect('/administracion')
+	if request.method == "POST":
+		usuario.nombres = request.POST['nombres']
+		usuario.apellidos = request.POST['apellidos']
+		usuario.correo = request.POST['correo']
+		try:
+			if usuario.tipo == "Docente":
+				usuario.jornada = request.POST['jornada_select']
+				if(request.POST['jornada_select'] == "Tarde" and request.POST['sede_select'] == "John F. Kennedy"):
+					usuario.curso = request.POST['curso_select_b']
+				else:
+					usuario.curso = request.POST['curso_select_c']
+				usuario.sede = sede.objects.get(nombre = request.POST['sede_select'])
+				try:
+					usuario.foto = request.FILES['foto']
+				except KeyError:
+					pass
+		except:
+			usuario.tipo_usuario = request.POST['rol_select']
+			u = usuario.user
+			if request.POST['rol_select'] == "Administrador General":
+				u.is_superuser = True
+			else:
+				u.is_superuser = False
+			u.save()
+		usuario.save()
+		return HttpResponseRedirect('/administracion')
 	sedes = sede.objects.all()
 	ctx = {'user':usuario,'sedes':sedes}
-
-
 	return  render_to_response('administracion/edit_usuario.html', ctx, context_instance = RequestContext(request))
 
 def add_alumno_view(request):

@@ -75,6 +75,22 @@
 	color : #aa6708;
 }
 
+.aula:hover{
+	opacity: 0.9;
+}
+.aula:hover .text-title{
+	color: #2e6da4;
+}
+.text{
+	color: #333; 
+}
+blockquote{
+	border-left: 5px solid #8a6d3b;
+}
+a:hover blockquote{
+	border-left: 5px solid #2e6da4;
+}
+
 
 .alerta{
 	display: none;

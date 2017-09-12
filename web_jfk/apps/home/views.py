@@ -145,7 +145,7 @@ def lista_ofertas_view(request):
 #aula virtual
 def documentos_view(request):
 
-	if request.user.is_authenticated:
+	if request.user.is_authenticated():
 		if request.method == "POST":
 			var_grado = request.POST['grado_select']
 			var_materia = request.POST['materia_select']
@@ -158,25 +158,26 @@ def documentos_view(request):
 				documentos = documento.objects.all().exclude(autor__docente__tipo = "Docente")
 				ctx = {'documentos':documentos}
 				return render_to_response('home/academico.html', ctx, context_instance = RequestContext(request))
-			else:
+			else:				
 				try:
-					query_jornada = docente.objects.get(user = request.user.id).jornada
-					query_sede = docente.objects.get(user = request.user.id).sede.id
+					try:
+						query_jornada = docente.objects.get(user = request.user.id).jornada
+						query_sede = docente.objects.get(user = request.user.id).sede.id
+					except:
+						query_jornada = funcionario.objects.get(user = request.user.id).jornada
+						query_sede = sede.objects.get(coordinadores = request.user.funcionario.id).id
+					try:
+						documentos_sede = documento.objects.filter(autor__funcionario__sede__id = query_sede, autor__funcionario__jornada = query_jornada)
+						documentos_rector = documento.objects.filter(autor__funcionario__tipo_funcionario = "Rector")
+					except:
+						documentos_sede = documento.objects.filter(autor__docente__sede = query_sede)
+						documentos_rector = documento.objects.filter(autor__funcionario__tipo_funcionario = "Rector")
+					ctx = {'documentos':documentos_sede, 'documentos_rector':documentos_rector}
+					return render_to_response('home/academico.html', ctx, context_instance = RequestContext(request))
 				except:
-					query_jornada = funcionario.objects.get(user = request.user.id).jornada
-					query_sede = sede.objects.get(coordinadores = request.user.funcionario.id).id
-				try:
-					documentos_sede = documento.objects.filter(autor__funcionario__sede__id = query_sede, autor__funcionario__jornada = query_jornada)
-					documentos_rector = documento.objects.filter(autor__funcionario__tipo_funcionario = "Rector")
-				except:
-					documentos_sede = documento.objects.filter(autor__docente__sede = query_sede)
-					documentos_rector = documento.objects.filter(autor__funcionario__tipo_funcionario = "Rector")
-				ctx = {'documentos':documentos_sede, 'documentos_rector':documentos_rector}
-				return render_to_response('home/academico.html', ctx, context_instance = RequestContext(request))
-		
-	return render_to_response('home/academico.html', context_instance = RequestContext(request))
+					return render_to_response('home/academico.html', context_instance=RequestContext(request))
 
-
+	return HttpResponseRedirect('/login')
 #Contacto
 
 def contacto_view(request):

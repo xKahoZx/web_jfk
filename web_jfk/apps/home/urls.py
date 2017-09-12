@@ -43,7 +43,7 @@ urlpatterns = patterns('web_jfk.apps.home.views',
 	url(r'^lista_sedes/$', 'lista_sedes_view', name = "vista_lista_sedes"),
 
 	#institucion
-	url(r'^institucion/$', 'institucion_view', name = "vista_insitucion_view"),
+	url(r'^institucion/$', 'institucion_view', name = "vista_institucion_view"),
 
 	#slider
 	url(r'^lista_items_carrousel/$','lista_slider',name = 'vista_slider'),

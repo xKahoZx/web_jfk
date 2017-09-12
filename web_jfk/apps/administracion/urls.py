@@ -14,7 +14,7 @@ urlpatterns = patterns('web_jfk.apps.administracion.views',
 	
 	#Slider Inicio
 	url(r'^add_item/$','add_item_slider',name = 'vista_crear_item'),
-	url(r"^modificar/(?P<id_item>[^/]+)/(?P<opc>[^/]+)$", 'modificar_estado_view' , name = 'modificar_estado'),
+	url(r"^modificar/(?P<id_item>[^/]+)/(?P<opc>[^/]+)/$", 'modificar_estado_view' , name = 'modificar_estado'),
 	url(r'^edit_item/(?P<id_img>.*)/$','edit_item_view',name = 'vista_editar_img'),
 	url(r'^del_item/(?P<id_item>.*)/$','del_item_view',name = 'vista_eliminar_item'),
 	
@@ -34,7 +34,7 @@ urlpatterns = patterns('web_jfk.apps.administracion.views',
 
 	#usuarios
 	url(r'^add_usuario/$','add_usuario_view', name = 'vista_agregar_usuario'),
-	url(r'^edit_usuario/(?P<id_user>.*)/$','edit_usuario_view', name = 'vista_editar_usuario'),
+	url(r'^edit_usuario/(?P<tipo_usuario>[^/]+)/(?P<id_user>[^/]+)/$','edit_usuario_view', name = 'vista_editar_usuario'),
 	url(r'^add_estudiante/$','add_alumno_view', name = 'vista_agregar_usuario'),
 
 	#institucion
