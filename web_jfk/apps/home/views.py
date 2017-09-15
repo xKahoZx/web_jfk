@@ -40,17 +40,43 @@ def index_view(request):
 	return render_to_response('home/index.html',ctx, context_instance = RequestContext(request))
 
 #slider
-def lista_slider(request):
-	items = slider_show.objects.all().order_by('-id')
-	ctx = {'items':items}
-	return render_to_response('home/lista_slider.html', ctx, context_instance=RequestContext(request))
+def lista_slider_view(request):
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+			items = slider_show.objects.all().order_by('-id')
+			ctx = {'items':items}
+			return render_to_response('home/lista_slider.html', ctx, context_instance=RequestContext(request))
+		else:
+			return HttpResponseRedirect('/')
+	except:
+		return  HttpResponseRedirect('/')
 
-def media_view(request):
+#albums
+def media_view(request,pagina):
 	albums = album.objects.filter(estado = True)	
 	album_aux = album.objects.filter(estado = True)	
 	for p in album_aux:
 		p.descripcion = p.descripcion[0:300] + "..."
-	ctx = {'album':albums, 'album_aux':album_aux}
+
+	paginator = Paginator(albums, 4)
+	paginator2 = Paginator(album_aux, 4)
+	try:
+		page = int(pagina)
+	except:
+		page = 1
+	try:
+		albums = paginator.page(page)
+		album_aux = paginator2.page(page)
+	except (EmptyPage, InvalidPage):
+		albums = paginator.page(paginator.num_pages)
+		album_aux = paginator2.page(paginator2.num_pages)
+	
+	paginas = []
+	num_page = 0
+	for p in range(paginator.num_pages):
+		num_page = num_page + 1
+		paginas.append(num_page)
+	ctx = {'album':albums, 'album_aux':album_aux, 'paginas':paginas}
 	return render_to_response('home/media.html', ctx, context_instance = RequestContext(request))
 
 

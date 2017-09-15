@@ -8,7 +8,7 @@
 {% block content %}
 	<div class="container">
 		<h1 align="center" class="title"><span class="label label-primary">Galeria de imágenes</span></h1>
-		{% if user.is_authenticated%}
+		{% if user.is_superuser or user.administrador.tipo_usuario = "Administrador Multimedia"%}
 		<p>
 			<a href="/crear_album" class="btn btn-primary">Crear nuevo album</a>
 		</p>
@@ -26,10 +26,11 @@
 				{% endfor %}
 				<article>{{p.descripcion}}</article>
 				<p class="text-right">
-					{%if user.is_authenticated %}
+					{% if user.is_superuser or user.administrador.tipo_usuario = "Administrador Multimedia"%}
+					<a href="/del_album/{{p.id}}" class="btn btn-danger">Eliminar</a>
 					<a href="/edit-album/{{p.id}}" class="btn btn-warning">Editar</a>
 					{% endif %}
-					<a href="#"  class="btn btn-danger" data-toggle="modal" data-target="#modal-{{p.id}}" class="modal-thumbnail" id="{{p.id}}">Ver pantalla completa</a>
+					<a href="#"  class="btn btn-primary" data-toggle="modal" data-target="#modal-{{p.id}}" class="modal-thumbnail" id="{{p.id}}">Ver pantalla completa</a>
 					
 				</p>				
 			</div>
@@ -39,20 +40,28 @@
 		<div align="center">
 			<nav >
 				<ul class="pagination pagination-sm">
-					<li ><a href="#">&laquo;</a></li>
-					<li class="active"><a href="">1</a></li>
-					<li><a href="">2</a></li>
-					<li><a href="">3</a></li>
-					<li><a href="">4</a></li>
-					<li><a href="">5</a></li>
-					<li><a href="#">&raquo;</a></li>
+				    {% if album.has_previous %}
+						<li ><a href="/albums/page/{{album.previous_page_number}}">&laquo;</a></li>
+				    	
+				    {% else %}
+				    	<li class="disabled"><a>&laquo;</a></li>
+					{% endif%}
+					{% for p in paginas%}
+					<li><a href="/albums/page/{{p}}">{{p}}</a></li>
+					{% endfor %}
+					{% if album.has_next %}
+					   	<li ><a href="/albums/page/{{album.next_page_number}}">&raquo;</a></li>
+				    	
+				    {% else %}			    	
+						<li class="disabled"><a>&raquo;</a></li>
+						
+				    {% endif %}	
 				</ul>
 			</nav>
 		</div>
 					
 	
 	</div>
-	
 	<!-- bootstrap modal -->
 	{% for p in album%}
 		<div class="modal fade" tabindex="-1" role="dialog" id="modal-{{p.id}}">
@@ -89,7 +98,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-					   <article class="text-left text-justify">
+					   <article class="text-left text-justify text-warning">
 					   		{{p.descripcion}}
 					   </article>
 					</div>

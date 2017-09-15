@@ -45,7 +45,7 @@
 					<span class="sr-only">Next</span>
 			   </a>
 			</div>
-			{% if user.is_authenticated%}
+			{% if user.is_superuser or user.administrador.tipo_usuario = "Administrador Multimedia"%}
 			<p ><a href="/lista_items_carrousel" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Panel de control del carousel</a></p>
 			{% endif %}
 		</div>

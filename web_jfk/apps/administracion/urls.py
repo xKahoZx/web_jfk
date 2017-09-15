@@ -11,9 +11,11 @@ urlpatterns = patterns('web_jfk.apps.administracion.views',
 	url(r'^crear_album/$','add_album_view',name = 'vista_crear_album'),
 	url(r'^edit-album/(?P<id_album>.*)/$', 'edit_album_view', name = 'vista_editar_album'),
 	url(r"^edit-img/(?P<id_img>.*)/$", 'edit_img_view' , name = 'modificar_imagen_album'),
+	url(r"^del_imagen/(?P<id_img>.*)/$", 'del_img_album_view' , name = 'vista_eliminar_imagen'),
+	url(r"^del_album/(?P<id_album>.*)/$", 'del_album_view' , name = 'vista_eliminar_album'),
 	
 	#Slider Inicio
-	url(r'^add_item/$','add_item_slider',name = 'vista_crear_item'),
+	url(r'^add_item/$','add_item_view',name = 'vista_crear_item'),
 	url(r"^modificar/(?P<id_item>[^/]+)/(?P<opc>[^/]+)/$", 'modificar_estado_view' , name = 'modificar_estado'),
 	url(r'^edit_item/(?P<id_img>.*)/$','edit_item_view',name = 'vista_editar_img'),
 	url(r'^del_item/(?P<id_item>.*)/$','del_item_view',name = 'vista_eliminar_item'),

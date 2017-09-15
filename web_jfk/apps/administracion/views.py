@@ -3,7 +3,7 @@ from django.template import RequestContext
 from web_jfk.apps.administracion.models import *
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
-from datetime import date
+from datetime import date, datetime
 import os
 import openpyxl
 from web_jfk.settings import MEDIA_ROOT
@@ -55,106 +55,166 @@ def del_noticia_view(request, id_noticia):
 		return HttpResponseRedirect ('/')
 
 #Album - Media
-
+#Crear nuevo album
 def add_album_view(request):
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+			if request.method == "POST":
+				new_album = album()
+				new_album.titulo = request.POST['titulo']
+				new_album.descripcion = request.POST['descripcion']
+				new_album.save()
+				for p in request.FILES.getlist('imagenes'):
+					new_img = imagen_album()
+					new_img.imagen = p
+					new_img.album = new_album
+					new_img.save() 
+				return HttpResponseRedirect('/albums/page/1')
 
-	if request.method == "POST":
-		new_album = album()
-		new_album.titulo = request.POST['titulo']
-		new_album.descripcion = request.POST['descripcion']
-		new_album.save()
-		for p in request.FILES.getlist('imagenes'):
-			new_img = imagen_album()
-			new_img.imagen = p
-			new_img.album = new_album
-			new_img.save() 
-		return HttpResponseRedirect('/media')
-
-	return render_to_response('administracion/admin_album.html',  context_instance= RequestContext(request))
-
-
+			return render_to_response('administracion/admin_album.html',  context_instance= RequestContext(request))
+		else:
+			return HttpResponseRedirect('/')
+	except:
+		return  HttpResponseRedirect('/')
+#editar album segun id
 def edit_album_view(request, id_album):
-	album_id = album.objects.get(id = id_album)
-	if request.method == "POST":
-		album_id.titulo = request.POST['titulo']
-		album_id.descripcion = request.POST['descripcion']
-		for p in request.FILES.getlist('imagenes'):
-			new_img = imagen_album()
-			new_img.imagen = p
-			new_img.album = album_id
-			new_img.save() 
-		album_id.save()
-		return HttpResponseRedirect('/media/')
-	ctx = {'album':album_id}
-	return render_to_response('administracion/admin_album.html',ctx, context_instance=RequestContext(request))
-
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+			album_id = album.objects.get(id = id_album)
+			if request.method == "POST":
+				album_id.titulo = request.POST['titulo']
+				album_id.descripcion = request.POST['descripcion']
+				for p in request.FILES.getlist('imagenes'):
+					new_img = imagen_album()
+					new_img.imagen = p
+					new_img.album = album_id
+					new_img.save() 
+				album_id.save()
+				return HttpResponseRedirect('/albums/page/1/')
+			ctx = {'album':album_id}
+			return render_to_response('administracion/admin_album.html',ctx, context_instance=RequestContext(request))
+		else:
+			return HttpResponseRedirect('/')
+	except:
+		return  HttpResponseRedirect('/')
+#eliminar album segun id y sus imagenes asociadas
+def del_album_view(request, id_album):
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+			del_album = album.objects.get(id = id_album)
+			imagenes = imagen_album.objects.filter(album = del_album)
+			for del_img in imagenes:
+				if os.path.exists(del_img.imagen._get_path()) and os.path.isfile(del_img.imagen._get_path()):
+					os.remove(del_img.imagen._get_path())
+				del_img.delete()
+			del_album.delete()
+			return HttpResponseRedirect('/albums/page/1')
+		else:
+			return HttpResponseRedirect('/')
+	except:
+		return  HttpResponseRedirect('/')
+#editar imagen agregada a un album segun id
 def edit_img_view(request, id_img):
-	item = imagen_album.objects.get(id = id_img)
-	
-	if request.method=="POST":		
-		item.imagen = request.FILES['imagen']
-		item.save()		
-		id = album.objects.get(imagenes = id_img).id
-		print  id
-		return HttpResponseRedirect('/edit-album/%s' %id)
-	ctx = {'item':item}
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+			item = imagen_album.objects.get(id = id_img)
+			if request.method=="POST":		
+				item.imagen = request.FILES['imagen']
+				item.save()		
+				id = album.objects.get(imagenes = id_img).id
+				return HttpResponseRedirect('/edit-album/%s' %id)
+			ctx = {'item':item}
 
-	return render_to_response('administracion/edit_item.html',ctx, context_instance=RequestContext(request))
+			return render_to_response('administracion/edit_item.html',ctx, context_instance=RequestContext(request))
+		else:
+			return HttpResponseRedirect('/')
+	except:
+		return  HttpResponseRedirect('/')
+#eliminar imagen de un album por id
+def del_img_album_view(request, id_img):
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+			try:
+				del_img = imagen_album.objects.get(id = id_img)
+				if os.path.exists(del_img.imagen._get_path()) and os.path.isfile(del_img.imagen._get_path()):
+					os.remove(del_img.imagen._get_path())
+				del_img.delete()
+				return HttpResponseRedirect('/edit-album/%s' %id_img)
+			except:
+				print "pase try"
+				return HttpResponseRedirect('/edit-album/%s' %id_img)
+		else:
+			return HttpResponseRedirect ('/')
+	except:
+		return  HttpResponseRedirect('/')
 
 # Slider
-def add_item_slider(request):
+#crear nueva imagen 
+def add_item_view(request):
 	if request.method == "POST":
 		item = slider_show()
 		item.imagen = request.FILES['imagen']
 		item.save()
 		return HttpResponseRedirect('/lista_items_carrousel')
 	return HttpResponseRedirect('/lista_items_carrousel')
-
+#editar imagen
 def edit_item_view(request, id_img):
-	item = slider_show.objects.get(id = id_img)
-	if request.method=="POST":
-		item = slider_show.objects.get(id = id_img)
-		item.imagen = request.FILES['imagen']
-		item.save()
-		return HttpResponseRedirect('/list-slider')
-	ctx = {'item':item}
-	return render_to_response('administracion/edit_item.html',ctx, context_instance=RequestContext(request))
-
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+			item = slider_show.objects.get(id = id_img)
+			if request.method=="POST":
+				item = slider_show.objects.get(id = id_img)
+				item.imagen = request.FILES['imagen']
+				item.save()
+				return HttpResponseRedirect('/lista_items_carrousel')
+			ctx = {'item':item}
+			return render_to_response('administracion/edit_item.html',ctx, context_instance=RequestContext(request))
+		else:
+			return HttpResponseRedirect('/')
+	except:
+		return  HttpResponseRedirect('/')
+#modificar estado de la imagen de visible a no visible y vice versa
 def modificar_estado_view(request, id_item, opc):
-
-	item = slider_show.objects.get(id = id_item)
-	if opc == 'activar':
-		item.estado = True
-	else:
-		item.estado = False
-	item.save()
-	return HttpResponseRedirect('/list-slider')
-
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+			item = slider_show.objects.get(id = id_item)
+			if opc == 'activar':
+				item.estado = True
+			else:
+				item.estado = False
+			item.save()
+			return HttpResponseRedirect('/lista_items_carrousel')
+		else:
+			return HttpResponseRedirect('/')
+	except:
+		return  HttpResponseRedirect('/')
+#eliminar imagen
 def del_item_view(request, id_item):
-
-	if request.user.is_authenticated:		
-		try:
-			del_item = slider_show.objects.get(id = id_item)
-			if os.path.exists(del_item.imagen._get_path()) and os.path.isfile(del_item.imagen._get_path()):
-				os.remove(del_item.imagen._get_path())
-			del_item.delete()
-			return HttpResponseRedirect('/list-slider')
-		except:
-			return HttpResponseRedirect('/list-slider')
-	else:
-		return HttpResponseRedirect ('/')
-
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+			try:
+				del_item = slider_show.objects.get(id = id_item)
+				if os.path.exists(del_item.imagen._get_path()) and os.path.isfile(del_item.imagen._get_path()):
+					os.remove(del_item.imagen._get_path())
+				del_item.delete()
+				return HttpResponseRedirect('/lista_items_carrousel')
+			except:
+				return HttpResponseRedirect('/lista_items_carrousel')
+		else:
+			return HttpResponseRedirect ('/')
+	except:
+		return  HttpResponseRedirect('/')
 
 #CRUD Eventos
 
 def add_evento_view(request):
-
 	if request.method == "POST":
 		new_evento = calendario_eventos()
 		new_evento.titulo = request.POST['titulo']
 		new_evento.descripcion = request.POST['descripcion']
 		new_evento.imagen = request.FILES['imagen']
 		new_evento.fecha = request.POST['fecha']
+		new_evento.anio = datetime.now().year
 		new_evento.save()
 		return HttpResponseRedirect('/eventos')
 
@@ -360,6 +420,7 @@ def add_usuario_view(request):
 			new_usuario.tipo_usuario = request.POST['rol_select']
 			if request.POST['rol_select'] == "Administrador General":
 				u.is_superuser = True
+				u.is_staff = True
 				u.save()
 			new_usuario.user = u
 			new_usuario.save()
@@ -405,7 +466,9 @@ def edit_usuario_view(request, tipo_usuario, id_user):
 			u = usuario.user
 			if request.POST['rol_select'] == "Administrador General":
 				u.is_superuser = True
+				u.is_staff = True
 			else:
+				u.is_staff = False
 				u.is_superuser = False
 			u.save()
 		usuario.save()

@@ -51,7 +51,7 @@
 			{% for p in album.imagenes.all%}
 				<div class="thumbnail col-md-3 padding-thumbnail" align="center">
 					<img src="/media/{{p.imagen}}" class="img-4">
-					<a href="/edit-img/{{p.id}}" class="btn btn-danger">Eliminar</a>					
+					<a href="/del_imagen/{{p.id}}" class="btn btn-danger">Eliminar</a>					
 					<a href="/edit-img/{{p.id}}" class="btn btn-primary">Editar</a>
 				</div>
 			{% endfor %}

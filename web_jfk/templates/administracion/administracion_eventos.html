@@ -6,13 +6,17 @@
 	{% else %}
 	Agregar nuevo evento
 	{% endif %}
-
 {% endblock %}
 {% block extras%}
 		<link href="/media/bootstrap/calendario/css/bootstrap-datepicker.min.css" rel="stylesheet">
+		<link href="/media/bootstrap/fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+
+{% endblock %}
+{% block js%}
+		<script src="/media/bootstrap/fileinput/js/fileinput.js"></script>
+		<script  src="/media/bootstrap/calendario/js/bootstrap-datepicker.min.js"></script>
 {% endblock %}
 {% block content %}
-	<script  src="/media/bootstrap/calendario/js/bootstrap-datepicker.min.js"></script>
 	<div class="container">
 		<div class="row ">
 			{% if evento%}
@@ -42,14 +46,13 @@
   						<input type="text" class="form-control" readonly name="fecha"><span class="input-group-addon"><i class="glyphicon glyphicon-th" value="{{p.fecha}}"></i></span>
 					</div>
 				</div>
-				
-				<div class="form-group">
-				    <label for="imagen" class="col-sm-2 control-label">Imagen</label>
-				   	<div class="col-sm-10">
-					    <input type="file" id="imagen" class="form-control" name="imagen">
-					    <p class="help-block">Selecciona una imagen de tu equipo preferiblemente que sea formato jpg.</p>
+				<div class="form-group" >
+					<label for="imagen" class="col-sm-2 control-label">Imagen</label>
+					   	<div class="col-sm-10">
+					   		<input type="file" id="imagen" name="imagen" class="file-loading">
+						</div>
 					</div>
-				</div>
+				
 				{% if evento %}				
 				<div align="center">
 					<h4><span class="label label-primary">Imagen actual</span></h4>
@@ -73,6 +76,9 @@
 		    language: "es",
 		    orientation: "auto left",
 		    todayHighlight: true
+		});
+		$('#imagen').fileinput({
+			showUpload: false
 		});
 	</script>
 {% endblock %}
