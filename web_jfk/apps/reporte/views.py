@@ -96,7 +96,6 @@ def generar_pdf(request, id):
 	
 	reporte = oferta_educativa.objects.get(id = id)
 	inscripciones = inscripcion.objects.filter(oferta__id = id)
-	
 	high = 650
 	number = 0
 	data = my_table()

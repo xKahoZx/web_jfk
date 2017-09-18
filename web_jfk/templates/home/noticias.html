@@ -6,18 +6,13 @@
 
 {%block content %}
 
-
 	<div class="container">
 		<div class="row">
 			<h1 align="center" class="title"><span class="label label-primary"> Noticias Institucion Educativa John F. Kennedy</span></h1>
 
-			{% if user.is_authenticated%}
-			{% if user.usuario.tipo_usuario == "Administrador Noticias" or user.usuario.tipo_usuario == "Administrador General" or user.is_superuser%}
-				<a href="/add-noticia" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Agregar nueva noticia</a>
+			{% if user.is_superuser or user.administrador.tipo_usuario = "Administrador Noticias"%}
+				<a href="/add-noticia" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Crear nueva noticia</a>
 			{% endif%}
-			
-			
-			{% endif %}
 			{% for p in noticias %}
 				<div>	
 					<a href="#" class="hover-noticia" data-toggle="modal" data-target="#modal-{{p.id}}">
@@ -28,7 +23,7 @@
 							</div>
 							<div class="col-sm-12 col-md-8">
 								<h3 ><span class="label label-primary">{{p.titulo}}</span></h3>
-								<article>{{p.cuerpo}}</article>	
+								<article class="text-justify text-warning">{{p.cuerpo}}</article>	
 								<h5 align="right"><span class="label label-primary">{{p.fecha}}</span></h5>
 							</div>	
 						</div>	
@@ -73,7 +68,6 @@
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 						<h3 align="center"><span class="label label-primary">{{p.titulo}} </span></h3>
-						
 					</div>
 					<div class="modal-body">
 						<div align="center">
@@ -84,12 +78,10 @@
 					</div>
 					<div class="modal-footer">
 						<ul class="list-inline">
-							<li><p>{{p.autor}} {{p.fecha}}</p></li>
-							{%if user.is_authenticated%}
-							{% if user.usuario.tipo_usuario == "Administrador Noticias" or user.usuario.tipo_usuario == "Administrador General" or user.is_superuser%}
+							<li><p class="text-muted">{{p.autor}} {{p.fecha}}</p></li>
+							{% if user.is_superuser or user.administrador.tipo_usuario = "Administrador Noticias"%}
 							<li><a href="/edit-noticia/{{p.id}}" class="btn btn-info">Editar <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></li>
 							<li><a href="/del-noticia/{{p.id}}" class="btn btn-danger">Eliminar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></a></li>
-							{% endif %}
 							{% endif %}
 							<li><button class="btn btn-primary" class="close" data-dismiss="modal" aria-hidden="true">Cerrar</button></li>
 						</ul>

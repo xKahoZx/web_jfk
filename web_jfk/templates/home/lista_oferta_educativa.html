@@ -9,7 +9,7 @@
 	<div class="container">
 		<div class="row">
 			<h1 class="title" align="center"><span class="label label-primary">Lista de ofertas educativas</span></h1>
-			{% if user.is_authenticated%}
+			{% if user.is_superuser or user.funcionario.tipo_funcionario = 'Coordinador'%}
 				<p ><a href="/lista_ofertas" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Panel de control para ofertas educativas</a></p>	
 			{% endif %}
 			<form action="." method="POST" class="form-horizontal">	

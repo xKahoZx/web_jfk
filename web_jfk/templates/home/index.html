@@ -92,9 +92,9 @@
 							<h3 align="center"><span class="label label-primary">Proximos eventos</span></h3>
 							{% for p in eventos%}
 							<div class="thumbnail border-calendario"> 
-								<img src="/media/{{p.imagen}}" style="height: 100px !important;">
-								<h4 align="center"><span class="label label-primary">{{p.titulo}}	</span></h4>
-								<p class="text-justify text-muted">{{p.descripcion}}</p>
+								<img src="/media/{{p.imagen}}" class="img-6" >
+								<p class="text-warning">{{p.titulo}}</p>
+								<p class="text-justify ">{{p.descripcion}}</p>
 								<h5 align="right"><span class="label label-success">{{p.fecha}}</span></h5>
 							</div>
 							{% endfor%}

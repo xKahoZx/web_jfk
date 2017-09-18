@@ -9,16 +9,16 @@
 	<div class="container">
 		<div class="row">
 			<h1 class="title" align="center"><span class="label label-primary">Panel de control ofertas educativas</span></h1>
-			{% if user.is_authenticated and user.is_superuser%}
+			{% if user.is_superuser%}
 			<p align="center"><a href="/add_oferta" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Crear nueva oferta educativa</a></p>
 			<form action="." method="POST" class="form-horizontal" >
 				{% csrf_token %}
 				<div class="col-sm-12 col-md-5 col-md-offset-2">					
 					<select class='form-control ' id='filtro_sede' name='sede_select' title="listar oferta por sede" >
+						<option value="Todas" >Todas las sedes</option>
 						<option value="John F. Kennedy">Sede John F. Kennedy</option>
 						 <option value="Jose Maria Obando">Sede Jose Maria Obando</option>
 						<option value="Nueva Esperanza" >Sede Nueva Esperanza</option>
-						<option value="Todas" >Todas las sedes</option>
 					</select>	
 				</div>
 				<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search "  aria-hidden="true"></span> Filtrar </button>			

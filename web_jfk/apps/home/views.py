@@ -87,8 +87,8 @@ def noticias_view(request, pagina):
 	for p in noticias:
 		p.cuerpo = p.cuerpo[0:792] + "..."
 
-	paginator = Paginator(noticias, 3)
-	paginator2 = Paginator(noticias_aux, 3)
+	paginator = Paginator(noticias, 4)
+	paginator2 = Paginator(noticias_aux, 4)
 	try:
 		page = int(pagina)
 	except:

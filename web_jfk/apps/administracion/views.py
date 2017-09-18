@@ -9,50 +9,63 @@ import openpyxl
 from web_jfk.settings import MEDIA_ROOT
 
 #CRUD noticias
+#Crear nueva noticia
 def add_noticia_view(request):
-
-	if request.method == "POST":
-		new_noticia = noticia()
-		new_noticia.titulo = request.POST['titulo']
-		new_noticia.subtitulo = request.POST['subtitulo']
-		new_noticia.cuerpo = request.POST['cuerpo']
-		new_noticia.autor = request.POST['autor']
-		new_noticia.imagen = request.FILES['imagen']
-		new_noticia.fecha =  date.today()
-		new_noticia.save()
-		return HttpResponseRedirect('/noticias/page/1/')
-		
-	return render_to_response('administracion/admin_noticia.html', context_instance = RequestContext(request))
-
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
+			if request.method == "POST":
+				new_noticia = noticia()
+				new_noticia.titulo = request.POST['titulo']
+				new_noticia.subtitulo = request.POST['subtitulo']
+				new_noticia.cuerpo = request.POST['cuerpo']
+				new_noticia.autor = request.POST['autor']
+				new_noticia.imagen = request.FILES['imagen']
+				new_noticia.fecha =  date.today()
+				new_noticia.save()
+				return HttpResponseRedirect('/noticias/page/1/')
+			return render_to_response('administracion/admin_noticia.html', context_instance = RequestContext(request))
+		else:
+			return HttpResponseRedirect('/noticias/page/1/')
+	except:
+		return  HttpResponseRedirect('/noticias/page/1/')
+#editar noticia por id
 def edit_noticia_view(request, id_noticia):
-	noticia_id = noticia.objects.get(id = id_noticia)
-	if request.method == "POST":
-		noticia_id.titulo = request.POST['titulo']
-		noticia_id.subtitulo = request.POST['subtitulo']
-		noticia_id.cuerpo = request.POST['cuerpo']
-		noticia_id.autor = request.POST['autor']
-		try:
-			noticia_id.imagen = request.FILES['imagen']
-		except KeyError:
-			pass
-		noticia_id.save()
-		return HttpResponseRedirect('/noticias/page/1')
-	ctx = {'noticia': noticia_id}
-	return render_to_response('administracion/admin_noticia.html', ctx, context_instance = RequestContext(request))
-
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
+			noticia_id = noticia.objects.get(id = id_noticia)
+			if request.method == "POST":
+				noticia_id.titulo = request.POST['titulo']
+				noticia_id.subtitulo = request.POST['subtitulo']
+				noticia_id.cuerpo = request.POST['cuerpo']
+				noticia_id.autor = request.POST['autor']
+				try:
+					imagen = request.FILES['imagen']
+					if os.path.exists(noticia_id.imagen._get_path()) and os.path.isfile(noticia_id.imagen._get_path()):
+						os.remove(noticia_id.imagen._get_path())
+					noticia_id.imagen = imagen
+				except KeyError:
+					pass
+				noticia_id.save()
+				return HttpResponseRedirect('/noticias/page/1')
+			ctx = {'noticia': noticia_id}
+			return render_to_response('administracion/admin_noticia.html', ctx, context_instance = RequestContext(request))
+		else:
+			return HttpResponseRedirect('/noticias/page/1/')
+	except:
+		return  HttpResponseRedirect('/noticias/page/1/')
+#eliminar noticia por id
 def del_noticia_view(request, id_noticia):
-
-	if request.user.is_authenticated:		
-		try:
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
 			del_noticia = noticia.objects.get(id = id_noticia)
 			if os.path.exists(del_noticia.imagen._get_path()) and os.path.isfile(del_noticia.imagen._get_path()):
 				os.remove(del_noticia.imagen._get_path())
 			del_noticia.delete()
-			return HttpResponseRedirect('/lista_noticias')
-		except:
-			return HttpResponseRedirect('/lista_noticias')
-	else:
-		return HttpResponseRedirect ('/')
+			return HttpResponseRedirect('/noticias/page/1')
+		else:
+			return HttpResponseRedirect ('/noticias/page/1/')
+	except:
+		return  HttpResponseRedirect('/noticias/page/1/')
 
 #Album - Media
 #Crear nuevo album
@@ -73,9 +86,9 @@ def add_album_view(request):
 
 			return render_to_response('administracion/admin_album.html',  context_instance= RequestContext(request))
 		else:
-			return HttpResponseRedirect('/')
+			return HttpResponseRedirect('/albums/page/1')
 	except:
-		return  HttpResponseRedirect('/')
+		return  HttpResponseRedirect('/albums/page/1')
 #editar album segun id
 def edit_album_view(request, id_album):
 	try:
@@ -94,9 +107,9 @@ def edit_album_view(request, id_album):
 			ctx = {'album':album_id}
 			return render_to_response('administracion/admin_album.html',ctx, context_instance=RequestContext(request))
 		else:
-			return HttpResponseRedirect('/')
+			return HttpResponseRedirect('/albums/page/1')
 	except:
-		return  HttpResponseRedirect('/')
+		return  HttpResponseRedirect('/albums/page/1')
 #eliminar album segun id y sus imagenes asociadas
 def del_album_view(request, id_album):
 	try:
@@ -110,9 +123,9 @@ def del_album_view(request, id_album):
 			del_album.delete()
 			return HttpResponseRedirect('/albums/page/1')
 		else:
-			return HttpResponseRedirect('/')
+			return HttpResponseRedirect('/albums/page/1')
 	except:
-		return  HttpResponseRedirect('/')
+		return  HttpResponseRedirect('/albums/page/1')
 #editar imagen agregada a un album segun id
 def edit_img_view(request, id_img):
 	try:
@@ -127,9 +140,9 @@ def edit_img_view(request, id_img):
 
 			return render_to_response('administracion/edit_item.html',ctx, context_instance=RequestContext(request))
 		else:
-			return HttpResponseRedirect('/')
+			return HttpResponseRedirect('/albums/page/1')
 	except:
-		return  HttpResponseRedirect('/')
+		return  HttpResponseRedirect('/albums/page/1')
 #eliminar imagen de un album por id
 def del_img_album_view(request, id_img):
 	try:
@@ -144,9 +157,9 @@ def del_img_album_view(request, id_img):
 				print "pase try"
 				return HttpResponseRedirect('/edit-album/%s' %id_img)
 		else:
-			return HttpResponseRedirect ('/')
+			return HttpResponseRedirect ('/albums/page/1')
 	except:
-		return  HttpResponseRedirect('/')
+		return  HttpResponseRedirect('/albums/page/1')
 
 # Slider
 #crear nueva imagen 
@@ -206,7 +219,7 @@ def del_item_view(request, id_item):
 		return  HttpResponseRedirect('/')
 
 #CRUD Eventos
-
+#crear nuevo evento
 def add_evento_view(request):
 	if request.method == "POST":
 		new_evento = calendario_eventos()
@@ -269,7 +282,6 @@ def verificar_fecha_evento():
 			
 #CRUD OFERTA EDUCATIVA
 def add_oferta_view(request):
-
 	if request.method == "POST":
 		oferta = oferta_educativa()
 		oferta.fecha_apertura = request.POST['fecha_inicio']
