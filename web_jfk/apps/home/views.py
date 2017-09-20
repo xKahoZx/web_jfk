@@ -3,11 +3,11 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from web_jfk.apps.administracion.models import *
 from web_jfk.apps.administracion.views import verificar_fecha, verificar_fecha_evento
-from django.core import serializers
 from django.contrib.auth.models import User
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import login, logout , authenticate
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
+from datetime import datetime
 
 
 def index_view(request):
@@ -113,8 +113,13 @@ def noticias_view(request, pagina):
 #Calendario
 def eventos_view(request):
 	verificar_fecha_evento()
-	calendario = calendario_eventos.objects.all().order_by('fecha')
-	calendario_aux = calendario_eventos.objects.all().order_by('fecha')
+	year = datetime.now().year
+	calendario = calendario_eventos.objects.filter(anio = year).order_by('fecha')
+	calendario_aux = calendario_eventos.objects.filter(anio = year).order_by('fecha')
+	if request.method == "POST":
+		busqueda = request.POST['busqueda']
+		calendario = calendario_eventos.objects.filter(anio = busqueda).order_by('fecha')
+		calendario_aux = calendario_eventos.objects.filter(anio = busqueda).order_by('fecha')
 	for p in calendario_aux:
 		p.descripcion = p.descripcion[0:200]
 	ctx = {'calendario':calendario, 'calendario_aux': calendario_aux}	
@@ -143,6 +148,8 @@ def oferta_view(request):
 def lista_ofertas_view(request):
 
 	if request.user.is_authenticated():
+		print "entre"
+		verificar_fecha()
 		if request.method == "POST":
 			consulta = request.POST['sede_select']
 			if consulta == "Todas":
@@ -204,6 +211,27 @@ def documentos_view(request):
 					return render_to_response('home/academico.html', context_instance=RequestContext(request))
 
 	return HttpResponseRedirect('/login')
+
+def mis_documentos_view(request):
+
+	if request.user.is_authenticated():
+		try:
+			if request.user.funcionario:
+				mis_documentos = documento.objects.filter(autor = request.user)
+				ctx = {'documentos':mis_documentos}
+				return render_to_response('home/lista_documentos.html', ctx, context_instance = RequestContext(request))
+		except:
+			try:
+				if request.user.docente.jornada ==  "Tarde" and request.user.docente.sede.nombre == "John F. Kennedy":
+					mis_documentos = documento.objects.filter(autor = request.user)
+					ctx = {'documentos':mis_documentos}
+					return render_to_response('home/lista_documentos.html', ctx, context_instance = RequestContext(request))
+			except:
+				return HttpResponseRedirect('/aula_virtual')
+
+		return HttpResponseRedirect('/aula_virtual')
+	else:
+		return HttpResponseRedirect('/login')
 #Contacto
 
 def contacto_view(request):

@@ -33,6 +33,8 @@ urlpatterns = patterns('web_jfk.apps.administracion.views',
 	
 	#documentos academicos
 	url(r'^add_documento/$','add_documento_view', name = 'vista_agregar_documento'),
+	url(r'^edit_documento/(?P<id_documento>.*)/$','edit_documento_view', name = 'vista_editar_documento'),
+	url(r'^del_documento/(?P<id_documento>.*)/$','del_documento_view',name = 'vista_eliminar_documento'),
 
 	#usuarios
 	url(r'^add_usuario/$','add_usuario_view', name = 'vista_agregar_usuario'),

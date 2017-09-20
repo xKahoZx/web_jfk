@@ -4,13 +4,14 @@
 	Agregar nueva oferta educativa
 {% endblock %}
 {% block extras%}
-		<link href="/media/bootstrap/calendario/css/bootstrap-datepicker.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/media/bootstrap/calendario/css/bootstrap-datepicker.css">
 {% endblock %}
 {% block js%}
-		<script  src="/media/bootstrap/calendario/js/bootstrap-datepicker.min.js"></script>	
+		<script type="text/javascript" src="/media/bootstrap/calendario/js/bootstrap-datepicker.min.js"></script>	
+		<script type="text/javascript" src="/media/bootstrap/calendario/locales/bootstrap-datepicker.es.min.js"></script>	
 {% endblock %}
 {% block content %}
-	<div class="container">
+	<div class="container arreglo">
 		<div class="row col-xs-12">
 			
 			<h1 class="title" align="center"><span class="label label-primary">Agregar nueva oferta educativa</span></h1>
@@ -91,13 +92,14 @@
 
 		</div>
 	</div>
+	
 	<script type="text/javascript">
 		$('.date').datepicker({
+    		todayBtn: "linked",
+    		language: "es",
 		    format: "yyyy-mm-dd",
-		    todayBtn: true,
-		    language: "es",
-		    orientation: "auto left",
 		    todayHighlight: true
+
 		});
 	</script>
 {% endblock %}

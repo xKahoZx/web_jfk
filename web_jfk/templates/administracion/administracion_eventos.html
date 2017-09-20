@@ -1,6 +1,4 @@
 {% extends 'base.html' %}
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque quidem, quasi rerum! Saepe eaque error dolores, reiciendis eligendi nesciunt voluptatibus praesentium, culpa velit sed omnis quos dicta, in ex dolorum. Dolorum earum, eligendi, sapiente sed, labore incidunt, voluptate ex maiores optio a quidem eius veritatis est sunt repellendus. Facilis, hic!
-
 {% block title %}
 	{% if evento%}
 	Editar evento
@@ -16,6 +14,8 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque quidem, qua
 {% block js%}
 		<script src="/media/bootstrap/fileinput/js/fileinput.js"></script>
 		<script  src="/media/bootstrap/calendario/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="/media/bootstrap/calendario/locales/bootstrap-datepicker.es.min.js"></script>	
+
 {% endblock %}
 {% block content %}
 	<div class="container">
@@ -44,7 +44,7 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque quidem, qua
 				<div class="form-group">
 					<label for="evento" class="col-sm-2 control-label">Fecha del evento</label>
 					<div class="input-group date">
-  						<input type="text" class="form-control" readonly name="fecha"><span class="input-group-addon"><i class="glyphicon glyphicon-th" value="{{p.fecha}}"></i></span>
+  						<input type="text" class="form-control" readonly name="fecha" value="{{evento.fecha}}"><span class="input-group-addon"><i class="glyphicon glyphicon-th" ></i></span>
 					</div>
 				</div>
 				<div class="form-group" >
@@ -72,10 +72,9 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque quidem, qua
 
 	<script type="text/javascript">
 		$('.date').datepicker({
+    		todayBtn: "linked",
+    		language: "es",
 		    format: "yyyy-mm-dd",
-		    todayBtn: true,
-		    language: "es",
-		    orientation: "auto left",
 		    todayHighlight: true
 		});
 		$('#imagen').fileinput({

@@ -15,59 +15,50 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 		<script src="/media/bootstrap/js/bootstrap.min.js"></script>
 		<script src="/media/js/style.js"></script>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.js"></script>
 		{% block js%}
 		{% endblock %}
-		<div>
-			<header>
-				<nav class="navbar navbar-default navbar-fixed-top">
-					<div class="container">
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle collapsed"
-							data-toggle="collapse" data-target="#navbar-1">
-								<span class="sr-only">Menu</span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-							
-							<a class="navbar-brand brand" href="#"><img src="/media/images/escudo.png" class="logo"></a>
-							<a href="#" class="navbar-brand responsive-titulo">Institucion Educativa John F. Kennedy</a>
-							
-						</div>
-						
-						<div class="collapse navbar-collapse"  id="navbar-1">
-
-							<ul class="nav navbar-nav navbar-right">
-								<li><a href="/">Inicio</a></li>
-								<li><a href="/albums/page/1">Galeria</a></li>
-								<li><a href="/noticias/page/1"">Noticias</a></li>
-								<li><a href="/ofertas_educativas">Oferta educativa</a></li>
-								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Institucion <span class="caret"></span></a>
-									<ul class="dropdown-menu">
-										<li><a href="/mision-vision">Mision - Vision</a></li>
-										<li><a href="/metas-valores">Valores - Metas</a></li>
-										<li><a href="#">Simbolos </a></li>
-										<li><a href="/docentes">Docentes</a></li>
-										<li><a href="/aula_virtual">Aula Virtual</a></li>
-										{% if user.is_authenticated and user.is_superuser%}
-										<li><a href="/administracion">Administracion</a></li>
-										{% endif %}
-									</ul>
-								</li>
-								<li><a href="/contacto">Contactanos</a></li>
-								{% if user.is_authenticated %}
-								<li><a href="/logout" title="Cerrar Sesion" class="btn-a"><span class="glyphicon glyphicon-off"></span></a></li>
-								{% else %}
-								<li><a href="/login" title="Iniciar Sesion" class="btn-a"><span class="glyphicon glyphicon-user"></span></a></li>
+		<nav class="navbar navbar-default">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed"
+						data-toggle="collapse" data-target="#navbar-1">
+						<span class="sr-only">Menu</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand brand" href="#"><img src="/media/images/escudo.png" class="logo"></a>
+					<a href="#" class="navbar-brand responsive-titulo">Institucion Educativa John F. Kennedy</a>
+				</div>
+				<div class="collapse navbar-collapse"  id="navbar-1">
+					<ul class="nav navbar-nav navbar-right">
+						<li><a href="/">Inicio</a></li>
+						<li><a href="/albums/page/1">Galeria</a></li>
+						<li><a href="/noticias/page/1"">Noticias</a></li>
+						<li><a href="/ofertas_educativas">Oferta educativa</a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Institucion <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="/mision-vision">Mision - Vision</a></li>
+								<li><a href="/metas-valores">Valores - Metas</a></li>
+								<li><a href="#">Simbolos </a></li>
+								<li><a href="/docentes">Docentes</a></li>
+								<li><a href="/aula_virtual">Aula Virtual</a></li>
+								{% if user.is_authenticated and user.is_superuser%}
+								<li><a href="/administracion">Administracion</a></li>
 								{% endif %}
 							</ul>
-						</div>
-					</div>
-				</nav>
-			</header>	
-		</div>
+						</li>
+						<li><a href="/contacto">Contactanos</a></li>
+						{% if user.is_authenticated %}
+						<li><a href="/logout" title="Cerrar Sesion" class="btn-a"><span class="glyphicon glyphicon-off"></span></a></li>
+						{% else %}
+						<li><a href="/login" title="Iniciar Sesion" class="btn-a"><span class="glyphicon glyphicon-user"></span></a></li>
+						{% endif %}
+					</ul>
+				</div>
+			</div>
+		</nav>
 
 		{% block content %}
 		{% endblock %}

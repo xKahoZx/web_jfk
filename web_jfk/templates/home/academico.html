@@ -7,8 +7,14 @@
 	<div class="container">
 		<div class="row">
 			<h1 class="title" align="center"><span class="label label-primary">Aula Virtual</span></h1>
-			{% if user.is_authenticated and user.docente or user.funcionario or user.is_superuser%}
-				<p ><a href="/add_documento" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Panel de control para area academica</a></p>	
+			{% if user.docente.jornada = "Tarde"%}
+				{% if user.docente.sede.nombre = "John F. Kennedy"%}
+				<p ><a href="/mis_documentos" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Ver mis documentos publicados</a></p>	
+				{% endif %}
+			{% endif %}
+			{% if user.funcionario%}
+				<p ><a href="/mis_documentos" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Ver mis documentos publicados</a></p>	
+				
 			{% endif %}
 			{% if user.estudiante%}
 			<form action="." method="POST" class="form-horizontal">	
@@ -48,24 +54,32 @@
 
 			<div class="col-sm-12" align="center">
 				{% for p in documentos%}
-				<a href="/media/{{p.documento}}" download class="aula" title="persiona clic izquiero para descargar">
+				<a href="/media/{{p.documento}}" target="_blank" class="aula" title="Ver documento">
 					<div class="col-sm-6">
 						<blockquote>
 							<p class="text-warning text-title"><strong><em>{{p.titulo}}</em></strong></p>
 						  	<p class="text text-left text-justify">{{p.descripcion}}</p>
 						  	<small>Publicado por <cite>{{p.autor.docente.nombres}} {{p.autor.docente.apellidos}} {{p.autor.funcionario.nombres}} {{p.autor.funcionario.apellidos}}</cite> </small>
+						  	{% if p.autor.docente %}
+						  	<small>Docente <cite>materia {{p.autor.docente.curso}}</cite></small>
+						  	{% endif %}
+						  	{% if p.autor.funcionario%}
+						  	<small>Coordinador <cite>{{p.autor.funcionario.sede.nombre}} jornada {{p.autor.funcionario.jornada}}</cite></small>
+						  	{% endif%}
 						  	<small>Fecha publicacion <cite>{{p.fecha}}</cite></small>
+
 						</blockquote>
 					</div>
 				</a>
 				{% endfor%}
 				{% for p in documentos_rector%}
-				<a href="/media/{{p.documento}}" download class="aula" title="persiona clic izquiero para descargar">
+				<a href="/media/{{p.documento}}" target="_blank" class="aula" title="Ver documento">
 					<div class="col-sm-6">
 						<blockquote>
 							<p class="text-warning text-title"><strong><em>{{p.titulo}}</em></strong></p>
 						  	<p class="text text-left text-justify">{{p.descripcion}}</p>
 						  	<small>Publicado por<cite> {{p.autor.funcionario.nombres}} {{p.autor.funcionario.apellidos}}</cite> </small>
+						  	<small>Rector</small>
 						  	<small>Fecha publicacion <cite>{{p.fecha}}</cite></small>
 						</blockquote>
 					</div>

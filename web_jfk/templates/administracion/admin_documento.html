@@ -1,11 +1,15 @@
 {% extends 'base.html' %}
 {% block title %}
-	Agregar nuevo documento
+	{% if documento%}
+	Editar documento
+	{% else%}
+	Crear nuevo documento
+	{% endif %}
 {% endblock %} 
 {% block content %}
 	<div class="container">
 		<div class="row">
-			{% if noticia %}
+			{% if documento %}
 			<h1 align="center" class="title" ><span id="indicador" class="label label-primary">Editar Documento</span></h1>
 			{% else %}
 			<h1 align="center" class="title" ><span id="indicador" class="label label-primary">Agregar Nuevo Documento</span></h1>
@@ -15,13 +19,13 @@
 				<div class="form-group" id="group_titulo">
 				    <label for="titulo" class="col-sm-2 control-label">Titulo</label>
 				    <div class="col-sm-10">
-				     	<input type="text" class="form-control" id="titulo" placeholder="Titulo" name="titulo" value="{{noticia.titulo}}">
+				     	<input type="text" class="form-control" id="titulo" placeholder="Titulo" name="titulo" value="{{documento.titulo}}">
 				    </div>
 				</div>
 				<div class="form-group" id="group_subtitulo">
 				    <label for="descripcion" class="col-sm-2 control-label">Descripcion</label>
 				    <div class="col-sm-10">
-						<textarea class="form-control" rows="3" placeholder="Ingrese la descripcion del documento" name="descripcion" id="descripcion">{{noticia.subtitulo}}</textarea>
+						<textarea class="form-control" rows="3" placeholder="Ingrese la descripcion del documento" name="descripcion" id="descripcion">{{documento.descripcion}}</textarea>
 				    </div>
 				</div>			
 				{% if user.docente.sede.nombre == "John F. Kennedy" and user.docente.jornada == "Tarde"%}
@@ -46,12 +50,12 @@
 					<div class="col-sm-10">
 						<select class="form-control" id="grado" name="grado">
 							<option value="0">--- Seleccione el grado al cual pertenece el documento ---</option>
- 							<option value="Sexto "> Sexto </option>
- 							<option value="Septimo "> Septimo </option>
- 							<option value="Octavo "> Octavo </option>
- 							<option value="Noveno "> Noveno </option>
- 							<option value="Decimo "> Decimo </option>
- 							<option value="Once "> Once </option>
+ 							<option value="Sexto"> Sexto </option>
+ 							<option value="Septimo"> Septimo </option>
+ 							<option value="Octavo"> Octavo </option>
+ 							<option value="Noveno"> Noveno </option>
+ 							<option value="Decimo"> Decimo </option>
+ 							<option value="Once"> Once </option>
 						  
 						</select>
 					</div>
@@ -61,10 +65,11 @@
 				    <label for="imagen" class="col-sm-2 control-label">Documento</label>
 				   	<div class="col-sm-10">
 					    <input type="file" id="imagen" class="form-control" name="documento">
-					    <p class="help-block">Selecciona el documento que deseas publicar</p>
 					</div>
 				</div>
-				
+				<div class="text-center">
+					<a href="/media/{{documento.documento}}" target="_blank" class="btn btn-info ">Ver documento</a>
+				</div>
 				<div id="alerta" class='alert alerta alert-danger col-sm-6 col-sm-offset-4' align="center" role='alert'><strong>Por favor completa los campos resaltados</strong></div>
 				<p align="center" class="col-xs-12">
 					<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
@@ -75,5 +80,11 @@
 			</form>
 		</div>
 	</div>
-
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#materia > option[value="{{documento.materia}}"]').attr('selected','selected');
+			$('#grado > option[value="{{documento.grado}}"]').attr('selected', 'selected');	
+		});
+	</script>
 {% endblock %}
+

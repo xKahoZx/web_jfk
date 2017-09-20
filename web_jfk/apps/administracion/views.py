@@ -221,124 +221,165 @@ def del_item_view(request, id_item):
 #CRUD Eventos
 #crear nuevo evento
 def add_evento_view(request):
-	if request.method == "POST":
-		new_evento = calendario_eventos()
-		new_evento.titulo = request.POST['titulo']
-		new_evento.descripcion = request.POST['descripcion']
-		new_evento.imagen = request.FILES['imagen']
-		new_evento.fecha = request.POST['fecha']
-		new_evento.anio = datetime.now().year
-		new_evento.save()
-		return HttpResponseRedirect('/eventos')
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
+			if request.method == "POST":
+				new_evento = calendario_eventos()
+				new_evento.titulo = request.POST['titulo']
+				new_evento.descripcion = request.POST['descripcion']
+				new_evento.imagen = request.FILES['imagen']
+				new_evento.fecha = request.POST['fecha']
+				new_evento.anio = new_evento.fecha[0:4]
+				new_evento.save()
+				return HttpResponseRedirect('/eventos')
 
-	return render_to_response('administracion/administracion_eventos.html',context_instance = RequestContext(request))
-
+			return render_to_response('administracion/administracion_eventos.html',context_instance = RequestContext(request))
+		else:
+			return  HttpResponseRedirect('/eventos')
+	except:
+		return  HttpResponseRedirect('/eventos')
+#eliminar evento por id
 def del_evento_view(request, id_evento):
-
-	if request.user.is_authenticated:		
-		try:
-			del_evento = calendario_eventos.objects.get(pk = id_evento)
-			if os.path.exists(del_evento.imagen._get_path()) and os.path.isfile(del_evento.imagen._get_path()):
-				os.remove(del_evento.imagen._get_path())
-			del_evento.delete()
-			return HttpResponseRedirect('/eventos')
-		except:
-			return HttpResponseRedirect('/eventos')
-
-
-	return render_to_response('administracion/calendario.html', context_instance = RequestContext(request))
-
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
+			try:
+				del_evento = calendario_eventos.objects.get(pk = id_evento)
+				if os.path.exists(del_evento.imagen._get_path()) and os.path.isfile(del_evento.imagen._get_path()):
+					os.remove(del_evento.imagen._get_path())
+				del_evento.delete()
+				return HttpResponseRedirect('/eventos')
+			except:
+				return HttpResponseRedirect('/eventos')
+		else:
+			return  HttpResponseRedirect('/eventos')
+	except:
+		return  HttpResponseRedirect('/eventos')
+#editar evento por id
 def edit_evento_view(request, id_evento):
-
-	edit_evento = calendario_eventos.objects.get(id = id_evento)
-	if request.method == "POST":
-		edit_evento.titulo = request.POST['titulo']
-		edit_evento.descripcion = request.POST['descripcion']
-		edit_evento.fecha = request.POST['fecha']		
-		try:
-			edit_evento.imagen = request.FILES['imagen']
-			if os.path.exists(edit_evento.imagen._get_path()) and os.path.isfile(edit_evento.imagen._get_path()):
-				os.remove(edit_evento.imagen._get_path())
-		except KeyError:
-			pass
-		fecha = date.today()
-		if ( str(edit_evento.fecha) > str(fecha) or str(edit_evento.fecha) == str(fecha)):
-			edit_evento.estado = True
-		if( str(edit_evento.fecha) < str(fecha)):
-			edit_evento.estado = False
-		edit_evento.save()
-		return HttpResponseRedirect('/eventos')
-	ctx = {'evento': edit_evento}
-	return render_to_response('administracion/administracion_eventos.html', ctx, context_instance = RequestContext(request))
-
+	try:
+		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
+			edit_evento = calendario_eventos.objects.get(id = id_evento)
+			if request.method == "POST":
+				edit_evento.titulo = request.POST['titulo']
+				edit_evento.descripcion = request.POST['descripcion']
+				fecha_anterior = edit_evento.fecha
+				year_anterior = edit_evento.anio
+				edit_evento.fecha = request.POST['fecha']	
+				edit_evento.anio = edit_evento.fecha[0:4]
+				try:
+					imagen = request.FILES['imagen']
+					if os.path.exists(edit_evento.imagen._get_path()) and os.path.isfile(edit_evento.imagen._get_path()):
+						os.remove(edit_evento.imagen._get_path())
+					edit_evento.imagen = imagen
+				except KeyError:
+					pass
+				fecha = date.today()
+				if ( str(edit_evento.fecha) > str(fecha) or str(edit_evento.fecha) == str(fecha)):
+					edit_evento.estado = True
+				if( str(edit_evento.fecha) < str(fecha)):
+					edit_evento.estado = False
+				try:
+					edit_evento.save()
+				except:
+					edit_evento.fecha = fecha_anterior
+					edit_evento.anio = year_anterior
+					edit_evento.save()
+				return HttpResponseRedirect('/eventos')
+			ctx = {'evento': edit_evento}
+			return render_to_response('administracion/administracion_eventos.html', ctx, context_instance = RequestContext(request))
+		else:
+			return  HttpResponseRedirect('/eventos')
+	except:
+		return  HttpResponseRedirect('/eventos')
+#Verifica la fecha del evento si esta o no aun por suceder
 def verificar_fecha_evento():
-
 	eventos = calendario_eventos.objects.filter(estado = True)
 	fecha = date.today()
 	for p in eventos:
 		if( str(fecha) > str(p.fecha)):
 			p.estado = False
 			p.save()
-			
 #CRUD OFERTA EDUCATIVA
+#crear nueva oferta educativa
 def add_oferta_view(request):
-	if request.method == "POST":
-		oferta = oferta_educativa()
-		oferta.fecha_apertura = request.POST['fecha_inicio']
-		oferta.fecha_cierre = request.POST['fecha_fin']
-		oferta.nivel = request.POST['nivel']
-		oferta.grado = request.POST['grado']		
-		oferta.cupos = request.POST['cupos']
-		oferta.cupos_disponibles = oferta.cupos
-		oferta.jornada = request.POST['jornada']		
-		oferta.sede  = sede.objects.get(nombre = request.POST['sede'])
-		if (str(oferta.fecha_apertura) > str(date.today())):
-			oferta.estado = False
-		oferta.save()
-		return HttpResponseRedirect('/lista_ofertas')
-	return render_to_response('administracion/crear_oferta.html', context_instance=RequestContext(request))
-
+	try:
+		if request.user.is_superuser:
+			if request.method == "POST":
+				oferta = oferta_educativa()
+				oferta.fecha_apertura = request.POST['fecha_inicio']
+				oferta.fecha_cierre = request.POST['fecha_fin']
+				oferta.nivel = request.POST['nivel']
+				oferta.grado = request.POST['grado']		
+				oferta.cupos = request.POST['cupos']
+				oferta.cupos_disponibles = oferta.cupos
+				oferta.jornada = request.POST['jornada']		
+				oferta.sede  = sede.objects.get(nombre = request.POST['sede'])
+				if (str(oferta.fecha_apertura) > str(date.today())):
+					oferta.estado = False
+				oferta.save()
+				return HttpResponseRedirect('/lista_ofertas')
+			return render_to_response('administracion/crear_oferta.html', context_instance=RequestContext(request))
+		else:
+			return  HttpResponseRedirect('/ofertas_educativas')
+	except:
+		return  HttpResponseRedirect('/ofertas_educativas')
+#editar oferta educativa por id
 def edit_oferta_view(request, id_oferta):
+	try:
+		if  request.user.is_superuser:			
+			oferta = oferta_educativa.objects.get(pk = id_oferta)
+			if request.method == "POST":
+				cupos = oferta.cupos	
+				oferta.cupos = request.POST['cupos']
+				fecha_ini = oferta.fecha_apertura
+				fecha_fin = oferta.fecha_cierre
+				if cupos > oferta.cupos:
+					cupos = cupos - oferta.cupos
+					oferta.cupos_disponibles = oferta.cupos_disponibles - cupos
+				else:
+					cupos = int(oferta.cupos) - cupos	
+					oferta.cupos_disponibles = oferta.cupos_disponibles + cupos
 
-	oferta = oferta_educativa.objects.get(pk = id_oferta)
-	if request.method == "POST":
-		
-		cupos = oferta.cupos	
-		oferta.cupos = request.POST['cupos']
-		oferta.fecha_apertura = request.POST['fecha_inicio']
-		oferta.fecha_cierre = request.POST['fecha_fin']
-		if cupos > oferta.cupos:
-			cupos = cupos - oferta.cupos
-			oferta.cupos_disponibles = oferta.cupos_disponibles - cupos
+				if oferta.cupos_disponibles == 0:
+					oferta.estado = False
+				else:
+					oferta.estado = True
+				try:
+					oferta.fecha_apertura = request.POST['fecha_inicio']
+					oferta.save()
+				except:
+					oferta.fecha_apertura = fecha_ini
+					oferta.save()
+				try:
+					oferta.fecha_cierre = request.POST['fecha_fin']
+					oferta.save()
+				except:
+					oferta.fecha_cierre = fecha_fin
+					oferta.save()
+				return HttpResponseRedirect('/lista_ofertas')
+			
+			ctx = {'oferta': oferta}
+			return render_to_response('administracion/editar_oferta.html', ctx, context_instance=RequestContext(request))
 		else:
-			cupos = int(oferta.cupos) - cupos	
-			oferta.cupos_disponibles = oferta.cupos_disponibles + cupos
-
-		if oferta.cupos_disponibles == 0:
-			oferta.estado = False
-		else:
-			oferta.estado = True
-		
-		if (str(oferta.fecha_apertura) > str(date.today())):
-			oferta.estado = False
-		oferta.save()
-		return HttpResponseRedirect('/lista_ofertas')
-	
-	ctx = {'oferta': oferta}
-	return render_to_response('administracion/editar_oferta.html', ctx, context_instance=RequestContext(request))
-
+			return  HttpResponseRedirect('/ofertas_educativas')
+	except:
+		return  HttpResponseRedirect('/ofertas_educativas')
+#eliminar oferta educativa por id
 def delete_oferta_view(request, id_oferta):
-	if request.user.is_authenticated:
-		oferta = oferta_educativa.objects.get(id = id_oferta)
-		inscripciones = inscripcion.objects.filter(oferta__id = id_oferta)
-		for p in inscripciones:
-			p.delete()
-		oferta.delete()
-
-	return HttpResponseRedirect('/lista_ofertas')
-
+	try:
+		if request.user.is_superuser:
+			oferta = oferta_educativa.objects.get(id = id_oferta)
+			inscripciones = inscripcion.objects.filter(oferta__id = id_oferta)
+			for p in inscripciones:
+				p.delete()
+			oferta.delete()
+			return HttpResponseRedirect('/lista_ofertas')
+		else:
+			return  HttpResponseRedirect('/ofertas_educativas')
+	except:
+		return  HttpResponseRedirect('/ofertas_educativas')
+#verifica si hay ofertas educativas para habilitar  o inhabilitar de acuerdo a la fecha.
 def verificar_fecha():
-
 	ofertas = oferta_educativa.objects.all()
 	fecha = date.today()
 	for p in ofertas:
@@ -352,7 +393,6 @@ def verificar_fecha():
 				p.save()
 	
 def inscripcion_view(request, id_oferta):
-
 	if request.method == "POST":
 		registro = inscripcion()
 		registro.nombres_alumno = request.POST['nombres_a']
@@ -374,30 +414,75 @@ def inscripcion_view(request, id_oferta):
 	return HttpResponseRedirect('/ofertas_educativas')
 
 #CRUD Documentos academicos
-
+#crear nuevo documento
 def add_documento_view(request):
-
-	if request.method == "POST":
-		new_documento = documento()
-		new_documento.titulo = request.POST['titulo']
-		new_documento.descripcion = request.POST['descripcion']
-		try:
-			if request.user.docente.jornada == "Tarde" and request.user.docente.sede.nombre == "John F. Kennedy":
- 				new_documento.materia = request.POST['materia']
-				new_documento.grado = request.POST['grado']
-		except:
-			pass
-		new_documento.fecha = date.today()
-		new_documento.autor =  request.user
-		new_documento.documento = request.FILES['documento']
+	bandera_doc  = False
+	bandera_fun  = False
+	try:
+		if request.user.docente.jornada == "Tarde" and request.user.docente.sede.nombre == "John F. Kennedy":
+			bandera_doc = True
 		
-		new_documento.save()
-		return HttpResponseRedirect('/academico')
+	except:
+		pass
+	try:
+		if request.user.funcionario:
+			bandera_fun = True
 		
-	return render_to_response('administracion/admin_documento.html', context_instance = RequestContext(request))
+	except:
+		pass
+	if bandera_fun or bandera_doc:
+		if request.method == "POST":
+			new_documento = documento()
+			new_documento.titulo = request.POST['titulo']
+			new_documento.descripcion = request.POST['descripcion']
+			try:
+				if request.user.docente.jornada == "Tarde" and request.user.docente.sede.nombre == "John F. Kennedy":
+	 				new_documento.materia = request.POST['materia']
+					new_documento.grado = request.POST['grado']
+			except:
+				pass
+			new_documento.fecha = date.today()
+			new_documento.autor =  request.user
+			new_documento.documento = request.FILES['documento']			
+			new_documento.save()
+			return HttpResponseRedirect('/aula_virtual')	
+		return render_to_response('administracion/admin_documento.html', context_instance = RequestContext(request))
+	else:
+		return HttpResponseRedirect('/aula_virtual')
+def edit_documento_view(request, id_documento):
 
-
-
+	edit_documento = documento.objects.get(id = id_documento)
+	if request.user == edit_documento.autor:
+		if request.method == "POST":
+			edit_documento.titulo = request.POST['titulo']
+			edit_documento.descripcion = request.POST['descripcion']
+			try:
+				if request.user.docente.jornada == "Tarde" and request.user.docente.sede.nombre == "John F. Kennedy":
+	 				edit_documento.materia = request.POST['materia']
+					edit_documento.grado = request.POST['grado']
+			except:
+				pass
+			try:
+				new_documento = request.FILES['documento']
+				if os.path.exists(edit_documento.documento._get_path()) and os.path.isfile(edit_documento.documento._get_path()):
+					os.remove(edit_documento.documento._get_path())
+				edit_documento.documento = new_documento
+			except KeyError:
+				pass
+			edit_documento.save()
+			return HttpResponseRedirect('/mis_documentos')
+		ctx = {'documento':edit_documento}
+		return render_to_response('administracion/admin_documento.html', ctx, context_instance = RequestContext(request))
+	else:
+		return HttpResponseRedirect('/mis_documentos')
+def del_documento_view(request, id_documento):
+	
+	del_documento = documento.objects.get(id = id_documento)
+	if request.user == del_documento.autor:
+		if os.path.exists(del_documento.documento._get_path()) and os.path.isfile(del_documento.documento._get_path()):
+			os.remove(del_documento.documento._get_path())
+		del_documento.delete()
+	return HttpResponseRedirect('/mis_documentos')
 
 #CRUD usuarios
 

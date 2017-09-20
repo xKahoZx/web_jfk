@@ -3,14 +3,32 @@
 {% block title %}
 	Calendario de eventos - Jhon F. Kennedy
 {% endblock %}
-
+{% block extras%}
+		<link rel="stylesheet" href="/media/bootstrap/calendario/css/bootstrap-datepicker.css">
+{% endblock %}
+{% block js%}
+		<script type="text/javascript" src="/media/bootstrap/calendario/js/bootstrap-datepicker.min.js"></script>	
+		<script type="text/javascript" src="/media/bootstrap/calendario/locales/bootstrap-datepicker.es.min.js"></script>	
+{% endblock %}
 {% block content %}
 	
 	<div class="container">
 		<h1 class="title text-center"><span class="label label-primary">Calendario de eventos</span></h1>
 		{% if user.is_authenticated%}
-		<a href="/add-evento" class="btn btn-primary">Crear nuevo evento</a>
+		<ul class="list-inline text-center col-md-12">
+			<li class="col-md-2 col-md-offset-2"><a href="/add-evento" class="btn btn-primary">Crear nuevo evento</a></li>
+			<li class="col-md-5">
+				<form accept="." method="POST">
+					{% csrf_token %}
+					<div class="col-sm-8">
+						<input class="date-own form-control" type="text" readonly placeholder="Listar eventos por año" name="busqueda">
+					</div>
+					<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search "  aria-hidden="true"></span> Consultar </button>
+				</form>
+			</li>
+		</ul>
 		{% endif %}
+		{% if  calendario_aux%}
 		<div class="row text-center">
 			<br>
 			{% for p in calendario_aux%}
@@ -27,6 +45,9 @@
 				</div>
 			{% endfor %}
 		</div>
+		{% else %}
+			<h4 class="title text-center"><span class="label label-warning">No existen eventos creados para el año consultado</span></h4>
+		{% endif %}
 	</div>
 	<!--- Modal -->
 	{% if calendario %}
@@ -57,7 +78,12 @@
 	{% endfor%}
 	{% endif %}
 
-
+  	<script type="text/javascript">
+      	$('.date-own').datepicker({
+        	minViewMode: 2,
+         	format: 'yyyy'
+       	});
+  	</script>
 {% endblock %}
 
 

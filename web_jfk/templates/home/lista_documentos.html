@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Mis documentos
+{% endblock %}
+
+{% block content %}
+
+	<div class="container">
+		<div class="row">
+			<h1 class="title" align="center"><span class="label label-primary">Mis documentos publicados</span></h1>
+			
+			{% if user.is_authenticated and user.docente or user.funcionario or user.is_superuser%}
+				<p align="center"><a href="/add_documento" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Crear nuevo documento</a></p>	
+			{% endif %}
+			<div class="col-sm-12" align="center">
+				{% for p in documentos%}
+				<div class="col-sm-6">
+					<a href="/media/{{p.documento}}" target="_blank" class="aula" title="Ver documento">
+						<div class="col-sm-12">
+							<blockquote>
+								<p class="text-warning text-title"><strong><em>{{p.titulo}}</em></strong></p>
+							  	<p class="text text-left text-justify">{{p.descripcion}}</p>
+							  	{% if user.docente %}
+							  	<small>Materia <cite>{{p.materia}}</cite> </small>
+							  	{% endif %}
+							  	<small>Publicado por <cite>{{p.autor.docente.nombres}} {{p.autor.docente.apellidos}} {{p.autor.funcionario.nombres}} {{p.autor.funcionario.apellidos}}</cite> </small>
+							  	<small>Fecha publicacion <cite>{{p.fecha}}</cite></small>
+							</blockquote>
+						</div>
+					</a>
+					<p>
+						<a href="/edit_documento/{{p.id}}" class="btn btn-info">Editar <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+						<a href="/del_documento/{{p.id}}" class="btn btn-danger">Eliminar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></a>
+					</p>
+				</div>
+				{% endfor%}
+			</div>
+		</div>
+	</div>
+{% endblock %}
