@@ -1,0 +1,58 @@
+{% extends 'base.html'%}
+
+{% block title %}
+	Lista Estudiantes
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<h1 class="title" align="center"><span class="label label-primary">Lista de estudiantes</span></h1>
+			<form action="." method="POST" class="form-horizontal">
+				{% csrf_token %}
+				<div class="col-sm-12 col-md-5">
+					<select class="form-control" id="filtro_sede" name="tipo">
+						<option value="0">Todos los estudiantes</option>
+						<option value="identificacion">identificacion</option>
+						<option value="username">Nombre de usuario</option>
+					</select>
+				</div>
+				<div class="col-sm-12 col-md-5">
+					<input type="text" class="form-control" id="consulta" placeholder="numero de identificacion o nombre de usuario" name="consulta" >
+				</div>
+				<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search "  aria-hidden="true"></span> Consultar </button>
+			</form>
+			{% if estudiantes %}
+			<div class="col-sm-12">
+				<table class="table table-hover text-center" >
+				
+					<thead >
+						<tr>
+							<th class="th-align">#</th>
+							<th class="th-align">Documento</th>
+							<th class="th-align">Nombres</th>
+							<th class="th-align">Apellidos</th>
+							<th class="th-align">Correo</th>
+							<th class="th-align">Nombre Usuario</th>
+
+						</tr>
+					</thead>
+					<tbody >
+						{% for p in estudiantes %}
+						<tr>
+							<td><strong>{{forloop.counter}}</strong></td>
+							<td>{{p.identificacion}}</td>
+							<td>{{p.nombres}}</td>
+							<td>{{p.apellidos}}</td>
+							<td>{{p.correo}}</td>
+							<td>{{p.user.username}}</td>							
+							<td><a href="/cambiar_password/{{p.user.id}}" class="btn btn-warning">Cambiar contraseña</a> <a href="/del_user/{{p.user.id}}" class="btn btn-danger">Eliminar</a></td>
+						</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

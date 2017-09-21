@@ -8,18 +8,19 @@
 	<div class="container">
 		<div class="row">
 			<h1 class="title text-center" ><span class="label label-primary">Institucion Educativa {{institucion.nombre}}</span></h1>
-			<div class="col-sm-5">
+			<div class="col-sm-12 col-sm-5 col-md-offset-1"">
 				<h2 class="title text-center"><span class="label label-info">Informacion Rector</span></h2>
-				<ul>
-					<li class="list-group-item"><strong>Nombres:</strong> {{institucion.rector.nombres}}</li>
-					<li class="list-group-item"><strong>Apellidos:</strong> {{institucion.rector.apellidos}}</li>
-					<li class="list-group-item"><strong>Correo:</strong> {{institucion.rector.correo}}</li>
-					<li class="list-group-item"><strong>Nombre usuario:</strong> {{institucion.rector.user.username}}</li>
-					<li class="list-group-item text-center"><img src="/media/{{institucion.rector.foto}}" class="img-5"></li>
+				<div class="text-center">
+					<p ><strong>Nombres:</strong> {{institucion.rector.nombres}}</p>
+					<p ><strong>Apellidos:</strong> {{institucion.rector.apellidos}}</p>
+					<p ><strong>Correo:</strong> {{institucion.rector.correo}}</p>
+					<p ><strong>Nombre usuario:</strong> {{institucion.rector.user.username}}</p>
+					<p class="list-group-item text-center"><img src="/media/{{institucion.rector.foto}}" class="img-5"></p>
+					<a href="/edit_funcionario/{{institucion.rector.id}}" class="btn btn-primary">Editar</a>
 				  	
-				</ul>
+				</div>
 			</div>
-			<div class="col-sm-7 text-center">
+			<div class="col-sm-12 col-md-6 text-center">
 				<h3 class="text-warning"><em><strong>Escudo actual</strong></em></h3>
 				<img src="/media/{{institucion.escudo}}" class="img-2">
 			</div>

@@ -286,15 +286,33 @@ def lista_administradores_view(request):
 
 	return render_to_response('home/lista_administradores.html', ctx, context_instance = RequestContext(request))
 
+def lista_estudiantes_view(request):
+
+	estudiantes = estudiante.objects.all()
+	if request.method == "POST":
+		if request.POST['tipo'] == "username":
+			estudiantes = estudiante.objects.filter(user__username = request.POST['consulta'])
+		else:
+			if request.POST['tipo'] == "0":
+				estudiantes = estudiante.objects.all()
+			else:
+				estudiantes = estudiante.objects.filter(identificacion = request.POST['consulta'])
+
+	ctx = {'estudiantes':estudiantes}
+
+	return render_to_response('home/lista_estudiantes.html', ctx, context_instance = RequestContext(request))
+
 #lista de sedes
 def lista_sedes_view(request):
 
 	sedes = sede.objects.all()
-
 	ctx = {'sedes':sedes}
-
 	return render_to_response('home/lista_sedes.html', ctx, context_instance = RequestContext(request))
 
+def ver_sede_view(request, id_sede):
+	ver_sede = sede.objects.get(id = id_sede)
+	ctx = {'sede':ver_sede}
+	return render_to_response('home/single_sede.html', ctx, context_instance = RequestContext(request))
 
 
 #autenticacion
@@ -336,8 +354,7 @@ def institucion_view(request):
 
 	try:
 		query_institucion = institucion.objects.all()[0]
-	except:
-		
+	except:		
 	 	return HttpResponseRedirect('/crear_institucion')
 
 	ctx = {'institucion':query_institucion}

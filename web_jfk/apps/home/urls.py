@@ -32,10 +32,12 @@ urlpatterns = patterns('web_jfk.apps.home.views',
 	url(r'^lista_administradores/$', 'lista_administradores_view', name = "vista_lista_administradores"),
 	#sedes
 	url(r'^lista_sedes/$', 'lista_sedes_view', name = "vista_lista_sedes"),
+	url(r'^ver_sede/(?P<id_sede>.*)/$', 'ver_sede_view' , name = 'vista_ver_sede'),
 	#institucion
 	url(r'^institucion/$', 'institucion_view', name = "vista_institucion_view"),
 	#slider
 	url(r'^lista_items_carrousel/$','lista_slider_view',name = 'vista_slider'),
-
+	#estudiantes
+	url(r'^lista_estudiantes/$', 'lista_estudiantes_view', name = "vista_lista_estudiantes"),
 
 )
