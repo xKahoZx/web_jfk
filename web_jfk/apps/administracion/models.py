@@ -9,7 +9,7 @@ class noticia(models.Model):
 		return ruta
 
 	titulo			= models.CharField(max_length = 200)
-	subtitulo		= models.TextField(max_length = 2000)
+	copete			= models.TextField(max_length = 2000)
 	cuerpo			= models.TextField(max_length = 10000)	
 	fecha			= models.DateField()	
 	imagen 			= models.ImageField(upload_to = url , blank = True, null = True)

@@ -10,72 +10,67 @@ from web_jfk.settings import MEDIA_ROOT
 
 #CRUD noticias
 #Crear nueva noticia
+
 def add_noticia_view(request):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
-			if request.method == "POST":
-				new_noticia = noticia()
-				new_noticia.titulo = request.POST['titulo']
-				new_noticia.subtitulo = request.POST['subtitulo']
-				new_noticia.cuerpo = request.POST['cuerpo']
-				new_noticia.autor = request.POST['autor']
-				new_noticia.imagen = request.FILES['imagen']
-				new_noticia.fecha =  date.today()
-				new_noticia.save()
-				return HttpResponseRedirect('/noticias/page/1/')
-			return render_to_response('administracion/admin_noticia.html', context_instance = RequestContext(request))
-		else:
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
+		if request.method == "POST":
+			new_noticia = noticia()
+			new_noticia.titulo = request.POST['titulo'].strip()
+			new_noticia.copete = request.POST['subtitulo'].strip()
+			new_noticia.cuerpo = request.POST['cuerpo'].strip()
+			new_noticia.autor = request.POST['autor'].strip()
+			new_noticia.imagen = request.FILES['imagen']
+			new_noticia.fecha =  date.today()
+			new_noticia.save()
 			return HttpResponseRedirect('/noticias/page/1/')
-	except:
-		return  HttpResponseRedirect('/noticias/page/1/')
+		return render_to_response('administracion/admin_noticia.html', context_instance = RequestContext(request))
+	else:
+		return HttpResponseRedirect('/noticias/page/1/')
 #editar noticia por id
 def edit_noticia_view(request, id_noticia):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
-			noticia_id = noticia.objects.get(id = id_noticia)
-			if request.method == "POST":
-				noticia_id.titulo = request.POST['titulo']
-				noticia_id.subtitulo = request.POST['subtitulo']
-				noticia_id.cuerpo = request.POST['cuerpo']
-				noticia_id.autor = request.POST['autor']
-				try:
-					imagen = request.FILES['imagen']
-					if os.path.exists(noticia_id.imagen._get_path()) and os.path.isfile(noticia_id.imagen._get_path()):
-						os.remove(noticia_id.imagen._get_path())
-					noticia_id.imagen = imagen
-				except KeyError:
-					pass
-				noticia_id.save()
-				return HttpResponseRedirect('/noticias/page/1')
-			ctx = {'noticia': noticia_id}
-			return render_to_response('administracion/admin_noticia.html', ctx, context_instance = RequestContext(request))
-		else:
-			return HttpResponseRedirect('/noticias/page/1/')
-	except:
-		return  HttpResponseRedirect('/noticias/page/1/')
+
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
+		noticia_id = noticia.objects.get(id = id_noticia)
+		if request.method == "POST":
+			noticia_id.titulo = request.POST['titulo'].strip()
+			noticia_id.copete = request.POST['subtitulo'].strip()
+			noticia_id.cuerpo = request.POST['cuerpo'].strip()
+			noticia_id.autor = request.POST['autor'].strip()
+			try:
+				imagen = request.FILES['imagen']
+				if os.path.exists(noticia_id.imagen._get_path()) and os.path.isfile(noticia_id.imagen._get_path()):
+					os.remove(noticia_id.imagen._get_path())
+				noticia_id.imagen = imagen
+			except KeyError:
+				pass
+			noticia_id.save()
+			return HttpResponseRedirect('/noticias/page/1')
+		num = len(noticia_id.cuerpo)
+		ctx = {'noticia': noticia_id,'num':num}
+		return render_to_response('administracion/admin_noticia.html', ctx, context_instance = RequestContext(request))
+	else:
+		return HttpResponseRedirect('/noticias/page/1/')
 #eliminar noticia por id
 def del_noticia_view(request, id_noticia):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
-			del_noticia = noticia.objects.get(id = id_noticia)
-			if os.path.exists(del_noticia.imagen._get_path()) and os.path.isfile(del_noticia.imagen._get_path()):
-				os.remove(del_noticia.imagen._get_path())
-			del_noticia.delete()
-			return HttpResponseRedirect('/noticias/page/1')
-		else:
-			return HttpResponseRedirect ('/noticias/page/1/')
-	except:
-		return  HttpResponseRedirect('/noticias/page/1/')
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
+		del_noticia = noticia.objects.get(id = id_noticia)
+		if os.path.exists(del_noticia.imagen._get_path()) and os.path.isfile(del_noticia.imagen._get_path()):
+			os.remove(del_noticia.imagen._get_path())
+		del_noticia.delete()
+		return HttpResponseRedirect('/noticias/page/1')
+	else:
+		return HttpResponseRedirect ('/noticias/page/1/')
 
 #Album - Media
 #Crear nuevo album
 def add_album_view(request):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
-			if request.method == "POST":
-				new_album = album()
-				new_album.titulo = request.POST['titulo']
-				new_album.descripcion = request.POST['descripcion']
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+		if request.method == "POST":
+			new_album = album()
+			new_album.titulo = request.POST['titulo'].strip()
+			new_album.descripcion = request.POST['descripcion'].strip()
+
+			if len(request.FILES.getlist('imagenes')) >= 6:
 				new_album.save()
 				for p in request.FILES.getlist('imagenes'):
 					new_img = imagen_album()
@@ -83,213 +78,201 @@ def add_album_view(request):
 					new_img.album = new_album
 					new_img.save() 
 				return HttpResponseRedirect('/albums/page/1')
-
-			return render_to_response('administracion/admin_album.html',  context_instance= RequestContext(request))
-		else:
-			return HttpResponseRedirect('/albums/page/1')
-	except:
-		return  HttpResponseRedirect('/albums/page/1')
+			else:
+				caracteres = len(new_album.descripcion)
+				ctx ={'titulo':new_album.titulo, 'desc':new_album.descripcion, 'ban':True, 'num':caracteres}
+				return render_to_response('administracion/admin_album.html',ctx,  context_instance= RequestContext(request))
+		return render_to_response('administracion/admin_album.html',  context_instance= RequestContext(request))
+	else:
+		return HttpResponseRedirect('/albums/page/1')
 #editar album segun id
 def edit_album_view(request, id_album):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
-			album_id = album.objects.get(id = id_album)
-			if request.method == "POST":
-				album_id.titulo = request.POST['titulo']
-				album_id.descripcion = request.POST['descripcion']
-				for p in request.FILES.getlist('imagenes'):
-					new_img = imagen_album()
-					new_img.imagen = p
-					new_img.album = album_id
-					new_img.save() 
-				album_id.save()
-				return HttpResponseRedirect('/albums/page/1/')
-			ctx = {'album':album_id}
-			return render_to_response('administracion/admin_album.html',ctx, context_instance=RequestContext(request))
-		else:
-			return HttpResponseRedirect('/albums/page/1')
-	except:
-		return  HttpResponseRedirect('/albums/page/1')
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+		album_id = album.objects.get(id = id_album)
+		if request.method == "POST":
+			album_id.titulo = request.POST['titulo'].strip()
+			album_id.descripcion = request.POST['descripcion'].strip()
+			for p in request.FILES.getlist('imagenes'):
+				new_img = imagen_album()
+				new_img.imagen = p
+				new_img.album = album_id
+				new_img.save() 
+			album_id.save()
+			return HttpResponseRedirect('/edit-album/%s' %album_id.id)
+		caracteres = len(album_id.descripcion)
+		num_img = len(imagen_album.objects.filter(album = album_id))
+		ctx = {'album':album_id, 'num':caracteres,'num_img':num_img}
+		return render_to_response('administracion/admin_album.html',ctx, context_instance=RequestContext(request))
+	else:
+		return HttpResponseRedirect('/albums/page/1')
 #eliminar album segun id y sus imagenes asociadas
 def del_album_view(request, id_album):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
-			del_album = album.objects.get(id = id_album)
-			imagenes = imagen_album.objects.filter(album = del_album)
-			for del_img in imagenes:
-				if os.path.exists(del_img.imagen._get_path()) and os.path.isfile(del_img.imagen._get_path()):
-					os.remove(del_img.imagen._get_path())
-				del_img.delete()
-			del_album.delete()
-			return HttpResponseRedirect('/albums/page/1')
-		else:
-			return HttpResponseRedirect('/albums/page/1')
-	except:
-		return  HttpResponseRedirect('/albums/page/1')
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+		del_album = album.objects.get(id = id_album)
+		imagenes = imagen_album.objects.filter(album = del_album)
+		for del_img in imagenes:
+			if os.path.exists(del_img.imagen._get_path()) and os.path.isfile(del_img.imagen._get_path()):
+				os.remove(del_img.imagen._get_path())
+			del_img.delete()
+		del_album.delete()
+		return HttpResponseRedirect('/albums/page/1')
+	else:
+		return HttpResponseRedirect('/albums/page/1')
 #editar imagen agregada a un album segun id
 def edit_img_view(request, id_img):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
-			item = imagen_album.objects.get(id = id_img)
-			if request.method=="POST":		
-				item.imagen = request.FILES['imagen']
-				item.save()		
-				id = album.objects.get(imagenes = id_img).id
-				return HttpResponseRedirect('/edit-album/%s' %id)
-			ctx = {'item':item}
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+		item = imagen_album.objects.get(id = id_img)
+		if request.method=="POST":	
+			img = request.FILES['imagen']
+			if os.path.exists(item.imagen._get_path()) and os.path.isfile(item.imagen._get_path()):
+					os.remove(item.imagen._get_path())
+			item.imagen = img
+			item.save()		
+			id = album.objects.get(imagenes = id_img).id
+			return HttpResponseRedirect('/edit-album/%s' %id)
+		ctx = {'item':item}
 
-			return render_to_response('administracion/edit_item.html',ctx, context_instance=RequestContext(request))
-		else:
-			return HttpResponseRedirect('/albums/page/1')
-	except:
-		return  HttpResponseRedirect('/albums/page/1')
+		return render_to_response('administracion/edit_item.html',ctx, context_instance=RequestContext(request))
+	else:
+		return HttpResponseRedirect('/albums/page/1')
 #eliminar imagen de un album por id
 def del_img_album_view(request, id_img):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
-			try:
-				del_img = imagen_album.objects.get(id = id_img)
+
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+		del_img = imagen_album.objects.get(id = id_img)
+		id_album = album.objects.get(id = del_img.album.id)
+		try:
+			if len(imagen_album.objects.filter(album = id_album.id)) > 6:
 				if os.path.exists(del_img.imagen._get_path()) and os.path.isfile(del_img.imagen._get_path()):
 					os.remove(del_img.imagen._get_path())
 				del_img.delete()
-				return HttpResponseRedirect('/edit-album/%s' %id_img)
-			except:
-				print "pase try"
-				return HttpResponseRedirect('/edit-album/%s' %id_img)
-		else:
-			return HttpResponseRedirect ('/albums/page/1')
-	except:
-		return  HttpResponseRedirect('/albums/page/1')
+			return HttpResponseRedirect('/edit-album/%s' %id_album.id)
+		except:
+			return HttpResponseRedirect('/edit-album/%s' %id_album.id)
+	else:
+		return HttpResponseRedirect ('/albums/page/1')
 
-# Slider
 #crear nueva imagen 
 def add_item_view(request):
 	if request.method == "POST":
 		item = slider_show()
 		item.imagen = request.FILES['imagen']
 		item.save()
-		return HttpResponseRedirect('/lista_items_carrousel')
 	return HttpResponseRedirect('/lista_items_carrousel')
 #editar imagen
 def edit_item_view(request, id_img):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
-			item = slider_show.objects.get(id = id_img)
-			if request.method=="POST":
-				item = slider_show.objects.get(id = id_img)
-				item.imagen = request.FILES['imagen']
-				item.save()
-				return HttpResponseRedirect('/lista_items_carrousel')
-			ctx = {'item':item}
-			return render_to_response('administracion/edit_item.html',ctx, context_instance=RequestContext(request))
-		else:
-			return HttpResponseRedirect('/')
-	except:
-		return  HttpResponseRedirect('/')
-#modificar estado de la imagen de visible a no visible y vice versa
-def modificar_estado_view(request, id_item, opc):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
-			item = slider_show.objects.get(id = id_item)
-			if opc == 'activar':
-				item.estado = True
-			else:
-				item.estado = False
+
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+		item = slider_show.objects.get(id = id_img)
+		if request.method=="POST":
+			nueva_img = request.FILES['imagen']
+			if os.path.exists(item.imagen._get_path()) and os.path.isfile(item.imagen._get_path()):
+				os.remove(item.imagen._get_path())
+			item.imagen = nueva_img
 			item.save()
 			return HttpResponseRedirect('/lista_items_carrousel')
+		ctx = {'item':item}
+		return render_to_response('administracion/edit_item.html',ctx, context_instance=RequestContext(request))
+	else:
+		return HttpResponseRedirect('/')
+
+#modificar estado de la imagen de visible a no visible y vice versa
+def modificar_estado_view(request, id_item, opc):
+
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+		item = slider_show.objects.get(id = id_item)
+		if opc == 'activar':
+			item.estado = True
 		else:
-			return HttpResponseRedirect('/')
-	except:
-		return  HttpResponseRedirect('/')
+			item.estado = False
+		item.save()
+		return HttpResponseRedirect('/lista_items_carrousel')
+	else:
+		return HttpResponseRedirect('/')
+
 #eliminar imagen
 def del_item_view(request, id_item):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
-			try:
-				del_item = slider_show.objects.get(id = id_item)
-				if os.path.exists(del_item.imagen._get_path()) and os.path.isfile(del_item.imagen._get_path()):
-					os.remove(del_item.imagen._get_path())
-				del_item.delete()
-				return HttpResponseRedirect('/lista_items_carrousel')
-			except:
-				return HttpResponseRedirect('/lista_items_carrousel')
-		else:
-			return HttpResponseRedirect ('/')
-	except:
-		return  HttpResponseRedirect('/')
+
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
+		try:
+			del_item = slider_show.objects.get(id = id_item)
+			if os.path.exists(del_item.imagen._get_path()) and os.path.isfile(del_item.imagen._get_path()):
+				os.remove(del_item.imagen._get_path())
+			del_item.delete()
+			return HttpResponseRedirect('/lista_items_carrousel')
+		except:
+			return HttpResponseRedirect('/lista_items_carrousel')
+	else:
+		return HttpResponseRedirect ('/')
 
 #CRUD Eventos
 #crear nuevo evento
 def add_evento_view(request):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
-			if request.method == "POST":
-				new_evento = calendario_eventos()
-				new_evento.titulo = request.POST['titulo']
-				new_evento.descripcion = request.POST['descripcion']
-				new_evento.imagen = request.FILES['imagen']
-				new_evento.fecha = request.POST['fecha']
-				new_evento.anio = new_evento.fecha[0:4]
-				new_evento.save()
-				return HttpResponseRedirect('/eventos')
+	
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
+		if request.method == "POST":
+			new_evento = calendario_eventos()
+			new_evento.titulo = request.POST['titulo']
+			new_evento.descripcion = request.POST['descripcion']
+			new_evento.imagen = request.FILES['imagen']
+			new_evento.fecha = request.POST['fecha']
+			new_evento.anio = new_evento.fecha[0:4]
+			new_evento.save()
+			return HttpResponseRedirect('/eventos')
 
-			return render_to_response('administracion/administracion_eventos.html',context_instance = RequestContext(request))
-		else:
-			return  HttpResponseRedirect('/eventos')
-	except:
+		return render_to_response('administracion/administracion_eventos.html',context_instance = RequestContext(request))
+	else:
 		return  HttpResponseRedirect('/eventos')
+		
 #eliminar evento por id
 def del_evento_view(request, id_evento):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
-			try:
-				del_evento = calendario_eventos.objects.get(pk = id_evento)
-				if os.path.exists(del_evento.imagen._get_path()) and os.path.isfile(del_evento.imagen._get_path()):
-					os.remove(del_evento.imagen._get_path())
-				del_evento.delete()
-				return HttpResponseRedirect('/eventos')
-			except:
-				return HttpResponseRedirect('/eventos')
-		else:
-			return  HttpResponseRedirect('/eventos')
-	except:
+
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
+		try:
+			del_evento = calendario_eventos.objects.get(pk = id_evento)
+			if os.path.exists(del_evento.imagen._get_path()) and os.path.isfile(del_evento.imagen._get_path()):
+				os.remove(del_evento.imagen._get_path())
+			del_evento.delete()
+			return HttpResponseRedirect('/eventos')
+		except:
+			return HttpResponseRedirect('/eventos')
+	else:
 		return  HttpResponseRedirect('/eventos')
+
+		
 #editar evento por id
 def edit_evento_view(request, id_evento):
-	try:
-		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
-			edit_evento = calendario_eventos.objects.get(id = id_evento)
-			if request.method == "POST":
-				edit_evento.titulo = request.POST['titulo']
-				edit_evento.descripcion = request.POST['descripcion']
-				fecha_anterior = edit_evento.fecha
-				year_anterior = edit_evento.anio
-				edit_evento.fecha = request.POST['fecha']	
-				edit_evento.anio = edit_evento.fecha[0:4]
-				try:
-					imagen = request.FILES['imagen']
-					if os.path.exists(edit_evento.imagen._get_path()) and os.path.isfile(edit_evento.imagen._get_path()):
-						os.remove(edit_evento.imagen._get_path())
-					edit_evento.imagen = imagen
-				except KeyError:
-					pass
-				fecha = date.today()
-				if ( str(edit_evento.fecha) > str(fecha) or str(edit_evento.fecha) == str(fecha)):
-					edit_evento.estado = True
-				if( str(edit_evento.fecha) < str(fecha)):
-					edit_evento.estado = False
-				try:
-					edit_evento.save()
-				except:
-					edit_evento.fecha = fecha_anterior
-					edit_evento.anio = year_anterior
-					edit_evento.save()
-				return HttpResponseRedirect('/eventos')
-			ctx = {'evento': edit_evento}
-			return render_to_response('administracion/administracion_eventos.html', ctx, context_instance = RequestContext(request))
-		else:
-			return  HttpResponseRedirect('/eventos')
-	except:
+	if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Noticias":
+		edit_evento = calendario_eventos.objects.get(id = id_evento)
+		if request.method == "POST":
+			edit_evento.titulo = request.POST['titulo']
+			edit_evento.descripcion = request.POST['descripcion']
+			fecha_anterior = edit_evento.fecha
+			year_anterior = edit_evento.anio
+			edit_evento.fecha = request.POST['fecha']	
+			edit_evento.anio = edit_evento.fecha[0:4]
+			try:
+				imagen = request.FILES['imagen']
+				if os.path.exists(edit_evento.imagen._get_path()) and os.path.isfile(edit_evento.imagen._get_path()):
+					os.remove(edit_evento.imagen._get_path())
+				edit_evento.imagen = imagen
+			except KeyError:
+				pass
+			fecha = date.today()
+			if ( str(edit_evento.fecha) > str(fecha) or str(edit_evento.fecha) == str(fecha)):
+				edit_evento.estado = True
+			if( str(edit_evento.fecha) < str(fecha)):
+				edit_evento.estado = False
+			try:
+				edit_evento.save()
+			except:
+				edit_evento.fecha = fecha_anterior
+				edit_evento.anio = year_anterior
+				edit_evento.save()
+			return HttpResponseRedirect('/eventos')
+		ctx = {'evento': edit_evento}
+		return render_to_response('administracion/administracion_eventos.html', ctx, context_instance = RequestContext(request))
+	else:
 		return  HttpResponseRedirect('/eventos')
 #Verifica la fecha del evento si esta o no aun por suceder
 def verificar_fecha_evento():
@@ -302,81 +285,72 @@ def verificar_fecha_evento():
 #CRUD OFERTA EDUCATIVA
 #crear nueva oferta educativa
 def add_oferta_view(request):
-	try:
-		if request.user.is_superuser:
-			if request.method == "POST":
-				oferta = oferta_educativa()
-				oferta.fecha_apertura = request.POST['fecha_inicio']
-				oferta.fecha_cierre = request.POST['fecha_fin']
-				oferta.nivel = request.POST['nivel']
-				oferta.grado = request.POST['grado']		
-				oferta.cupos = request.POST['cupos']
-				oferta.cupos_disponibles = oferta.cupos
-				oferta.jornada = request.POST['jornada']		
-				oferta.sede  = sede.objects.get(nombre = request.POST['sede'])
-				if (str(oferta.fecha_apertura) > str(date.today())):
-					oferta.estado = False
-				oferta.save()
-				return HttpResponseRedirect('/lista_ofertas')
-			return render_to_response('administracion/crear_oferta.html', context_instance=RequestContext(request))
-		else:
-			return  HttpResponseRedirect('/ofertas_educativas')
-	except:
+	if request.user.is_superuser:
+		if request.method == "POST":
+			oferta = oferta_educativa()
+			oferta.fecha_apertura = request.POST['fecha_inicio']
+			oferta.fecha_cierre = request.POST['fecha_fin']
+			oferta.nivel = request.POST['nivel']
+			oferta.grado = request.POST['grado']		
+			oferta.cupos = request.POST['cupos']
+			oferta.cupos_disponibles = oferta.cupos
+			oferta.jornada = request.POST['jornada']		
+			oferta.sede  = sede.objects.get(nombre = request.POST['sede'])
+			if (str(oferta.fecha_apertura) > str(date.today())):
+				oferta.estado = False
+			oferta.save()
+			return HttpResponseRedirect('/lista_ofertas')
+		return render_to_response('administracion/crear_oferta.html', context_instance=RequestContext(request))
+	else:
 		return  HttpResponseRedirect('/ofertas_educativas')
 #editar oferta educativa por id
 def edit_oferta_view(request, id_oferta):
-	try:
-		if  request.user.is_superuser:			
-			oferta = oferta_educativa.objects.get(pk = id_oferta)
-			if request.method == "POST":
-				cupos = oferta.cupos	
-				oferta.cupos = request.POST['cupos']
-				fecha_ini = oferta.fecha_apertura
-				fecha_fin = oferta.fecha_cierre
-				if cupos > oferta.cupos:
-					cupos = cupos - oferta.cupos
-					oferta.cupos_disponibles = oferta.cupos_disponibles - cupos
-				else:
-					cupos = int(oferta.cupos) - cupos	
-					oferta.cupos_disponibles = oferta.cupos_disponibles + cupos
+	if  request.user.is_superuser:			
+		oferta = oferta_educativa.objects.get(pk = id_oferta)
+		if request.method == "POST":
+			cupos = oferta.cupos	
+			oferta.cupos = request.POST['cupos']
+			fecha_ini = oferta.fecha_apertura
+			fecha_fin = oferta.fecha_cierre
+			if cupos > oferta.cupos:
+				cupos = cupos - oferta.cupos
+				oferta.cupos_disponibles = oferta.cupos_disponibles - cupos
+			else:
+				cupos = int(oferta.cupos) - cupos	
+				oferta.cupos_disponibles = oferta.cupos_disponibles + cupos
 
-				if oferta.cupos_disponibles == 0:
-					oferta.estado = False
-				else:
-					oferta.estado = True
-				try:
-					oferta.fecha_apertura = request.POST['fecha_inicio']
-					oferta.save()
-				except:
-					oferta.fecha_apertura = fecha_ini
-					oferta.save()
-				try:
-					oferta.fecha_cierre = request.POST['fecha_fin']
-					oferta.save()
-				except:
-					oferta.fecha_cierre = fecha_fin
-					oferta.save()
-				return HttpResponseRedirect('/lista_ofertas')
-			
-			ctx = {'oferta': oferta}
-			return render_to_response('administracion/editar_oferta.html', ctx, context_instance=RequestContext(request))
-		else:
-			return  HttpResponseRedirect('/ofertas_educativas')
-	except:
+			if oferta.cupos_disponibles == 0:
+				oferta.estado = False
+			else:
+				oferta.estado = True
+			try:
+				oferta.fecha_apertura = request.POST['fecha_inicio']
+				oferta.save()
+			except:
+				oferta.fecha_apertura = fecha_ini
+				oferta.save()
+			try:
+				oferta.fecha_cierre = request.POST['fecha_fin']
+				oferta.save()
+			except:
+				oferta.fecha_cierre = fecha_fin
+				oferta.save()
+			return HttpResponseRedirect('/lista_ofertas')
+		
+		ctx = {'oferta': oferta}
+		return render_to_response('administracion/editar_oferta.html', ctx, context_instance=RequestContext(request))
+	else:
 		return  HttpResponseRedirect('/ofertas_educativas')
 #eliminar oferta educativa por id
 def delete_oferta_view(request, id_oferta):
-	try:
-		if request.user.is_superuser:
-			oferta = oferta_educativa.objects.get(id = id_oferta)
-			inscripciones = inscripcion.objects.filter(oferta__id = id_oferta)
-			for p in inscripciones:
-				p.delete()
-			oferta.delete()
-			return HttpResponseRedirect('/lista_ofertas')
-		else:
-			return  HttpResponseRedirect('/ofertas_educativas')
-	except:
+	if request.user.is_superuser:
+		oferta = oferta_educativa.objects.get(id = id_oferta)
+		inscripciones = inscripcion.objects.filter(oferta__id = id_oferta)
+		for p in inscripciones:
+			p.delete()
+		oferta.delete()
+		return HttpResponseRedirect('/lista_ofertas')
+	else:
 		return  HttpResponseRedirect('/ofertas_educativas')
 #verifica si hay ofertas educativas para habilitar  o inhabilitar de acuerdo a la fecha.
 def verificar_fecha():
@@ -394,61 +368,46 @@ def verificar_fecha():
 	
 def inscripcion_view(request, id_oferta):
 	if request.method == "POST":
-		registro = inscripcion()
-		registro.nombres_alumno = request.POST['nombres_a']
-		registro.apellidos_alumno = request.POST['apellidos_a']
-		registro.nombres = request.POST['nombres']
-		registro.apellidos = request.POST['apellidos']
-		registro.identificacion = request.POST['identificacion']
-		registro.telefono_1 = request.POST['telefono']
-		registro.telefono_2 = request.POST['celular']
-		registro.edad = request.POST['edad']	
-		registro.fecha_inscripcion = date.today()
+
 		oferta_ed = oferta_educativa.objects.get(id = id_oferta)
-		oferta_ed.cupos_disponibles = oferta_ed.cupos_disponibles - 1		
-		if oferta_ed.cupos_disponibles == 0:
-			oferta_ed.estado = False
-		oferta_ed.save()
-		registro.oferta = oferta_ed
-		registro.save()				
+		if oferta_ed.cupos_disponibles > 0:
+			registro = inscripcion()
+			registro.nombres_alumno = request.POST['nombres_a']
+			registro.apellidos_alumno = request.POST['apellidos_a']
+			registro.nombres = request.POST['nombres']
+			registro.apellidos = request.POST['apellidos']
+			registro.identificacion = request.POST['identificacion']
+			registro.telefono_1 = request.POST['telefono']
+			registro.telefono_2 = request.POST['celular']
+			registro.edad = request.POST['edad']	
+			registro.fecha_inscripcion = date.today()
+			oferta_ed.cupos_disponibles = oferta_ed.cupos_disponibles - 1
+			if oferta_ed.cupos_disponibles == 0:	
+				oferta_ed.estado = False
+			oferta_ed.save()
+			registro.oferta = oferta_ed
+			registro.save()		
 	return HttpResponseRedirect('/ofertas_educativas')
 
 #CRUD Documentos academicos
 #crear nuevo documento
 def add_documento_view(request):
-	bandera_doc  = False
-	bandera_fun  = False
-	try:
-		if request.user.docente.jornada == "Tarde" and request.user.docente.sede.nombre == "John F. Kennedy":
-			bandera_doc = True
-		
-	except:
-		pass
-	try:
-		if request.user.funcionario:
-			bandera_fun = True
-		
-	except:
-		pass
-	if bandera_fun or bandera_doc:
-		if request.method == "POST":
-			new_documento = documento()
-			new_documento.titulo = request.POST['titulo']
-			new_documento.descripcion = request.POST['descripcion']
-			try:
-				if request.user.docente.jornada == "Tarde" and request.user.docente.sede.nombre == "John F. Kennedy":
-	 				new_documento.materia = request.POST['materia']
-					new_documento.grado = request.POST['grado']
-			except:
-				pass
-			new_documento.fecha = date.today()
-			new_documento.autor =  request.user
-			new_documento.documento = request.FILES['documento']			
-			new_documento.save()
-			return HttpResponseRedirect('/aula_virtual')	
-		return render_to_response('administracion/admin_documento.html', context_instance = RequestContext(request))
-	else:
-		return HttpResponseRedirect('/aula_virtual')
+	if request.method == "POST":
+		new_documento = documento()
+		new_documento.titulo = request.POST['titulo']
+		new_documento.descripcion = request.POST['descripcion']
+		try:
+			if request.user.docente.jornada == "Tarde" and request.user.docente.sede.nombre == "John F. Kennedy":
+ 				new_documento.materia = request.POST['materia']
+				new_documento.grado = request.POST['grado']
+		except:
+			pass
+		new_documento.fecha = date.today()
+		new_documento.autor =  request.user
+		new_documento.documento = request.FILES['documento']			
+		new_documento.save()
+		return HttpResponseRedirect('/aula_virtual')	
+	return render_to_response('administracion/admin_documento.html', context_instance = RequestContext(request))
 def edit_documento_view(request, id_documento):
 
 	edit_documento = documento.objects.get(id = id_documento)

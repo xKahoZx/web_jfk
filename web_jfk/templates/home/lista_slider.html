@@ -16,7 +16,7 @@
 		<div class="row">
 
 			<h1 class="title" align="center"><span class="label label-primary">Lista de imagenes</span></h1>
-			<form action="/add_item/" method="POST" enctype="multipart/form-data" class="form-horizontal jumbotron">
+			<form action="/add_item/" method="POST" enctype="multipart/form-data" class="form-horizontal jumbotron" onsubmit="return validar_img()">
 				{% csrf_token %}
 					<div class="form-group  " id="group_img">
 					    <label for="imagen" class="col-sm-2 control-label">Nueva imagen</label>
@@ -28,14 +28,13 @@
 					<div class="text-center">
 						<button type="submit" class="btn btn-primary">Agregar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
 					</div>
+					<br>
+					<div id="alerta" class='alert alert-danger col-sm-12 alerta' align="center" role='alert'><strong>Por favor completa los campos resaltados</strong></div>
 			</form>
 			<div class="col-md-12">
 				{% for p in items %}				
 					<div class="thumbnail col-md-3 padding-thumbnail" align="center">
-						<a href="#" class="hover-noticia" data-toggle="modal" data-target="#modal-{{p.id}}">
-							<img src="/media/{{p.imagen}}" class="img-noticia">
-						</a>
-
+						<img src="/media/{{p.imagen}}" class="img-noticia">
 						{% if p.estado%}
 							<p><span class="label label-success">Visible</span></p>
 							<a href="/modificar/{{p.id}}/desactivar" class="btn btn-warning">Desactivar</a>
@@ -52,8 +51,7 @@
 			</div>
 		</div>
 	</div>
-	
-	
+
 
 	<script type="text/javascript">
 		$('#imagen').fileinput({

@@ -53,8 +53,8 @@ def lista_slider_view(request):
 
 #albums
 def media_view(request,pagina):
-	albums = album.objects.filter(estado = True)	
-	album_aux = album.objects.filter(estado = True)	
+	albums = album.objects.all().order_by('-id')	
+	album_aux = album.objects.all().order_by('-id')
 	for p in album_aux:
 		p.descripcion = p.descripcion[0:300] + "..."
 
@@ -148,7 +148,6 @@ def oferta_view(request):
 def lista_ofertas_view(request):
 
 	if request.user.is_authenticated():
-		print "entre"
 		verificar_fecha()
 		if request.method == "POST":
 			consulta = request.POST['sede_select']
@@ -160,14 +159,14 @@ def lista_ofertas_view(request):
 			return render_to_response('home/lista_ofertas.html', ctx, context_instance = RequestContext(request))
 		else:
 			if request.user.is_superuser:
-				ofertas = oferta_educativa.objects.all()
+				ofertas = oferta_educativa.objects.all().order_by('-id')
 				ctx = {'ofertas':ofertas}
 				return render_to_response('home/lista_ofertas.html', ctx, context_instance = RequestContext(request))
 			else:	
 				try:
 					if request.user.funcionario:
 						id_sede = sede.objects.get(coordinadores = request.user.id).id
-						ofertas = oferta_educativa.objects.filter(sede = id_sede, jornada = request.user.funcionario.jornada)			
+						ofertas = oferta_educativa.objects.filter(sede = id_sede, jornada = request.user.funcionario.jornada).order_by('-id')		
 						ctx = {'ofertas':ofertas}
 						return render_to_response('home/lista_ofertas.html', ctx, context_instance = RequestContext(request))
 				except:
@@ -235,9 +234,9 @@ def mis_documentos_view(request):
 #Contacto
 
 def contacto_view(request):
-
-
-	return render_to_response('home/contacto.html', context_instance = RequestContext(request))
+	sedes = sede.objects.all()
+	ctx = {'sedes':sedes}
+	return render_to_response('home/contacto.html', ctx,context_instance = RequestContext(request))
 
 #docente
 

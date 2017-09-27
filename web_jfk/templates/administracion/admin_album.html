@@ -18,18 +18,22 @@
 			{% else %}
 			<h1 class="title text-center"><span class="label label-primary">Crear Nuevo Album</span></h1>
 			{% endif %}
-			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
+			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal" onsubmit="return validar_album()">
 				{% csrf_token %}
-				<div class="form-group">
+				<div class="form-group" id="group_titulo">
     				<label for="titulo" class="col-sm-2 control-label">Titulo Album</label>
     				<div class="col-sm-10">
-      					<input type="text" name="titulo" class="form-control" id="titulo" placeholder="Nombre del nuevo album" value="{{album.titulo}}">
+      					<input type="text" name="titulo" class="form-control" id="titulo" placeholder="Nombre del nuevo album" value="{{album.titulo}}{{titulo}}">
     				</div>
   				</div>
-  				<div class="form-group" >
+  				<div class="form-group" id="group_descripcion" >
     				<label for="descripcion" class="col-sm-2 control-label">Descripcion</label>
-    				<div class="col-sm-10">
-    					<textarea name="descripcion" class="form-control" rows="3" id="descripcion" placeholder="Ingrese la descripcion del album">{{album.descripcion}}</textarea>
+    				<div class="col-sm-10 ">
+    					<textarea name="descripcion" class="form-control" rows="3" id="descripcion"  onKeyUp="cuenta()" placeholder="Ingrese la descripcion del album">{{album.descripcion}}{{desc}}</textarea>
+    					<div class="col-sm-12">
+	    					<span id="helpBlock" class="help-block help col-sm-6 pull-left">La descripcion debe contener almenos 275 caracteres</span>
+	    					<span id="helpBlock2" class="help-block col-sm-4 pull-right text-right">Caracteres: {{num}}</span>
+    					</div>
 					</div>  					
   				</div>
   				<div class="form-group">
@@ -38,20 +42,26 @@
 						<input type="file" id="archivos" name="imagenes" multiple="true" class="file-loading">
 					</div>
 				</div>
-				{% if album %}
-				<h2 class="title" align="center"><span class="label label-info">Imagenes actuales</span></h2>
-				
+				{% if ban%}
+				<div class='alert alert-danger col-sm-12 ' align="center" role='alert'><strong>Debes seleccionar almenos seis imagenes para poder crear un nuevo album</strong></div>
 				{% endif %}
+				<div id="alerta" class='alert alert-danger col-sm-12 alerta' align="center" role='alert'><strong>Por favor completa los campos resaltados</strong></div>
+				<br>
 				<p align="center" class="col-xs-12">
 					<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
 					<button type="reset" class="btn btn-danger">Limpiar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></button>
 				</p>
 			</form>
 			<div>
+			{% if album %}
+			<h2 class="title" align="center"><span class="label label-info">Imagenes actuales</span></h2>
+			{% endif %}
 			{% for p in album.imagenes.all%}
 				<div class="thumbnail col-md-3 padding-thumbnail" align="center">
 					<img src="/media/{{p.imagen}}" class="img-4">
+					{% if num_img > 6%}
 					<a href="/del_imagen/{{p.id}}" class="btn btn-danger">Eliminar</a>
+					{%endif %}
 					<a href="/edit-img/{{p.id}}" class="btn btn-primary">Editar</a>
 				</div>
 			{% endfor %}

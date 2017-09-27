@@ -3,7 +3,9 @@
 	border-color: #2e6da4 !important;
 	color: #fff;
 }
-
+.help{
+	display: none;
+}
 .btn-a{
 	height: 50px !important;
 }

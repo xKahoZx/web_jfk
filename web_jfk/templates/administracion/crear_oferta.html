@@ -15,10 +15,10 @@
 		<div class="row col-xs-12">
 			
 			<h1 class="title" align="center"><span class="label label-primary">Agregar nueva oferta educativa</span></h1>
-			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal jumbotron">
+			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal jumbotron" onsubmit="return validar_oferta()">
 				{% csrf_token%}
 				
-				<div class="form-group">
+				<div class="form-group" id="group_jornada">
 					<label for="jornada" class="col-sm-2 control-label">Jornada</label>
 					<div class="col-sm-10">
 						<select class="form-control" id="jornada" name="jornada" >
@@ -29,7 +29,7 @@
 						</select>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" id="group_sede">
 					<label for="sede" class="col-sm-2 control-label">Sede</label>
 					<div class="col-sm-10">
 						<select class="form-control" id="sede" name="sede" >
@@ -42,7 +42,7 @@
 					</div>
 				</div>
 				
-				<div class="form-group">
+				<div class="form-group" id="group_nivel">
 					<label for="nivel" class="col-sm-2 control-label">Nivel educativo</label>
 					<div class="col-sm-10">
 						<select class="form-control" id="tipo" name="nivel">
@@ -55,7 +55,7 @@
 						</select>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" id="group_grado">
 					<label for="nivel" class="col-sm-2 control-label">Grado</label>
 					<div class="col-sm-10">
 						<select class="form-control" id="grado" name="grado">
@@ -64,25 +64,27 @@
 						</select>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" id="group_cupos">
 					<label for="cupos" class="col-sm-2 control-label">Cupos</label>
 					<div class="col-sm-10">
 						<input type="text" name="cupos" class="form-control" id="cupos" placeholder="Ingrese el numero de cupos disponibles para la oferta" >
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" id="group_inicio">
 					<label for="inicio" class="col-sm-2 control-label">Fecha de apertura</label>
 					<div class="input-group date">
-  						<input type="text" class="form-control" readonly name="fecha_inicio"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+  						<input type="text" class="form-control" readonly name="fecha_inicio" id="inicio"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group text-center" id="group_fin">
 					<label for="inicio" class="col-sm-2 control-label">Fecha de cierre</label>
 					<div class="input-group date">
-  						<input type="text" class="form-control" readonly name="fecha_fin"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+  						<input type="text" class="form-control" readonly name="fecha_fin" id="fin"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
 					</div>
+					<span id="helpBlock2" class="help-block help "><strong>La fecha de cierre no puede ser menor que la fecha de apertura</strong></span>
 				</div>
-				
+				<br>
+				<div id="alerta" class='alert alert-danger col-sm-12 alerta' align="center" role='alert'><strong>Por favor completa los campos resaltados</strong></div>
 				<p align="center">
 					<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
 					<button type="reset" class="btn btn-danger">Limpiar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></button>

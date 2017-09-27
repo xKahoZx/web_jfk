@@ -39,7 +39,7 @@ urlpatterns = patterns('web_jfk.apps.administracion.views',
 	#usuarios
 	url(r'^add_usuario/$','add_usuario_view', name = 'vista_agregar_usuario'),
 	url(r'^edit_usuario/(?P<tipo_usuario>[^/]+)/(?P<id_user>[^/]+)/$','edit_usuario_view', name = 'vista_editar_usuario'),
-	url(r'^add_estudiante/$','add_alumno_view', name = 'vista_agregar_usuario'),
+	url(r'^registro/$','add_alumno_view', name = 'vista_agregar_usuario'),
 	url(r'^cambiar_password/(?P<id_user>.*)/$','edit_password_view', name = 'vista_editar_password'),
 	url(r'^del_user/(?P<id_user>.*)/$','del_user_view', name = 'vista_eliminar_usuario'),
 

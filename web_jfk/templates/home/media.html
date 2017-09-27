@@ -24,7 +24,7 @@
 						</div>
 					{% endif %}
 				{% endfor %}
-				<article>{{p.descripcion}}</article>
+				<article class="text-justify">{{p.descripcion}}</article>
 				<p class="text-right">
 					{% if user.is_superuser or user.administrador.tipo_usuario = "Administrador Multimedia"%}
 					<a href="/del_album/{{p.id}}" class="btn btn-danger">Eliminar</a>

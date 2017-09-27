@@ -13,8 +13,7 @@
 				{% endif %}
 			{% endif %}
 			{% if user.funcionario%}
-				<p ><a href="/mis_documentos" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Ver mis documentos publicados</a></p>	
-				
+				<p ><a href="/mis_documentos" class="btn btn-primary"><span class="glyphicon glyphicon-edit"></span> Ver mis documentos publicados</a></p>					
 			{% endif %}
 			{% if user.estudiante%}
 			<form action="." method="POST" class="form-horizontal">	
@@ -64,7 +63,11 @@
 						  	<small>Docente <cite>materia {{p.autor.docente.curso}}</cite></small>
 						  	{% endif %}
 						  	{% if p.autor.funcionario%}
+						  	{% if p.autor.funcionario.sede.nombre == None %}
+						  	<small>Rector academico</small>
+						  	{% else%}
 						  	<small>Coordinador <cite>{{p.autor.funcionario.sede.nombre}} jornada {{p.autor.funcionario.jornada}}</cite></small>
+						  	{% endif %}
 						  	{% endif%}
 						  	<small>Fecha publicacion <cite>{{p.fecha}}</cite></small>
 

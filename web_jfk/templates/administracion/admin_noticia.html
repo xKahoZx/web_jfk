@@ -35,16 +35,20 @@
 				    </div>
 				</div>
 				<div class="form-group" id="group_subtitulo">
-				    <label for="subititulo" class="col-sm-2 control-label">Subtitulo</label>
+				    <label for="subititulo" class="col-sm-2 control-label">Copete</label>
 				    <div class="col-sm-10">
-						<textarea class="form-control" rows="3" placeholder="Ingrese el Subtitulo de la noticia" name="subtitulo" id="subtitulo">{{noticia.subtitulo}}</textarea>
+						<textarea class="form-control" rows="3" placeholder="Ingrese el copete de la noticia" name="subtitulo" id="copete" >{{noticia.copete}}</textarea>						
 				    </div>
 				</div>			
 				
 				<div class="form-group" id="group_cuerpo">
 				    <label for="cuerpo" class="col-sm-2 control-label">Cuerpo</label>
 				    <div class="col-sm-10">
-						<textarea class="form-control" rows="6" placeholder="Ingrese el cuerpo de la noticia" name="cuerpo" id="cuerpo">{{noticia.cuerpo}}</textarea>
+						<textarea class="form-control" rows="6" placeholder="Ingrese el cuerpo de la noticia" name="cuerpo" id="cuerpo" onKeyUp="contar_noticia()">{{noticia.cuerpo}}</textarea>
+						<div class="col-sm-12">
+	    					<span id="helpBlock" class="help-block help col-sm-7 pull-left text">El cuerpo de la noticia debe tener almenos 792 caracteres</span>
+	    					<span id="helpBlock2" class="help-block col-sm-4 pull-right text-right">Caracteres: {{num}}</span>
+    					</div>
 				    </div>
 				</div>	
 				<div class="form-group" id="group_autor">
@@ -66,7 +70,8 @@
 					<img src="/media/{{noticia.imagen}}" class="img-noticia">
 				</div>
 				{% endif %}
-				<div id="alerta" class='alert alert-danger col-sm-6 col-sm-offset-4 alerta' align="center" role='alert'><strong>Por favor completa los campos resaltados</strong></div>
+				<br>
+				<div id="alerta" class='alert alert-danger col-sm-12 alerta' align="center" role='alert'><strong>Por favor completa los campos resaltados</strong></div>
 				<p align="center" class="col-xs-12">
 					<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
 					<button type="reset" class="btn btn-danger">Limpiar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></button>

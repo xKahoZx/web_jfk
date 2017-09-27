@@ -19,10 +19,9 @@
 						<div class="col-sm-10">
 							<select class="form-control" id="jornada" name="jornada" >
 								<option value="0">--- Seleciona la sede con la cual desea contactarse ---</option>
-	 							<option value="Mañana">Jose Maria Obando</option>
-								<option value="Tarde" >John F. Kennedy</option>
-								<option value="Tarde" >Nueva Esperanza</option>
-								
+								{% for p in sedes%}
+	 							<option value="{{p.nombre}}">{{p.nombre}}</option>
+								{% endfor%}
 							</select>
 						</div>
 					</div>
@@ -53,7 +52,7 @@
 					<div class="form-group">
 					    <label for="descripcion" class="col-sm-2 control-label">Descripcion</label>
 					    <div class="col-sm-10">
-							<textarea class="form-control" rows="6" placeholder="Ingrese el mensaje o motivo de contacto" name="descripcion"></textarea>
+							<textarea class="form-control" rows="6" placeholder="Ingrese el motivo de contacto" name="descripcion"></textarea>
 					    </div>
 					</div>
 					<p align="center">
@@ -62,6 +61,12 @@
 					</p>
 					
 				</form>
+			</div>
+			<div class="col-sm-12 col-md-5 text-center">
+				<br>
+				<br>
+				<br>
+				<img src="/media/images/escudo.png" class="img-2">
 			</div>
 			<div class="col-sm-12" align="center">
 				<div class="col-md-4 col-sm-12">

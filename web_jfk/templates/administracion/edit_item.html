@@ -17,20 +17,22 @@
 			<h1 class="title"><span class="label label-primary">Editar Imagen</span></h1>
 			<img src="/media/{{item.imagen}} " class="img-thumbnail img-noticia">
 			<h4><span class="label label-success">Imagen actual</span></h4>
-			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
+			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal" onsubmit="return validar_img()">
 				{% csrf_token %}
 				<br>
 				<div class="form-group jumbotron">
-					<div class="form-group ">
+					<div class="form-group "  id="group_img"> 
 					    <label for="imagen" class="col-sm-2 control-label">Nueva imagen </label>
 					   	<div class="col-sm-10">
 					   		<input type="file" id="imagen" name="imagen" class="file-loading">
-						    
 						</div>
 					</div>
+					<div id="alerta" class='alert alert-danger col-sm-12 alerta' align="center" role='alert'><strong>Por favor completa los campos resaltados</strong></div>
+					<br>
 					<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
 					<a href="/lista_items_carrousel" class="btn btn-danger">Cancelar <span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span></a>
 				</div>
+
 			</form>
 		</div>
 	</div>

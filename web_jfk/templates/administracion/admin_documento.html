@@ -67,9 +67,11 @@
 					    <input type="file" id="imagen" class="form-control" name="documento">
 					</div>
 				</div>
+				{% if documento%}
 				<div class="text-center">
 					<a href="/media/{{documento.documento}}" target="_blank" class="btn btn-info ">Ver documento</a>
 				</div>
+				{% endif %}
 				<div id="alerta" class='alert alerta alert-danger col-sm-6 col-sm-offset-4' align="center" role='alert'><strong>Por favor completa los campos resaltados</strong></div>
 				<p align="center" class="col-xs-12">
 					<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>

@@ -205,6 +205,12 @@ $(document).ready(function(){
 			document.getElementById("jmo").disabled = false;
 			document.getElementById("ne").disabled = false;
 
+		} 
+		if ($("#jornada").val() == "0"){
+			document.getElementById("jfk").disabled = true;
+			document.getElementById("jmo").disabled = true;
+			document.getElementById("ne").disabled = true;
+
 		}	
 		if ($("#jornada").val() == "Tarde"){
 			document.getElementById("jfk").disabled = false;
@@ -236,7 +242,7 @@ function validar_noticia(){
 	}else{
 		$('#group_titulo').removeClass('has-error');
 	}
-	campo = document.getElementById('subtitulo').value.trim();
+	campo = document.getElementById('copete').value.trim();
 	if(campo.length == 0){
 		retorno = false;
 		$('#group_subtitulo').addClass('has-error');
@@ -245,12 +251,14 @@ function validar_noticia(){
 		$('#group_subtitulo').removeClass('has-error');
 	}
 	campo = document.getElementById('cuerpo').value.trim();
-	if(campo.length == 0){
+	if(campo.length < 792){
 		retorno = false;
 		$('#group_cuerpo').addClass('has-error');
+		$('.help').show();
 	}
 	else{
 		$('#group_cuerpo').removeClass('has-error');
+		$('.help').hide();
 	}
 	campo = document.getElementById('autor').value.trim();
 	if(campo.length == 0){
@@ -271,7 +279,7 @@ function validar_noticia(){
 function validar_registro(){
 
 	retorno = true;
-	var campo = document.getElementById('nombres_a').value;
+	var campo = document.getElementById('nombres_a').value.trim();
 	if(campo.length == 0){
 		retorno = false;
 		$('#group_nombres_a').addClass('has-error');
@@ -280,7 +288,7 @@ function validar_registro(){
 		$('#group_nombres_a').removeClass('has-error');
 	}
 
-	campo = document.getElementById('apellidos_a').value;
+	campo = document.getElementById('apellidos_a').value.trim();
 	if(campo.length == 0){
 		retorno = false;
 		$('#group_apellidos_a').addClass('has-error');
@@ -289,7 +297,7 @@ function validar_registro(){
 		$('#group_apellidos_a').removeClass('has-error');
 	}
 
-	campo = document.getElementById('edad').value;
+	campo = document.getElementById('edad').value.trim();
 	var campo_aux = campo.toString().trim();
 	if(!/^([0-9])*$/.test(campo) || campo_aux.length == 0){
 		retorno = false;
@@ -299,7 +307,7 @@ function validar_registro(){
 		$('#group_edad').removeClass('has-error');
 	}
 
-	campo = document.getElementById('identificacion').value;
+	campo = document.getElementById('identificacion').value.trim();
 	campo_aux = campo.toString().trim();
 	if(!/^([0-9])*$/.test(campo) || campo_aux.length == 0){
 		retorno = false;
@@ -308,7 +316,7 @@ function validar_registro(){
 	else{
 		$('#group_identificacion').removeClass('has-error');
 	}
-	campo = document.getElementById('nombres').value;
+	campo = document.getElementById('nombres').value.trim();
 	if(campo.length == 0){
 		retorno = false;
 		$('#group_nombres').addClass('has-error');
@@ -316,7 +324,7 @@ function validar_registro(){
 	else{
 		$('#group_nombres').removeClass('has-error');
 	}
-	campo = document.getElementById('apellidos').value;
+	campo = document.getElementById('apellidos').value.trim();
 	if(campo.length == 0){
 		retorno = false;
 		$('#group_apellidos').addClass('has-error');
@@ -324,7 +332,7 @@ function validar_registro(){
 	else{
 		$('#group_apellidos').removeClass('has-error');
 	}
-	campo = document.getElementById('telefono').value;
+	campo = document.getElementById('telefono').value.trim();
 	campo_aux = campo.toString().trim();
 	if(!/^([0-9])*$/.test(campo) || campo_aux.length == 0){
 		retorno = false;
@@ -333,7 +341,7 @@ function validar_registro(){
 	else{
 		$('#group_telefono').removeClass('has-error');
 	}
-	campo = document.getElementById('celular').value;
+	campo = document.getElementById('celular').value.trim();
 	campo_aux = campo.toString().trim();
 	if(!/^([0-9])*$/.test(campo) || campo_aux.length == 0){
 		retorno = false;
@@ -342,22 +350,7 @@ function validar_registro(){
 	else{
 		$('#group_celular').removeClass('has-error');
 	}
-	campo = document.getElementById('direccion').value;
-	if(campo.length == 0){
-		retorno = false;
-		$('#group_direccion').addClass('has-error');
-	}
-	else{
-		$('#group_direccion').removeClass('has-error');
-	}
-	campo = document.getElementById('barrio').value;
-	if(campo.length == 0){
-		retorno = false;
-		$('#group_barrio').addClass('has-error');
-	}
-	else{
-		$('#group_barrio').removeClass('has-error');
-	}
+	
 	if(retorno == false){
 		$("#alerta").show();
 	}
@@ -365,3 +358,328 @@ function validar_registro(){
 	return retorno;
 }
 
+function validar_img(){
+	var retorno = true;
+	var campo = document.getElementById('imagen').value;
+	if(campo.length == 0){
+		retorno = false;
+		$('#group_img').addClass('has-error');
+	}
+	else{
+		$('#group_img').removeClass('has-error');
+	}
+	if(retorno == false){
+		$(".alerta").show();
+	}
+	return retorno;
+
+}
+
+function validar_album(){
+	var retorno = true;
+	var campo = document.getElementById('titulo').value.trim();
+	if(campo.length == 0){
+		retorno = false;
+		$('#group_titulo').addClass('has-error');
+	}
+	else{
+		$('#group_titulo').removeClass('has-error');
+	}
+	campo = document.getElementById('descripcion').value.trim();
+
+	if(campo.length < 275){
+		retorno = false;
+		$('#group_descripcion').addClass('has-error');
+		$('.help').show();
+	}
+	else{
+		$('#group_descripcion').removeClass('has-error');
+		$('.help').hide();
+
+	}
+	if(retorno == false){
+		$(".alerta").show();
+	}
+	return retorno
+}
+
+function cuenta(){
+	contar(document.getElementById('descripcion').value.trim());
+	
+}
+
+function contar_noticia(){
+	contar(document.getElementById('cuerpo').value.trim());
+}
+
+function contar(cadena ){
+	$('#helpBlock2').html("Caracteres: " + cadena.length);
+}
+
+function validar_oferta(){
+	var retorno = true;
+
+	if(document.getElementById('jornada').value == '0'){
+		retorno = false;
+		$('#group_jornada').addClass('has-error');
+	}else{
+		$('#group_jornada').removeClass('has-error');
+	}
+	if(document.getElementById('sede').value == '0'){
+		retorno = false;
+		$('#group_sede').addClass('has-error')
+	}else{
+		$('#group_sede').removeClass('has-error')
+	}
+	if(document.getElementById('tipo').value == '0'){
+		retorno = false;
+		$('#group_nivel').addClass('has-error')
+	}else{
+		$('#group_nivel').removeClass('has-error')
+	}
+	if(document.getElementById('grado').value == '0'){
+		retorno = false;
+		$('#group_grado').addClass('has-error')
+	}else{
+		$('#group_grado').removeClass('has-error')
+	}
+	if(document.getElementById('cupos').value.trim() <= 0){
+		retorno = false;
+		$('#group_cupos').addClass('has-error')
+	}else{
+		$('#group_cupos').removeClass('has-error')
+	}
+	var bandera = true
+	if (document.getElementById('inicio').value.length == 0){
+		retorno = false;
+		bandera = false;
+		$('#group_inicio').addClass('has-error')
+	}else{
+		bandera = true;
+		$('#group_inicio').removeClass('has-error')
+	}
+	if (document.getElementById('fin').value.length == 0){
+		bandera = false;
+		$('#group_fin').addClass('has-error')
+	}else{
+		bandera = true;
+		$('#group_fin').removeClass('has-error')
+	}
+	if(bandera){
+		if (document.getElementById('inicio').value > document.getElementById('fin').value){
+			retorno = false
+			$('#group_fin').addClass('has-error')
+			$('.help').show();
+
+		}else{
+			$('#group_fin').removeClass('has-error')
+			$('.help').hide();
+
+		}
+
+	}
+	if(retorno == false){
+		$(".alerta").show();
+	}
+	return retorno
+}
+
+function validar_evento(){
+	var retorno = true;
+	if(document.getElementById('titulo').value.trim().length == 0){
+		retorno = false;
+		$('#group_titulo').addClass('has-error');
+	}else{
+		$('#group_titulo').removeClass('has-error');
+	}
+	if(document.getElementById('descripcion').value.trim().length < 200){
+		retorno = false;
+		$('#group_descripcion').addClass('has-error');
+		$('.help').show();
+	}else{
+		$('.help').hide();
+		$('#group_descripcion').removeClass('has-error');
+	}
+	if(document.getElementById('fecha').value.trim().length == 0){
+		retorno = false;
+		$('#group_fecha').addClass('has-error');
+	}else{
+		$('#group_fecha').removeClass('has-error');
+	}
+	if(document.getElementById('indicador').innerHTML == "Crear nuevo evento"){	
+		if(document.getElementById('imagen').value.trim().length == 0){
+			retorno = false;
+			$('#group_imagen').addClass('has-error');
+		}else{
+			$('#group_imagen').removeClass('has-error');
+		}
+	}
+	return retorno;
+}
+
+
+function validar_usuario(){
+
+	var retorno = true;
+	if(document.getElementById('nombres').value.trim().length == 0){
+		retorno = false;
+		$('#group_nombres').addClass('has-error');
+	}else{
+		$('#group_nombres').removeClass('has-error');
+	}
+	if(document.getElementById('apellidos').value.trim().length == 0){
+		retorno = false;
+		$('#group_apellidos').addClass('has-error');
+	}else{
+		$('#group_apellidos').removeClass('has-error');
+	}
+	if(document.getElementById('correo').value.trim().length == 0){
+		retorno = false;
+		$('#group_correo').addClass('has-error');
+	}else{
+		$('#group_correo').removeClass('has-error');
+	}
+	if(document.getElementById('username').value.trim().length == 0){
+		retorno = false;
+		$('#group_username').addClass('has-error');
+	}else{
+		$('#group_username').removeClass('has-error');
+	}
+	var bandera = true;
+	if(document.getElementById('password').value.trim().length == 0){
+		retorno = false;
+		bandera = false; 
+		$('#group_password').addClass('has-error');
+	}else{
+		$('#group_password').removeClass('has-error');
+	}
+	if(document.getElementById('password_conf').value.trim().length == 0){
+		retorno = false;
+		bandera = false;
+		$('#group_password_conf').addClass('has-error');
+	}else{
+		
+		$('#group_password_conf').removeClass('has-error');
+	}
+	if(bandera){
+		if(document.getElementById('password').value.trim() != document.getElementById('password_conf').value.trim()){
+			$('#group_password_conf').addClass('has-error');
+			$('#group_password').addClass('has-error');
+			$('.help').show();
+			document.getElementById('password').value = "";
+			document.getElementById('password_conf').value = "";
+			retorno = false;
+		}else{
+			$('#group_password_conf').removeClass('has-error');
+			$('#group_password').removeClass('has-error');
+			$('.help').hide();
+		}
+	}
+
+	// validar campos unicos para docente
+	if(document.getElementById('tipo_persona').value == 'Docente'){
+		if(document.getElementById('sede_docente').value == '0'){
+			retorno = false;
+			$('#group_sede').addClass('has-error');
+		}else{
+			$('#group_sede').removeClass('has-error');
+		}	
+		if(document.getElementById('jornada_docente').value == '0'){
+			retorno = false;
+			$('#group_jornada').addClass('has-error');
+		}else{
+			$('#group_jornada').removeClass('has-error');
+		}	
+		if (document.getElementById('sede_docente').value == 'John F. Kennedy' && document.getElementById('jornada_docente').value == 'Tarde'){
+			if(document.getElementById('curso_docente_b').value == '0'){
+				retorno = false;
+				$('#group_curso_b').addClass('has-error');
+			}else{
+				$('#group_curso_b').removeClass('has-error');
+			}	
+		}else{
+			if(document.getElementById('curso_docente_c').value == '0'){
+				retorno = false;
+				$('#group_curso_c').addClass('has-error');
+			}else{
+				$('#group_curso_c').removeClass('has-error');
+			}	
+		}
+		if(document.getElementById('imagen').value.trim().length == 0){
+			retorno = false;
+			$('#group_img').addClass('has-error');
+		}else{
+			$('#group_img').removeClass('has-error');
+		}
+	//validar campos para administrador
+	}else{
+		if(document.getElementById('rol_user').value == '0'){
+			retorno = false;
+			$('#group_rol').addClass('has-error');
+		}else{
+			$('#group_rol').removeClass('has-error');
+		}	
+	}
+                  
+	return retorno;
+}
+
+function validar_registro(){
+	var retorno = true;
+	if(document.getElementById('identificacion').value.trim().length ==0 ){
+		retorno = false;
+		$('#group_identificacion').addClass('has-error');
+	}else{
+		$('#group_identificacion').removeClass('has-error');
+	}
+	if(document.getElementById('email').value.trim().length ==0 ){
+		retorno = false;
+		$('#group_correo').addClass('has-error');
+	}else{
+		$('#group_correo').removeClass('has-error');
+	}
+	if(document.getElementById('email').value.trim().length ==0 ){
+		retorno = false;
+		$('#group_correo').addClass('has-error');
+	}else{
+		$('#group_correo').removeClass('has-error');
+	}	
+	if(document.getElementById('username').value.trim().length == 0){
+		retorno = false;
+		$('#group_username').addClass('has-error');
+	}else{
+		$('#group_username').removeClass('has-error');
+	}	
+	var bandera = true;
+	if(document.getElementById('password').value.trim().length == 0){
+		retorno = false;
+		bandera = false; 
+		$('#group_password').addClass('has-error');
+	}else{
+		$('#group_password').removeClass('has-error');
+	}
+	if(document.getElementById('password_conf').value.trim().length == 0){
+		retorno = false;
+		bandera = false;
+		$('#group_password_conf').addClass('has-error');
+	}else{
+		
+		$('#group_password_conf').removeClass('has-error');
+	}
+	if(bandera){
+		if(document.getElementById('password').value.trim() != document.getElementById('password_conf').value.trim()){
+			$('#group_password_conf').addClass('has-error');
+			$('#group_password').addClass('has-error');
+			$('.help').show();
+			document.getElementById('password').value = "";
+			document.getElementById('password_conf').value = "";
+			retorno = false;
+		}else{
+			$('#group_password_conf').removeClass('has-error');
+			$('#group_password').removeClass('has-error');
+			$('.help').hide();
+		}
+	}
+
+	return retorno
+}
