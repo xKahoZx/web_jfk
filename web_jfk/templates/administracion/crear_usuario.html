@@ -151,7 +151,12 @@
 				   	</div>
 				   	<span id="helpBlock" class="help-block help"><strong>Las contraseñas ingresadas no coinciden</strong></span>
 				</div>
-				
+				{% if men  %}
+				<div id="alerta" class='alert alert-danger col-sm-12' align="center" role='alert'>
+					<strong>{{men}}</strong>
+				</div>
+					
+				{% endif %}
 				<p align="center" class="col-xs-12 forms_persona" id="group_btn" >
 					<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
 					<button type="reset" class="btn btn-danger">Limpiar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></button>

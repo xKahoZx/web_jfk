@@ -247,8 +247,6 @@ def edit_evento_view(request, id_evento):
 		if request.method == "POST":
 			edit_evento.titulo = request.POST['titulo']
 			edit_evento.descripcion = request.POST['descripcion']
-			fecha_anterior = edit_evento.fecha
-			year_anterior = edit_evento.anio
 			edit_evento.fecha = request.POST['fecha']	
 			edit_evento.anio = edit_evento.fecha[0:4]
 			try:
@@ -263,12 +261,8 @@ def edit_evento_view(request, id_evento):
 				edit_evento.estado = True
 			if( str(edit_evento.fecha) < str(fecha)):
 				edit_evento.estado = False
-			try:
-				edit_evento.save()
-			except:
-				edit_evento.fecha = fecha_anterior
-				edit_evento.anio = year_anterior
-				edit_evento.save()
+
+			edit_evento.save()
 			return HttpResponseRedirect('/eventos')
 		ctx = {'evento': edit_evento}
 		return render_to_response('administracion/administracion_eventos.html', ctx, context_instance = RequestContext(request))
@@ -310,8 +304,8 @@ def edit_oferta_view(request, id_oferta):
 		if request.method == "POST":
 			cupos = oferta.cupos	
 			oferta.cupos = request.POST['cupos']
-			fecha_ini = oferta.fecha_apertura
-			fecha_fin = oferta.fecha_cierre
+			oferta.fecha_apertura = request.POST['fecha_inicio']
+			oferta.fecha_cierre = request.POST['fecha_fin']
 			if cupos > oferta.cupos:
 				cupos = cupos - oferta.cupos
 				oferta.cupos_disponibles = oferta.cupos_disponibles - cupos
@@ -319,22 +313,11 @@ def edit_oferta_view(request, id_oferta):
 				cupos = int(oferta.cupos) - cupos	
 				oferta.cupos_disponibles = oferta.cupos_disponibles + cupos
 
-			if oferta.cupos_disponibles == 0:
+			if oferta.cupos_disponibles <= 0:
 				oferta.estado = False
 			else:
 				oferta.estado = True
-			try:
-				oferta.fecha_apertura = request.POST['fecha_inicio']
-				oferta.save()
-			except:
-				oferta.fecha_apertura = fecha_ini
-				oferta.save()
-			try:
-				oferta.fecha_cierre = request.POST['fecha_fin']
-				oferta.save()
-			except:
-				oferta.fecha_cierre = fecha_fin
-				oferta.save()
+			oferta.save()
 			return HttpResponseRedirect('/lista_ofertas')
 		
 		ctx = {'oferta': oferta}
@@ -459,9 +442,13 @@ def add_usuario_view(request):
 			new_usuario.nombres = request.POST['nombres']
 			new_usuario.apellidos = request.POST['apellidos']
 			new_usuario.correo = request.POST['correo']
-			u = User.objects.create_user(username = request.POST['username'], password = request.POST['password'])
-			u.save()
-
+			try:
+				u = User.objects.create_user(username = request.POST['username'], password = request.POST['password'])
+				u.save()
+			except:
+				men = "El nombre de usuario ya se encuentra registrado"
+				ctx = {'sedes' : sedes, 'men':men}
+				return render_to_response('administracion/crear_usuario.html', ctx, context_instance=RequestContext(request))
 			if(request.POST['tipo_select'] == "Docente"):
 
 				new_usuario.jornada = request.POST['jornada_select']
@@ -538,6 +525,13 @@ def edit_usuario_view(request, tipo_usuario, id_user):
 
 def add_alumno_view(request):
 	if request.method == "POST":
+		try:
+			query_user = User.objects.get(username = request.POST['username'])
+			men = "El nombre de usuario ya se encuentra registrado"
+			ctx = {'men':men }
+			return render_to_response('administracion/registro_estudiante.html', ctx, context_instance=RequestContext(request))	
+		except:
+			pass
 		identificacion = request.POST['identificacion']
 		try:
 			men = "El numero de identificacion ingresado ya se encuentra registrado"
@@ -547,7 +541,7 @@ def add_alumno_view(request):
 		except:
 			pass
 		#abrir el archivo excel
-		document = openpyxl.load_workbook('%s/Libro1.xlsx' % MEDIA_ROOT)
+		document = openpyxl.load_workbook('%s/MultimediaData/doc_estudiantes/estudiantes.xlsx' % MEDIA_ROOT)
 		#acceder a una hoja del documento
 		hoja = document.get_sheet_by_name('Hoja1')
 		#recorre la columna 1 y la fila es una variable que aumenta 
@@ -615,8 +609,6 @@ def edit_funcionario_view(request, id_user):
 		return render_to_response('administracion/edit_coordinador.html', ctx,context_instance=RequestContext(request))
 	else:
 		return HttpResponseRedirect('/administracion')
-
-
 
 
 

@@ -113,10 +113,13 @@ class institucion(models.Model):
 	def url(self,filename):
 		ruta = "MultimediaData/escudo/%s.jpg"%(str(self.nombre) )
 		return ruta
-	
+	def url_doc(self,filename):
+		ruta = "MultimediaData/doc_estudiantes/estudiantes.xlsx"
+		return ruta
 	rector 			= models.OneToOneField(funcionario)
 	nombre 			= models.CharField(max_length = 100)
 	escudo			= models.ImageField(upload_to = url )
+	estudiantes		= models.FileField(upload_to = url_doc)
 	def __unicode__(self):
 		return self.nombre
 

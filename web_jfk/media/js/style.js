@@ -484,6 +484,49 @@ function validar_oferta(){
 	return retorno
 }
 
+function validar_edit_oferta(){
+	var retorno = true;
+	if(document.getElementById('cupos').value.trim() <= 0){
+		retorno = false;
+		$('#group_cupos').addClass('has-error')
+	}else{
+		$('#group_cupos').removeClass('has-error')
+	}
+	var bandera = true
+	if (document.getElementById('inicio').value.length == 0){
+		retorno = false;
+		bandera = false;
+		$('#group_inicio').addClass('has-error')
+	}else{
+		bandera = true;
+		$('#group_inicio').removeClass('has-error')
+	}
+	if (document.getElementById('fin').value.length == 0){
+		bandera = false;
+		$('#group_fin').addClass('has-error')
+	}else{
+		bandera = true;
+		$('#group_fin').removeClass('has-error')
+	}
+	if(bandera){
+		if (document.getElementById('inicio').value > document.getElementById('fin').value){
+			retorno = false
+			$('#group_fin').addClass('has-error')
+			$('.help').show();
+
+		}else{
+			$('#group_fin').removeClass('has-error')
+			$('.help').hide();
+
+		}
+
+	}
+	if(retorno == false){
+		$(".alerta").show();
+	}
+	return retorno;
+}
+
 function validar_evento(){
 	var retorno = true;
 	if(document.getElementById('titulo').value.trim().length == 0){
@@ -624,62 +667,64 @@ function validar_usuario(){
 	return retorno;
 }
 
-function validar_registro(){
-	var retorno = true;
-	if(document.getElementById('identificacion').value.trim().length ==0 ){
-		retorno = false;
-		$('#group_identificacion').addClass('has-error');
-	}else{
-		$('#group_identificacion').removeClass('has-error');
-	}
-	if(document.getElementById('email').value.trim().length ==0 ){
-		retorno = false;
-		$('#group_correo').addClass('has-error');
-	}else{
-		$('#group_correo').removeClass('has-error');
-	}
-	if(document.getElementById('email').value.trim().length ==0 ){
-		retorno = false;
-		$('#group_correo').addClass('has-error');
-	}else{
-		$('#group_correo').removeClass('has-error');
-	}	
-	if(document.getElementById('username').value.trim().length == 0){
-		retorno = false;
-		$('#group_username').addClass('has-error');
-	}else{
-		$('#group_username').removeClass('has-error');
-	}	
-	var bandera = true;
-	if(document.getElementById('password').value.trim().length == 0){
-		retorno = false;
-		bandera = false; 
-		$('#group_password').addClass('has-error');
-	}else{
-		$('#group_password').removeClass('has-error');
-	}
-	if(document.getElementById('password_conf').value.trim().length == 0){
-		retorno = false;
-		bandera = false;
-		$('#group_password_conf').addClass('has-error');
-	}else{
-		
-		$('#group_password_conf').removeClass('has-error');
-	}
-	if(bandera){
-		if(document.getElementById('password').value.trim() != document.getElementById('password_conf').value.trim()){
-			$('#group_password_conf').addClass('has-error');
-			$('#group_password').addClass('has-error');
-			$('.help').show();
-			document.getElementById('password').value = "";
-			document.getElementById('password_conf').value = "";
-			retorno = false;
-		}else{
-			$('#group_password_conf').removeClass('has-error');
-			$('#group_password').removeClass('has-error');
-			$('.help').hide();
-		}
-	}
 
-	return retorno
+
+function parsear_fecha(id){
+
+	var fecha = document.getElementById(id).value;
+
+	var dia = fecha.substring(0,2)
+	if (dia < parseInt(10)) {
+		dia = '0' + dia;
+	}
+	var year = fecha.substr(-4)
+	var mes = "";
+	for (var i = 5; i < fecha.length; i++) {
+		if(fecha.charAt(i) == ' '){
+			if(i > 5){
+				break;
+			}
+		}
+		mes = mes + fecha.charAt(i);
+	}
+	switch(mes.trim()){
+		case "Enero":
+			mes = "01"
+			break;
+		case "Febrero":
+			mes = "02"
+			break;
+		case "Marzo":
+			mes = "03"
+			break;
+		case "Abril":
+			mes = "04"
+			break;
+		case "Mayo":
+			mes = "05"
+			break;
+		case "Junio":
+			mes = "06"
+			break;
+		case "Julio":
+			mes = "07"
+			break;
+		case "Agosto":
+			mes = "08"
+			break;
+		case "Septiembre":
+			mes = "09"
+			break;
+		case "Octubre":
+			mes = "10"
+			break;
+		case "Noviembre":
+			mes = "11"
+			break;
+		case "Diciembre":
+			mes = "12"
+			break;
+	}
+	fecha = year+"-"+mes+"-"+dia;
+	document.getElementById(id).value = fecha.trim();
 }

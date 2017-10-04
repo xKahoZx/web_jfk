@@ -30,26 +30,30 @@
 				
 			</div>
 
-			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal">
+			<form action="." method="POST" enctype="multipart/form-data" class="form-horizontal text-center" onsubmit="return validar_edit_oferta()">
 				{% csrf_token%}
-				<div class="form-group">
+				<div class="form-group" id="group_cupos">
 					<label for="cupos" class="col-sm-2 control-label">Cupos</label>
 					<div class="col-sm-10">
 						<input type="text" name="cupos" class="form-control" id="cupos" placeholder="Ingrese el numero de cupos disponibles para la oferta" value="{{oferta.cupos}}">
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" id="group_inicio">
 					<label for="inicio" class="col-sm-2 control-label">Fecha de apertura</label>
 					<div class="input-group date">
-  						<input type="text" class="form-control" readonly name="fecha_inicio" value="{{oferta.fecha_apertura}}"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+  						<input type="text" class="form-control" readonly name="fecha_inicio" value="{{oferta.fecha_apertura}}" id="inicio"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" id="group_fin">
 					<label for="inicio" class="col-sm-2 control-label">Fecha de cierre</label>
 					<div class="input-group date">
-  						<input type="text" class="form-control" readonly name="fecha_fin" value="{{oferta.fecha_cierre}}"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+  						<input type="text" class="form-control" readonly name="fecha_fin" value="{{oferta.fecha_cierre}}" id="fin"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
 					</div>
+					<span id="helpBlock2" class="help-block help "><strong>La fecha de cierre no puede ser menor que la fecha de apertura</strong></span>
+
 				</div>
+				<div id="alerta" class='alert alert-danger col-sm-12 alerta' align="center" role='alert'><strong>Por favor completa los campos resaltados</strong></div>
+
 				<p align="center">
 					<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
 					<button type="reset" class="btn btn-danger">Limpiar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></button>
@@ -66,5 +70,8 @@
 		    orientation: "auto left",
 		    todayHighlight: true
 		});
+		parsear_fecha('inicio');
+		parsear_fecha('fin');
+
 	</script>
 {%  endblock %}
