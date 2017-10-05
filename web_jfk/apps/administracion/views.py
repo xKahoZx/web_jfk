@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from web_jfk.apps.administracion.models import *
@@ -542,33 +544,40 @@ def add_alumno_view(request):
 			pass
 		#abrir el archivo excel
 		document = openpyxl.load_workbook('%s/MultimediaData/doc_estudiantes/estudiantes.xlsx' % MEDIA_ROOT)
-		#acceder a una hoja del documento
-		hoja = document.get_sheet_by_name('Hoja1')
-		#recorre la columna 1 y la fila es una variable que aumenta 
-		row = 1
-		#el ciclo for se cierra cuando encuentra un campo con valor None osea vacio
-		for valor in range(100):
-			num_identificacion = hoja.cell(row = row, column = 1).value
-			#si encuentra que las identificacion son iguales entra a la siguiente condicion
-			if num_identificacion == long(identificacion):
-				u = User.objects.create_user(username = request.POST['username'], password=request.POST['password'])
-				u.save()
-				new_estudiante = estudiante()	
-				new_estudiante.user = u
-				new_estudiante.correo = request.POST['email']
-				new_estudiante.nombres = hoja.cell(row = row, column = 2).value
-				new_estudiante.apellidos = hoja.cell(row = row, column = 3).value
-				new_estudiante.identificacion = num_identificacion
-				new_estudiante.save()
-				break
-			if hoja.cell(row = row + 1 , column = 1).value == None:
-				men = "El numero de identificacion ingresado no se encuentra registrado en nuestra base de datos."
-				ctx = {'men':men }
-				return render_to_response('administracion/registro_estudiante.html', ctx, context_instance=RequestContext(request))	
-
-			else:
-				row = row + 1
-		return HttpResponseRedirect('/login')
+		#obtiene las hojas dentro del documento
+		hojas = document.get_sheet_names()
+		for p in hojas:
+			#accede a la hoja indicada segun el ciclo
+			hoja = document.get_sheet_by_name(p)
+			#recorre la columna 1 y la fila es una variable que aumenta 
+			row = 1
+			#el ciclo for se cierra cuando encuentra un campo con valor None osea vacio
+			for valor in range(50):
+				num_identificacion = hoja.cell(row = row, column = 1).value
+				#si encuentra que las identificacion son iguales entra a la siguiente condicion
+				if num_identificacion == long(identificacion):
+					u = User.objects.create_user(username = request.POST['username'], password=request.POST['password'])
+					u.save()
+					new_estudiante = estudiante()	
+					new_estudiante.user = u
+					new_estudiante.correo = request.POST['email']
+					new_estudiante.nombres = hoja.cell(row = row, column = 2).value
+					new_estudiante.apellidos = hoja.cell(row = row, column = 3).value
+					new_estudiante.identificacion = num_identificacion
+					new_estudiante.save()
+					hoja.cell(row = row  , column = 4).value = True	
+					document.save('%s/MultimediaData/doc_estudiantes/estudiantes.xlsx' % MEDIA_ROOT)
+					if request.user.is_superuser:
+						return HttpResponseRedirect('/administracion')
+					return HttpResponseRedirect('/login')
+				if hoja.cell(row = row + 1 , column = 1).value != None:
+					row = row + 1
+				else:
+					break
+		men = "El numero de identificacion ingresado no se encuentra registrado en nuestra base de datos."
+		ctx = {'men':men }
+		return render_to_response('administracion/registro_estudiante.html', ctx, context_instance=RequestContext(request))	
+					
 	return render_to_response('administracion/registro_estudiante.html', context_instance=RequestContext(request))	
 #Cambiar password
 def edit_password_view(request, id_user):
@@ -586,34 +595,172 @@ def del_user_view(request, id_user):
 	if request.user.is_superuser:
 		del_user = User.objects.get(id = id_user)
 		del_user.delete()
-	else:
+	return HttpResponseRedirect('/lista_estudiantes')
+
+#SEDE
+def add_sede_view(request):
+	if request.user.is_superuser:
+		if request.method == "POST":
+			new_sede = sede()
+			new_sede.nombre = request.POST['nombre']
+			new_sede.nit 	= request.POST['nit']
+			new_sede.telefono_1 = request.POST['telefono_1']
+			new_sede.telefono_2 = request.POST['telefono_2']
+			new_sede.direccion = request.POST['direccion']
+			new_sede.correo = request.POST['correo']
+			new_sede.institucion = institucion.objects.get(id = 1)
+			new_sede.save()
+			return HttpResponseRedirect('add_coordinador/%s' % new_sede.id)
+		return render_to_response('administracion/admin_sede.html', context_instance = RequestContext(request))
+	else:	
 		return HttpResponseRedirect('/administracion')
 
+def edit_sede_view(request, id_sede):
+	if request.user.is_superuser:
+		query_sede = sede.objects.get(id = id_sede)
+		if request.method == "POST":
+			query_sede.nombre = request.POST['nombre']
+			query_sede.nit 	= request.POST['nit']
+			query_sede.telefono_1 = request.POST['telefono_1']
+			query_sede.telefono_2 = request.POST['telefono_2']
+			query_sede.direccion = request.POST['direccion']
+			query_sede.correo = request.POST['correo']
+			query_sede.save()
+			return HttpResponseRedirect('/ver_sede/%s' % query_sede.id)
+		ctx = {'sede':query_sede}
+		return render_to_response('administracion/admin_sede.html',ctx, context_instance = RequestContext(request))
+	else:	
+		return HttpResponseRedirect('/administracion')
+#INSTITUCION
 def edit_funcionario_view(request, id_user):
 	if request.user.is_superuser:
-		coordinador = funcionario.objects.get(id = id_user)
+		query_funcionario = funcionario.objects.get(id = id_user)
 		if request.method=="POST":
-			coordinador.nombres = request.POST['nombres']
-			coordinador.apellidos = request.POST['apellidos']
+			query_funcionario.nombres = request.POST['nombres']
+			query_funcionario.apellidos = request.POST['apellidos']
 			try:
 				foto = request.FILES['foto']
-				if os.path.exists(coordinador.foto._get_path()) and os.path.isfile(coordinador.foto._get_path()):
-					os.remove(coordinador.foto._get_path())
-				coordinador.foto = foto
+				if os.path.exists(query_funcionario.foto._get_path()) and os.path.isfile(query_funcionario.foto._get_path()):
+					os.remove(query_funcionario.foto._get_path())
+				query_funcionario.foto = foto
 			except KeyError:
 				pass
-			coordinador.correo = request.POST['correo']
-			coordinador.save()
+			query_funcionario.correo = request.POST['correo']
+			query_funcionario.save()
+			try:
+				id = sede.objects.get(coordinadores = query_funcionario).id
+				return HttpResponseRedirect('/ver_sede/%s' % id )
+			except:
+				return HttpResponseRedirect('/institucion')
 			return HttpResponseRedirect('/lista_sedes')
-		ctx ={'coordinador':coordinador}
-		return render_to_response('administracion/edit_coordinador.html', ctx,context_instance=RequestContext(request))
+		bandera = "edit"
+		ctx ={'funcionario':query_funcionario, 'bandera':bandera}
+		return render_to_response('administracion/admin_funcionario.html', ctx,context_instance=RequestContext(request))
+	else:
+		return HttpResponseRedirect('/administracion')
+
+def add_coordinador_view(request, id_sede):
+
+	if request.user.is_superuser:
+		query_sede = sede.objects.get(id = id_sede)
+		if query_sede.coordinadores.count() < 2:
+	 		jornada = ""
+			if request.method == "POST":
+				new_funcionario = funcionario()
+				new_funcionario.nombres = request.POST['nombres']
+				new_funcionario.apellidos = request.POST['apellidos']
+				new_funcionario.correo = request.POST['correo']
+				new_funcionario.foto = request.FILES['foto']
+				new_funcionario.tipo_funcionario = "Coordinador"
+				u = User.objects.create_user(username = request.POST['username'], password=request.POST['password'])
+				u.save()
+				new_funcionario.user = u 
+				if query_sede.coordinadores.count() == 0:
+					new_funcionario.jornada = "Mañana"
+				else:
+					new_funcionario.jornada = "Tarde"
+				new_funcionario.save()
+				query_sede.coordinadores.add(new_funcionario)
+				query_sede.save()
+				if query_sede.coordinadores.count() == 2:
+					return HttpResponseRedirect('/lista_sedes')
+			if query_sede.coordinadores.count() == 0:
+				jornada = "mañana"
+			else:
+				jornada = "tarde"
+			bandera = "crear"
+			ctx = {'jornada':jornada ,'sede':query_sede.nombre, 'bandera':bandera}
+			return render_to_response('administracion/admin_funcionario.html', ctx,context_instance=RequestContext(request))
+		return HttpResponseRedirect('/lista_sedes')
+	else:	
+		return HttpResponseRedirect('/administracion')
+
+def edit_institucion_view(request):
+	if request.user.is_superuser:
+		
+
+		query_institucion = institucion.objects.get(id = 1)
+		if request.method == "POST":
+			query_institucion.nombre = request.POST['nombre']
+			try:
+				escudo = request.FILES['escudo']
+				if os.path.exists(query_institucion.escudo._get_path()) and os.path.isfile(query_institucion.escudo._get_path()):
+					os.remove(query_institucion.escudo._get_path())
+				query_institucion.escudo = escudo
+			except KeyError:
+				pass
+			try:
+				estudiantes = request.FILES['estudiantes']
+				if os.path.exists(query_institucion.estudiantes._get_path()) and os.path.isfile(query_institucion.estudiantes._get_path()):
+					os.remove(query_institucion.estudiantes._get_path())
+				query_institucion.estudiantes = estudiantes
+				query_institucion.save()
+				eliminar_usuarios()
+			except KeyError:
+				pass
+			query_institucion.save()
+			return HttpResponseRedirect('/institucion')
+		ctx = {'institucion':query_institucion}
+		return render_to_response('administracion/edit_institucion.html', ctx, context_instance = RequestContext(request))
 	else:
 		return HttpResponseRedirect('/administracion')
 
 
+def eliminar_usuarios():
 
+	document = openpyxl.load_workbook('%s/MultimediaData/doc_estudiantes/estudiantes.xlsx' % MEDIA_ROOT)
+	#acceder a una hoja del documento
+	hojas = document.get_sheet_names()
 
-
+	estudiantes = estudiante.objects.all()
+	for p in estudiantes:
+		p.estado = False
+		p.save()
+	
+	for p in hojas:
+		hoja = document.get_sheet_by_name(p)
+		row = 1
+		for valor in range(50):
+			if hoja.cell(row = row  , column = 4).value == None:				
+				num_identificacion = hoja.cell(row = row, column = 1).value
+				print num_identificacion
+				try:
+					verificar_estudiante = estudiante.objects.get(identificacion = num_identificacion)
+					verificar_estudiante.estado = True
+					verificar_estudiante.save()
+					hoja.cell(row = row  , column = 4).value = True				
+				except:
+					hoja.cell(row = row  , column = 4).value = False				
+				
+						
+			if hoja.cell(row = row + 1 , column = 1).value == None:
+				break
+			else:
+				row = row + 1
+	for p in estudiante.objects.filter(estado = False):
+		p.user.delete()
+		p.delete()
+	document.save('%s/MultimediaData/doc_estudiantes/estudiantes.xlsx' % MEDIA_ROOT)
 
 
 

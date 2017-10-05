@@ -1,4 +1,5 @@
 # Django settings for web_jfk project.
+
 import os
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

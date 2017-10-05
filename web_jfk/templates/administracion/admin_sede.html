@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %} Crear nueva sede  {% endblock %}
+
+{% block content %}
+	<div class="container">
+		<div class="row">
+			<h1 class="title" align="center"><span class="label label-primary">Crear nueva sede</span></h1>
+			<form action="." method="POST" class="form-horizontal jumbotron" onsubmit="return validar_sede()">
+				{% csrf_token %}
+				<div class="form-group" id="group_nombre">
+					<label for="nombre" class="col-sm-2 control-label">Nombre</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="nombre" placeholder="Nombre de la nueva sede" name="nombre" value="{{sede.nombre}}">
+					</div>
+				</div>
+				<div class="form-group" id="group_nit">
+					<label for="nit" class="col-sm-2 control-label">Nit</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="nit" placeholder="Nit de la nueva sede" name="nit" value="{{sede.nit}}">
+					</div>
+				</div>
+				<div class="form-group" id="group_telefono_1">
+					<label for="telefono_1" class="col-sm-2 control-label">Primer telefono</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="telefono_1" placeholder="Primer telefono de contacto de la nueva sede" name="telefono_1" value="{{sede.telefono_1}}">
+					</div>
+				</div>
+				<div class="form-group" id="group_telefono_2">
+					<label for="telefono_2" class="col-sm-2 control-label">Segundo telefono</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="telefono_2" placeholder="Segundo telefono de contacto de la nueva sede" name="telefono_2" value="{{sede.telefono_2}}">
+					</div>
+				</div>
+				<div class="form-group" id="group_direccion">
+					<label for="direccion" class="col-sm-2 control-label">Direccion</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="direccion" placeholder="Direccion de la nueva sede" name="direccion" value="{{sede.direccion}}">
+					</div>
+				</div>
+				<div class="form-group" id="group_correo">
+					<label for="correo" class="col-sm-2 control-label">Correo</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="correo" placeholder="correo de contacto de la nueva sede" name="correo" value="{{sede.correo}}">
+					</div>
+				</div>
+				<div id="alerta" class='alert alert-danger col-sm-12 alerta' align="center" role='alert'><strong>Por favor completa los campos resaltados</strong></div>
+				<p align="center" class="col-xs-12">
+					<button type="submit" class="btn btn-primary">Guardar <span class="glyphicon glyphicon-saved" aria-hidden="true"></span></button>
+					<button type="reset" class="btn btn-danger">Limpiar <span class="glyphicon glyphicon-refresh "  aria-hidden="true"></span></button>
+				</p>
+			</form>
+	
+		</div>
+	</div>
+
+{% endblock %}

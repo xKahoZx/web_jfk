@@ -728,3 +728,149 @@ function parsear_fecha(id){
 	fecha = year+"-"+mes+"-"+dia;
 	document.getElementById(id).value = fecha.trim();
 }
+
+
+function validar_institucion(){
+	var retorno = true;
+	if(document.getElementById('nombre').value.trim().length == 0){
+		retorno = false;
+		$('#group_nombre').addClass('has-error');
+	}else{
+		$('#group_nombre').removeClass('has-error');
+	}
+	
+	if(retorno == false){
+		$(".alerta").show();
+	}
+
+	return retorno;
+}
+
+function validar_sede(){
+	var retorno = true;
+	if(document.getElementById('nombre').value.trim().length == 0){
+		retorno = false;
+		$('#group_nombre').addClass('has-error');
+	}else{
+		$('#group_nombre').removeClass('has-error');
+	}
+	if(document.getElementById('nit').value.trim().length == 0){
+		retorno = false;
+		$('#group_nit').addClass('has-error');
+	}else{
+		$('#group_nit').removeClass('has-error');
+	}
+	if(document.getElementById('telefono_1').value.trim().length == 0){
+		retorno = false;
+		$('#group_telefono_1').addClass('has-error');
+	}else{
+		$('#group_telefono_1').removeClass('has-error');
+	}
+	if(document.getElementById('telefono_2').value.trim().length == 0){
+		retorno = false;
+		$('#group_telefono_2').addClass('has-error');
+	}else{
+		$('#group_telefono_2').removeClass('has-error');
+	}
+	if(document.getElementById('direccion').value.trim().length == 0){
+		retorno = false;
+		$('#group_direccion').addClass('has-error');
+	}else{
+		$('#group_direccion').removeClass('has-error');
+	}
+	if(document.getElementById('correo').value.trim().length == 0){
+		retorno = false;
+		$('#group_correo').addClass('has-error');
+	}else{
+		$('#group_correo').removeClass('has-error');
+	}
+
+
+
+	if(retorno == false){
+		$(".alerta").show();
+	}
+
+	return retorno;
+}
+
+function validar_funcionario(bandera){
+
+	var retorno = true;
+	if(document.getElementById('nombres').value.trim().length == 0){
+		retorno = false;
+		$('#group_nombres').addClass('has-error');
+	}else{
+		$('#group_nombres').removeClass('has-error');
+	}
+	
+	if(document.getElementById('apellidos').value.trim().length == 0){
+		retorno = false;
+		$('#group_apellidos').addClass('has-error');
+	}else{
+		$('#group_apellidos').removeClass('has-error');
+	}
+	
+	
+	if(document.getElementById('correo').value.trim().length == 0){
+		retorno = false;
+		$('#group_correo').addClass('has-error');
+	}else{
+		$('#group_correo').removeClass('has-error');
+	}
+
+	if (bandera == "crear"){
+		if(document.getElementById('foto').value.trim().length == 0){
+			retorno = false;
+			$('#group_foto').addClass('has-error');
+		}else{
+			$('#group_foto').removeClass('has-error');
+		}
+		if(document.getElementById('username').value.trim().length == 0){
+			retorno = false;
+			$('#group_username').addClass('has-error');
+		}else{
+			$('#group_username').removeClass('has-error');
+		}
+		var bandera_aux = true;
+		if(document.getElementById('password').value.trim().length == 0){
+			retorno = false;
+			bandera_aux = false; 
+			$('#group_password').addClass('has-error');
+		}else{
+			$('#group_password').removeClass('has-error');
+		}
+		if(document.getElementById('password_conf').value.trim().length == 0){
+			retorno = false;
+			bandera_aux = false;
+			$('#group_password_conf').addClass('has-error');
+		}else{
+			
+			$('#group_password_conf').removeClass('has-error');
+		}
+		if(bandera_aux){
+			if(document.getElementById('password').value.trim() != document.getElementById('password_conf').value.trim()){
+				$('#group_password_conf').addClass('has-error');
+				$('#group_password').addClass('has-error');
+				$('.help').show();
+				document.getElementById('password').value = "";
+				document.getElementById('password_conf').value = "";
+				retorno = false;
+			}else{
+				$('#group_password_conf').removeClass('has-error');
+				$('#group_password').removeClass('has-error');
+				$('.help').hide();
+			}
+		}
+	}
+
+
+	if(retorno == false){
+		$(".alerta").show();
+	}
+
+	return retorno;
+
+
+
+}

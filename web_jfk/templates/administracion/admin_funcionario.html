@@ -1,0 +1,101 @@
+{% extends 'base.html'%}
+
+{% block title %}
+	{% if jornada %}
+	Crear nuevo coordinador
+	{% else %}
+	Editar funcionario
+	{% endif %}
+{% endblock %}
+{% block extras %}
+		<link href="/media/bootstrap/fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+{% endblock %}
+{% block js%}
+		<script src="/media/bootstrap/fileinput/js/fileinput.js"></script>
+{% endblock %}
+{% block content %}
+	<div class="container">
+		<div class="row">
+			{% if jornada %}
+			<h1 class="title text-center"><span class="label label-primary">Crear nuevo coordinador jornada {{jornada}} sede {{sede}}</span></h1>
+			{% else %}
+			<h1 class="title text-center"><span class="label label-primary">Editar funcionario</span></h1>
+			{% endif%}
+			<form action="." method="POST" enctype="multipart/form-data" class="jumbotron form-horizontal" onsubmit="return validar_funcionario('{{bandera}}')">
+				{% csrf_token %}
+				
+				<div class="form-group" id="group_nombres">
+					<label for="nombres" class="col-sm-2 control-label">Nombres</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="nombres" placeholder="Nombres del funcionario" name="nombres" value="{{funcionario.nombres}}">
+					</div>
+				</div>
+				<div class="form-group" id="group_apellidos">
+					<label for="apellidos" class="col-sm-2 control-label">Apellidos</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="apellidos" placeholder="Apellidos del funcionario" name="apellidos" value="{{funcionario.apellidos}}">
+					</div>
+				</div>
+				<div class="form-group" id="group_correo">
+					<label for="correo" class="col-sm-2 control-label">Correo</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" id="correo" placeholder="Correo electronico del funcionario" name="correo" value="{{funcionario.correo}}">
+					</div>
+				</div>
+				<div class="form-group" id="group_foto">
+					<label for="imagen" class="col-sm-2 control-label">Foto del funcionario</label>
+					<div class="col-sm-10">
+						<input type="file" id="foto" name="foto" class="file-loading imagen">
+					</div>
+				</div>
+				{% if funcionario%}		
+				<div align="center">
+					<h4><span class="label label-primary">Foto actual</span></h4>
+					<img src="/media/{{funcionario.foto}}" class="img-noticia">
+				</div>
+				{% endif%}
+				{% if not funcionario %}
+				<div class="form-group" id="group_username">
+				   	<label for="username" class="col-sm-2 control-label">Usuario</label>
+				   	<div class="col-sm-10">
+				   		<input type="text" class="form-control" id="username" placeholder="Ingrese su usuario" name="username">
+				   	</div>
+				</div>
+				<div class="form-group" id="group_password">
+				   	<label for="contraseña" class="col-sm-2 control-label">Contraseña</label>
+				   	<div class="col-sm-10">
+				   		<input type="password" class="form-control" id="password" placeholder="Ingrese la contraseña del nuevo usuario" name="password">
+				   	</div>
+				</div>
+				<div class="form-group text-center" id="group_password_conf">
+				   	<label for="contraseña" class="col-sm-2 control-label">Repita Contraseña</label>
+				   	<div class="col-sm-10">
+				   		<input type="password" class="form-control" id="password_conf" placeholder="Repita la contraseña de usuario" name="password2">
+				   	</div>
+				   	<span id="helpBlock" class="help-block help"><strong>Las contraseñas ingresadas no coinciden</strong></span>
+				</div>
+				
+				{% endif%}
+				<br>
+				<div id="alerta" class='alert alert-danger col-sm-12 alerta' align="center" role='alert'><strong>Por favor completa los campos resaltados</strong></div>
+				<div align="center">
+					{% if funcionario%}
+					<a href="/cambiar_password/{{funcionario.user.id}}" class="btn btn-warning">Cambiar contraseña</a> 
+					{% endif %}
+					<button type="submit" class="btn btn-primary">Guardar</button>
+					<button type="reset" class="btn btn-danger">Limpiar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	
+	
+	
+		
+	<script type="text/javascript">
+		$('.imagen').fileinput({
+			showUpload: false
+		});
+		
+	</script>
+{% endblock %}

@@ -19,6 +19,9 @@
 					<p><strong>Telefono 2: </strong>{{sede.telefono_2}}</p>
 					<p><strong>Direccion sede: </strong>{{sede.direccion}}</p>
 				</div>
+				<div class="text-center col-sm-12">
+					<a href="/edit_sede/{{sede.id}}" class="btn btn-primary">Editar informacion sede</a>
+				</div>
 				<div class="clearfix"></div>
 				<div class="col-sm-10 col-md-offset-1">
 				{% for p in sede.coordinadores.all%}

@@ -92,6 +92,7 @@ class persona(models.Model):
 
 class estudiante(persona):
 	identificacion	= models.CharField(max_length = 100, unique = True)
+	estado 			= models.BooleanField(default = True)
 	def __unicode__(self):
 		return self.nombres + str(" ") + self.apellidos
 
@@ -111,7 +112,7 @@ class administrador(persona):
 class institucion(models.Model):
 	
 	def url(self,filename):
-		ruta = "MultimediaData/escudo/%s.jpg"%(str(self.nombre) )
+		ruta = "MultimediaData/escudo/%s.png"%(str(self.nombre) )
 		return ruta
 	def url_doc(self,filename):
 		ruta = "MultimediaData/doc_estudiantes/estudiantes.xlsx"
@@ -125,7 +126,7 @@ class institucion(models.Model):
 
 class sede(models.Model):
 
-	coordinadores	= models.ManyToManyField(funcionario)
+	coordinadores	= models.ManyToManyField(funcionario, blank = True)
 	nombre 			= models.CharField(max_length = 100)
 	nit 			= models.CharField(max_length = 100)
 	telefono_1 		= models.CharField(max_length = 10)
