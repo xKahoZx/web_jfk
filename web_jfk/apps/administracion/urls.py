@@ -46,6 +46,7 @@ urlpatterns = patterns('web_jfk.apps.administracion.views',
 	#institucion
 	url(r'^edit_funcionario/(?P<id_user>.*)/$','edit_funcionario_view', name = 'vistar_editar_funcionario'),
 	url(r'^edit_institucion/$','edit_institucion_view', name = 'vista_editar_institucion'),
+	url(r'^crear_institucion/$','add_institucion_view', name = 'vista_crear_institucion'),
 	url(r'^add_coordinador/(?P<id_sede>.*)/$','add_coordinador_view', name = 'vista_crear_coordinador'),
 	
 	#sede

@@ -871,6 +871,30 @@ function validar_funcionario(bandera){
 
 	return retorno;
 
+}
 
 
+function validar_institucion_crear(){
+	var retorno = validar_funcionario("crear");
+	if(document.getElementById('nombre').value.trim().length == 0){
+		retorno = false;
+		$('#group_nombre').addClass('has-error');
+	}else{
+		$('#group_nombre').removeClass('has-error');
+	}
+	if(document.getElementById('escudo').value.trim().length == 0){
+		retorno = false;
+		$('#group_escudo').addClass('has-error');
+	}else{
+		$('#group_escudo').removeClass('has-error');
+	}
+	if(document.getElementById('estudiantes').value.trim().length == 0){
+		retorno = false;
+		$('#group_estudiantes').addClass('has-error');
+	}else{
+		$('#group_estudiantes').removeClass('has-error');
+	}
+
+	
+	return retorno;
 }

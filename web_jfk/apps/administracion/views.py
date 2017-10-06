@@ -695,6 +695,31 @@ def add_coordinador_view(request, id_sede):
 	else:	
 		return HttpResponseRedirect('/administracion')
 
+def add_institucion_view(request):
+	if request.user.is_superuser:
+		if request.method == "POST":
+			new_funcionario = funcionario()
+			new_funcionario.nombres = request.POST['nombres']
+			new_funcionario.apellidos = request.POST['apellidos']
+			new_funcionario.correo = request.POST['correo']
+			new_funcionario.foto = request.FILES['foto']
+			new_funcionario.tipo_funcionario = "Rector"
+			u = User.objects.create_user(username = request.POST['username'], password=request.POST['password'])
+			u.is_staff = True
+			u.is_superuser = True			
+			u.save()
+			new_funcionario.user = u
+			new_funcionario.save()
+			new_insti = institucion()
+			new_insti.nombre = request.POST['nombre']
+			new_insti.estudiantes = request.FILES['estudiantes']
+			new_insti.escudo = request.FILES['escudo']
+			new_insti.rector = new_funcionario
+			new_insti.save()
+			return HttpResponseRedirect('/institucion')
+		return render_to_response('administracion/crear_institucion.html',context_instance=RequestContext(request))
+	else:
+		return HttpResponseRedirect('/administracion')
 def edit_institucion_view(request):
 	if request.user.is_superuser:
 		
