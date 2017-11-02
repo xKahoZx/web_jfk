@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
-
-
-{% block title %}
-	Contactanos - John F. Kennedy
-{% endblock %}
+{% block title %}Contactanos - {{institucion.nombre}}{% endblock %}
+{% block escudo%}{{institucion.escudo}}{% endblock%}
+{% block nombre%}{{institucion.nombre}}{% endblock%}
 
 {%block content %}
 	

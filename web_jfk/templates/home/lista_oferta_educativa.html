@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
-
-{% block title %}
-	Ofertas educativas
-{% endblock %}
+{% block title %}Ofertas educativas - {{institucion.nombre}}{% endblock %}
+{% block escudo%}{{institucion.escudo}}{% endblock%}
+{% block nombre%}{{institucion.nombre}}{% endblock%}
 
 {% block content %}
 	

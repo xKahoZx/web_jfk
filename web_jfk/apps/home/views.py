@@ -9,6 +9,8 @@ from django.contrib.auth import login, logout , authenticate
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from datetime import datetime
 
+def consulta_institucion():	
+	return institucion.objects.get(id = 1)
 
 def index_view(request):
 	noticias = noticia.objects.filter(estado = True).order_by('-id')[0:3]
@@ -16,7 +18,6 @@ def index_view(request):
 	slider = slider_show.objects.filter(estado = True).order_by('-id')	
 	verificar_fecha_evento()
 	eventos = calendario_eventos.objects.filter(estado = True ).order_by('fecha')[0:2]
-	
 	id = 0
 	if len(noticias) > 0:
 		id = noticias[0].id		
@@ -36,7 +37,7 @@ def index_view(request):
 	for p in eventos:
 		p.descripcion = p.descripcion[0:200]
 
-	ctx = {'noticias':noticias, 'noticias_aux':noticias_aux,'id':id, 'slider':slider, 'id_slider':id_slider, 'total':total, 'eventos':eventos} 
+	ctx = {'institucion':consulta_institucion(),'noticias':noticias, 'noticias_aux':noticias_aux,'id':id, 'slider':slider, 'id_slider':id_slider, 'total':total, 'eventos':eventos} 
 	return render_to_response('home/index.html',ctx, context_instance = RequestContext(request))
 
 #slider
@@ -44,7 +45,7 @@ def lista_slider_view(request):
 	try:
 		if request.user.is_superuser or  request.user.administrador.tipo_usuario == "Administrador Multimedia":
 			items = slider_show.objects.all().order_by('-id')
-			ctx = {'items':items}
+			ctx = {'items':items,'institucion':consulta_institucion()}
 			return render_to_response('home/lista_slider.html', ctx, context_instance=RequestContext(request))
 		else:
 			return HttpResponseRedirect('/')
@@ -76,7 +77,7 @@ def media_view(request,pagina):
 	for p in range(paginator.num_pages):
 		num_page = num_page + 1
 		paginas.append(num_page)
-	ctx = {'album':albums, 'album_aux':album_aux, 'paginas':paginas}
+	ctx = {'album':albums, 'album_aux':album_aux, 'paginas':paginas,'institucion':consulta_institucion()}
 	return render_to_response('home/media.html', ctx, context_instance = RequestContext(request))
 
 
@@ -106,7 +107,7 @@ def noticias_view(request, pagina):
 		num_page = num_page + 1
 		paginas.append(num_page)
 
-	ctx = {'noticias':noticias, 'noticias_aux': noticias_aux, 'paginas':paginas}
+	ctx = {'noticias':noticias, 'noticias_aux': noticias_aux, 'paginas':paginas,'institucion':consulta_institucion()}
 	return render_to_response('home/noticias.html', ctx, context_instance = RequestContext(request))
 
 
@@ -122,7 +123,7 @@ def eventos_view(request):
 		calendario_aux = calendario_eventos.objects.filter(anio = busqueda).order_by('fecha')
 	for p in calendario_aux:
 		p.descripcion = p.descripcion[0:200]
-	ctx = {'calendario':calendario, 'calendario_aux': calendario_aux}	
+	ctx = {'calendario':calendario, 'calendario_aux': calendario_aux,'institucion':consulta_institucion()}	
 	return render_to_response('home/lista_eventos.html', ctx,context_instance = RequestContext(request))
 
 #Oferta educativa
@@ -140,7 +141,7 @@ def oferta_view(request):
 		if (len(ofertas) == 0) :
 			mensaje = "No hay ofertas educativas disponibles relacionadas con la anterior busqueda"
 
-	ctx = {'ofertas':ofertas, 'men': mensaje, 'sedes': sedes}	
+	ctx = {'ofertas':ofertas, 'men': mensaje, 'sedes': sedes,'institucion':consulta_institucion()}	
 
 	return render_to_response('home/lista_oferta_educativa.html', ctx,context_instance = RequestContext(request))
 
@@ -155,19 +156,19 @@ def lista_ofertas_view(request):
 				ofertas = oferta_educativa.objects.all()
 			else:
 				ofertas = oferta_educativa.objects.filter(sede__nombre = consulta)
-			ctx = {'ofertas':ofertas}
+			ctx = {'ofertas':ofertas,'institucion':consulta_institucion()}
 			return render_to_response('home/lista_ofertas.html', ctx, context_instance = RequestContext(request))
 		else:
 			if request.user.is_superuser:
 				ofertas = oferta_educativa.objects.all().order_by('-id')
-				ctx = {'ofertas':ofertas}
+				ctx = {'ofertas':ofertas,'institucion':consulta_institucion()}
 				return render_to_response('home/lista_ofertas.html', ctx, context_instance = RequestContext(request))
 			else:	
 				try:
 					if request.user.funcionario:
 						id_sede = sede.objects.get(coordinadores = request.user.id).id
 						ofertas = oferta_educativa.objects.filter(sede = id_sede, jornada = request.user.funcionario.jornada).order_by('-id')		
-						ctx = {'ofertas':ofertas}
+						ctx = {'ofertas':ofertas,'institucion':consulta_institucion()}
 						return render_to_response('home/lista_ofertas.html', ctx, context_instance = RequestContext(request))
 				except:
 					return HttpResponseRedirect('/ofertas_educativas')
@@ -183,12 +184,12 @@ def documentos_view(request):
 			var_materia = request.POST['materia_select']
 			if var_grado != 0 and var_materia != 0:
 				documentos = documento.objects.filter(materia = var_materia, grado = var_grado)
-				ctx = {'documentos':documentos}
+				ctx = {'documentos':documentos,'institucion':consulta_institucion()}
 				return render_to_response('home/academico.html', ctx, context_instance = RequestContext(request))
 		else:
 			if request.user.is_superuser:
 				documentos = documento.objects.all().exclude(autor__docente__tipo = "Docente")
-				ctx = {'documentos':documentos}
+				ctx = {'documentos':documentos,'institucion':consulta_institucion()}
 				return render_to_response('home/academico.html', ctx, context_instance = RequestContext(request))
 			else:				
 				try:
@@ -204,7 +205,7 @@ def documentos_view(request):
 					except:
 						documentos_sede = documento.objects.filter(autor__docente__sede = query_sede)
 						documentos_rector = documento.objects.filter(autor__funcionario__tipo_funcionario = "Rector")
-					ctx = {'documentos':documentos_sede, 'documentos_rector':documentos_rector}
+					ctx = {'documentos':documentos_sede, 'documentos_rector':documentos_rector,'institucion':consulta_institucion()}
 					return render_to_response('home/academico.html', ctx, context_instance = RequestContext(request))
 				except:
 					return render_to_response('home/academico.html', context_instance=RequestContext(request))
@@ -217,13 +218,13 @@ def mis_documentos_view(request):
 		try:
 			if request.user.funcionario:
 				mis_documentos = documento.objects.filter(autor = request.user)
-				ctx = {'documentos':mis_documentos}
+				ctx = {'documentos':mis_documentos,'institucion':consulta_institucion()}
 				return render_to_response('home/lista_documentos.html', ctx, context_instance = RequestContext(request))
 		except:
 			try:
 				if request.user.docente.jornada ==  "Tarde" and request.user.docente.sede.nombre == "John F. Kennedy":
 					mis_documentos = documento.objects.filter(autor = request.user)
-					ctx = {'documentos':mis_documentos}
+					ctx = {'documentos':mis_documentos,'institucion':consulta_institucion()}
 					return render_to_response('home/lista_documentos.html', ctx, context_instance = RequestContext(request))
 			except:
 				return HttpResponseRedirect('/aula_virtual')
@@ -235,7 +236,7 @@ def mis_documentos_view(request):
 
 def contacto_view(request):
 	sedes = sede.objects.all()
-	ctx = {'sedes':sedes}
+	ctx = {'sedes':sedes,'institucion':consulta_institucion()}
 	return render_to_response('home/contacto.html', ctx,context_instance = RequestContext(request))
 
 #docente
@@ -255,7 +256,7 @@ def docentes_view(request):
 		ctx = {'sedes':sedes, 'info_sede':info_sede, 'insti':institucion_query, 'coordinador':coordinador_query, 'docentes':docentes}
 		return render_to_response('home/docentes.html',ctx, context_instance = RequestContext(request))
 
-	ctx = {'sedes':sedes}
+	ctx = {'sedes':sedes,'institucion':consulta_institucion()}
 
 
 	return render_to_response('home/docentes.html',ctx, context_instance = RequestContext(request))
@@ -272,7 +273,7 @@ def lista_docentes_view(request):
 		sede_select = request.POST['sede_select']
 		docentes = docente.objects.filter(sede__nombre = sede_select, jornada = request.POST['jornada_select'])
 
-	ctx = {'sedes':sedes, 'docentes':docentes, 'sede': sede_select}
+	ctx = {'sedes':sedes, 'docentes':docentes, 'sede': sede_select,'institucion':consulta_institucion()}
 
 	return render_to_response('home/lista_docentes.html',ctx, context_instance = RequestContext(request))
 
@@ -281,23 +282,23 @@ def lista_administradores_view(request):
 
 	administradores = administrador.objects.all()
 
-	ctx = {'administradores':administradores}
+	ctx = {'administradores':administradores,'institucion':consulta_institucion()}
 
 	return render_to_response('home/lista_administradores.html', ctx, context_instance = RequestContext(request))
 
 def lista_estudiantes_view(request):
 
-	estudiantes = estudiante.objects.all()
+	estudiantes = estudiante.objects.all().order_by('apellidos')
 	if request.method == "POST":
-		if request.POST['tipo'] == "username":
-			estudiantes = estudiante.objects.filter(user__username = request.POST['consulta'])
+		if request.POST['tipo'] == "grado":
+			estudiantes = estudiante.objects.filter(grado = request.POST['consulta']).order_by('apellidos')
 		else:
 			if request.POST['tipo'] == "0":
-				estudiantes = estudiante.objects.all()
+				estudiantes = estudiante.objects.all().order_by('apellidos')
 			else:
 				estudiantes = estudiante.objects.filter(identificacion = request.POST['consulta'])
 
-	ctx = {'estudiantes':estudiantes}
+	ctx = {'estudiantes':estudiantes,'institucion':consulta_institucion()}
 
 	return render_to_response('home/lista_estudiantes.html', ctx, context_instance = RequestContext(request))
 
@@ -305,12 +306,12 @@ def lista_estudiantes_view(request):
 def lista_sedes_view(request):
 
 	sedes = sede.objects.all()
-	ctx = {'sedes':sedes}
+	ctx = {'sedes':sedes,'institucion':consulta_institucion()}
 	return render_to_response('home/lista_sedes.html', ctx, context_instance = RequestContext(request))
 
 def ver_sede_view(request, id_sede):
 	ver_sede = sede.objects.get(id = id_sede)
-	ctx = {'sede':ver_sede}
+	ctx = {'sede':ver_sede,'institucion':consulta_institucion()}
 	return render_to_response('home/single_sede.html', ctx, context_instance = RequestContext(request))
 
 
@@ -335,7 +336,7 @@ def login_view(request):
 				mensaje = True
 		
 		
-	ctx = {'men': mensaje}
+	ctx = {'men': mensaje,'institucion':consulta_institucion()}
 	return render_to_response('home/login.html', ctx, context_instance = RequestContext(request))
 
 #Administracion

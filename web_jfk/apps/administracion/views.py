@@ -10,6 +10,9 @@ import os
 import openpyxl
 from web_jfk.settings import MEDIA_ROOT
 
+def consulta_institucion():	
+	return institucion.objects.get(id = 1)
+
 #CRUD noticias
 #Crear nueva noticia
 
@@ -25,7 +28,8 @@ def add_noticia_view(request):
 			new_noticia.fecha =  date.today()
 			new_noticia.save()
 			return HttpResponseRedirect('/noticias/page/1/')
-		return render_to_response('administracion/admin_noticia.html', context_instance = RequestContext(request))
+			ctx = {'institucion':consulta_institucion()}
+		return render_to_response('administracion/admin_noticia.html',ctx, context_instance = RequestContext(request))
 	else:
 		return HttpResponseRedirect('/noticias/page/1/')
 #editar noticia por id
@@ -48,7 +52,7 @@ def edit_noticia_view(request, id_noticia):
 			noticia_id.save()
 			return HttpResponseRedirect('/noticias/page/1')
 		num = len(noticia_id.cuerpo)
-		ctx = {'noticia': noticia_id,'num':num}
+		ctx = {'noticia': noticia_id,'num':num,'institucion':consulta_institucion()}
 		return render_to_response('administracion/admin_noticia.html', ctx, context_instance = RequestContext(request))
 	else:
 		return HttpResponseRedirect('/noticias/page/1/')
@@ -82,7 +86,7 @@ def add_album_view(request):
 				return HttpResponseRedirect('/albums/page/1')
 			else:
 				caracteres = len(new_album.descripcion)
-				ctx ={'titulo':new_album.titulo, 'desc':new_album.descripcion, 'ban':True, 'num':caracteres}
+				ctx ={'titulo':new_album.titulo, 'desc':new_album.descripcion, 'ban':True, 'num':caracteres,'institucion':consulta_institucion()}
 				return render_to_response('administracion/admin_album.html',ctx,  context_instance= RequestContext(request))
 		return render_to_response('administracion/admin_album.html',  context_instance= RequestContext(request))
 	else:
@@ -103,7 +107,7 @@ def edit_album_view(request, id_album):
 			return HttpResponseRedirect('/edit-album/%s' %album_id.id)
 		caracteres = len(album_id.descripcion)
 		num_img = len(imagen_album.objects.filter(album = album_id))
-		ctx = {'album':album_id, 'num':caracteres,'num_img':num_img}
+		ctx = {'album':album_id, 'num':caracteres,'num_img':num_img,'institucion':consulta_institucion()}
 		return render_to_response('administracion/admin_album.html',ctx, context_instance=RequestContext(request))
 	else:
 		return HttpResponseRedirect('/albums/page/1')
@@ -132,7 +136,7 @@ def edit_img_view(request, id_img):
 			item.save()		
 			id = album.objects.get(imagenes = id_img).id
 			return HttpResponseRedirect('/edit-album/%s' %id)
-		ctx = {'item':item}
+		ctx = {'item':item,'institucion':consulta_institucion()}
 
 		return render_to_response('administracion/edit_item.html',ctx, context_instance=RequestContext(request))
 	else:
@@ -173,7 +177,7 @@ def edit_item_view(request, id_img):
 			item.imagen = nueva_img
 			item.save()
 			return HttpResponseRedirect('/lista_items_carrousel')
-		ctx = {'item':item}
+		ctx = {'item':item,'institucion':consulta_institucion()}
 		return render_to_response('administracion/edit_item.html',ctx, context_instance=RequestContext(request))
 	else:
 		return HttpResponseRedirect('/')
@@ -221,8 +225,8 @@ def add_evento_view(request):
 			new_evento.anio = new_evento.fecha[0:4]
 			new_evento.save()
 			return HttpResponseRedirect('/eventos')
-
-		return render_to_response('administracion/administracion_eventos.html',context_instance = RequestContext(request))
+		ctx = {'institucion':consulta_institucion()}
+		return render_to_response('administracion/administracion_eventos.html',ctx,context_instance = RequestContext(request))
 	else:
 		return  HttpResponseRedirect('/eventos')
 		
@@ -266,7 +270,7 @@ def edit_evento_view(request, id_evento):
 
 			edit_evento.save()
 			return HttpResponseRedirect('/eventos')
-		ctx = {'evento': edit_evento}
+		ctx = {'evento': edit_evento,'institucion':consulta_institucion()}
 		return render_to_response('administracion/administracion_eventos.html', ctx, context_instance = RequestContext(request))
 	else:
 		return  HttpResponseRedirect('/eventos')
@@ -296,7 +300,8 @@ def add_oferta_view(request):
 				oferta.estado = False
 			oferta.save()
 			return HttpResponseRedirect('/lista_ofertas')
-		return render_to_response('administracion/crear_oferta.html', context_instance=RequestContext(request))
+		ctx = {'institucion':consulta_institucion()}
+		return render_to_response('administracion/crear_oferta.html', ctx,context_instance=RequestContext(request))
 	else:
 		return  HttpResponseRedirect('/ofertas_educativas')
 #editar oferta educativa por id
@@ -322,7 +327,7 @@ def edit_oferta_view(request, id_oferta):
 			oferta.save()
 			return HttpResponseRedirect('/lista_ofertas')
 		
-		ctx = {'oferta': oferta}
+		ctx = {'oferta': oferta,'institucion':consulta_institucion()}
 		return render_to_response('administracion/editar_oferta.html', ctx, context_instance=RequestContext(request))
 	else:
 		return  HttpResponseRedirect('/ofertas_educativas')
@@ -392,7 +397,8 @@ def add_documento_view(request):
 		new_documento.documento = request.FILES['documento']			
 		new_documento.save()
 		return HttpResponseRedirect('/aula_virtual')	
-	return render_to_response('administracion/admin_documento.html', context_instance = RequestContext(request))
+	ctx = {'institucion':consulta_institucion()}
+	return render_to_response('administracion/admin_documento.html', ctx,context_instance = RequestContext(request))
 def edit_documento_view(request, id_documento):
 
 	edit_documento = documento.objects.get(id = id_documento)
@@ -415,7 +421,7 @@ def edit_documento_view(request, id_documento):
 				pass
 			edit_documento.save()
 			return HttpResponseRedirect('/mis_documentos')
-		ctx = {'documento':edit_documento}
+		ctx = {'documento':edit_documento ,'institucion':consulta_institucion()}
 		return render_to_response('administracion/admin_documento.html', ctx, context_instance = RequestContext(request))
 	else:
 		return HttpResponseRedirect('/mis_documentos')
@@ -449,7 +455,7 @@ def add_usuario_view(request):
 				u.save()
 			except:
 				men = "El nombre de usuario ya se encuentra registrado"
-				ctx = {'sedes' : sedes, 'men':men}
+				ctx = {'sedes' : sedes, 'men':men,'institucion':consulta_institucion()}
 				return render_to_response('administracion/crear_usuario.html', ctx, context_instance=RequestContext(request))
 			if(request.POST['tipo_select'] == "Docente"):
 
@@ -472,7 +478,7 @@ def add_usuario_view(request):
 				new_usuario.save()
 
 			return HttpResponseRedirect('/administracion')
-		ctx = {'sedes' : sedes}
+		ctx = {'sedes' : sedes,'institucion':consulta_institucion()}
 
 		return render_to_response('administracion/crear_usuario.html', ctx, context_instance=RequestContext(request))
 	else:
@@ -521,7 +527,7 @@ def edit_usuario_view(request, tipo_usuario, id_user):
 			usuario.save()
 			return HttpResponseRedirect('/administracion')
 		sedes = sede.objects.all()
-		ctx = {'user':usuario,'sedes':sedes}
+		ctx = {'user':usuario,'sedes':sedes,'institucion':consulta_institucion()}
 		return  render_to_response('administracion/edit_usuario.html', ctx, context_instance = RequestContext(request))
 	HttpResponseRedirect('/administracion')
 
@@ -530,7 +536,7 @@ def add_alumno_view(request):
 		try:
 			query_user = User.objects.get(username = request.POST['username'])
 			men = "El nombre de usuario ya se encuentra registrado"
-			ctx = {'men':men }
+			ctx = {'men':men,'institucion':consulta_institucion() }
 			return render_to_response('administracion/registro_estudiante.html', ctx, context_instance=RequestContext(request))	
 		except:
 			pass
@@ -538,7 +544,7 @@ def add_alumno_view(request):
 		try:
 			men = "El numero de identificacion ingresado ya se encuentra registrado"
 			query_studiante = estudiante.objects.get(identificacion = request.POST['identificacion'])
-			ctx = {'men':men }
+			ctx = {'men':men,'institucion':consulta_institucion() }
 			return render_to_response('administracion/registro_estudiante.html', ctx, context_instance=RequestContext(request))	
 		except:
 			pass
@@ -546,14 +552,17 @@ def add_alumno_view(request):
 		document = openpyxl.load_workbook('%s/MultimediaData/doc_estudiantes/estudiantes.xlsx' % MEDIA_ROOT)
 		#obtiene las hojas dentro del documento
 		hojas = document.get_sheet_names()
+		print hojas
 		for p in hojas:
 			#accede a la hoja indicada segun el ciclo
 			hoja = document.get_sheet_by_name(p)
+			print hoja
 			#recorre la columna 1 y la fila es una variable que aumenta 
 			row = 1
 			#el ciclo for se cierra cuando encuentra un campo con valor None osea vacio
-			for valor in range(50):
+			for valor in range(300):
 				num_identificacion = hoja.cell(row = row, column = 1).value
+				print str(valor) + "ID BD " + str(num_identificacion) + "ID EN " + identificacion
 				#si encuentra que las identificacion son iguales entra a la siguiente condicion
 				if num_identificacion == long(identificacion):
 					u = User.objects.create_user(username = request.POST['username'], password=request.POST['password'])
@@ -561,21 +570,32 @@ def add_alumno_view(request):
 					new_estudiante = estudiante()	
 					new_estudiante.user = u
 					new_estudiante.correo = request.POST['email']
-					new_estudiante.nombres = hoja.cell(row = row, column = 2).value
-					new_estudiante.apellidos = hoja.cell(row = row, column = 3).value
+					nom_1 = hoja.cell(row = row, column = 2).value
+					nom_2 = hoja.cell(row = row, column = 3).value
+					ape_1 = hoja.cell(row = row, column = 4).value
+					ape_2 = hoja.cell(row = row, column = 5).value
+					try:
+						new_estudiante.nombres = nom_1 + " " + nom_2
+					except:
+						new_estudiante.nombres = nom_1
+					try:
+						new_estudiante.apellidos = ape_1 + " " + ape_2
+					except :
+						new_estudiante.apellidos = ape_1
 					new_estudiante.identificacion = num_identificacion
+					new_estudiante.grado = hoja.cell(row = row, column = 6).value
 					new_estudiante.save()
-					hoja.cell(row = row  , column = 4).value = True	
+					hoja.cell(row = row  , column = 7).value = True	
 					document.save('%s/MultimediaData/doc_estudiantes/estudiantes.xlsx' % MEDIA_ROOT)
 					if request.user.is_superuser:
-						return HttpResponseRedirect('/administracion')
+						return HttpResponseRedirect('/lista_estudiantes')
 					return HttpResponseRedirect('/login')
 				if hoja.cell(row = row + 1 , column = 1).value != None:
 					row = row + 1
 				else:
 					break
 		men = "El numero de identificacion ingresado no se encuentra registrado en nuestra base de datos."
-		ctx = {'men':men }
+		ctx = {'men':men ,'institucion':consulta_institucion()}
 		return render_to_response('administracion/registro_estudiante.html', ctx, context_instance=RequestContext(request))	
 					
 	return render_to_response('administracion/registro_estudiante.html', context_instance=RequestContext(request))	
@@ -611,7 +631,8 @@ def add_sede_view(request):
 			new_sede.institucion = institucion.objects.get(id = 1)
 			new_sede.save()
 			return HttpResponseRedirect('add_coordinador/%s' % new_sede.id)
-		return render_to_response('administracion/admin_sede.html', context_instance = RequestContext(request))
+		ctx = {'institucion':consulta_institucion()}
+		return render_to_response('administracion/admin_sede.html', ctx, context_instance = RequestContext(request))
 	else:	
 		return HttpResponseRedirect('/administracion')
 
@@ -627,7 +648,7 @@ def edit_sede_view(request, id_sede):
 			query_sede.correo = request.POST['correo']
 			query_sede.save()
 			return HttpResponseRedirect('/ver_sede/%s' % query_sede.id)
-		ctx = {'sede':query_sede}
+		ctx = {'sede':query_sede,'institucion':consulta_institucion()}
 		return render_to_response('administracion/admin_sede.html',ctx, context_instance = RequestContext(request))
 	else:	
 		return HttpResponseRedirect('/administracion')
@@ -654,7 +675,7 @@ def edit_funcionario_view(request, id_user):
 				return HttpResponseRedirect('/institucion')
 			return HttpResponseRedirect('/lista_sedes')
 		bandera = "edit"
-		ctx ={'funcionario':query_funcionario, 'bandera':bandera}
+		ctx ={'funcionario':query_funcionario, 'bandera':bandera,'institucion':consulta_institucion()}
 		return render_to_response('administracion/admin_funcionario.html', ctx,context_instance=RequestContext(request))
 	else:
 		return HttpResponseRedirect('/administracion')
@@ -689,7 +710,7 @@ def add_coordinador_view(request, id_sede):
 			else:
 				jornada = "tarde"
 			bandera = "crear"
-			ctx = {'jornada':jornada ,'sede':query_sede.nombre, 'bandera':bandera}
+			ctx = {'jornada':jornada ,'sede':query_sede.nombre, 'bandera':bandera,'institucion':consulta_institucion()}
 			return render_to_response('administracion/admin_funcionario.html', ctx,context_instance=RequestContext(request))
 		return HttpResponseRedirect('/lista_sedes')
 	else:	
@@ -717,7 +738,8 @@ def add_institucion_view(request):
 			new_insti.rector = new_funcionario
 			new_insti.save()
 			return HttpResponseRedirect('/institucion')
-		return render_to_response('administracion/crear_institucion.html',context_instance=RequestContext(request))
+		ctx = {'institucion':consulta_institucion()}
+		return render_to_response('administracion/crear_institucion.html',ctx,context_instance=RequestContext(request))
 	else:
 		return HttpResponseRedirect('/administracion')
 def edit_institucion_view(request):
@@ -740,7 +762,7 @@ def edit_institucion_view(request):
 					os.remove(query_institucion.estudiantes._get_path())
 				query_institucion.estudiantes = estudiantes
 				query_institucion.save()
-				eliminar_usuarios()
+				#eliminar_usuarios()
 			except KeyError:
 				pass
 			query_institucion.save()

@@ -6,6 +6,8 @@
 	Crear nuevo documento
 	{% endif %}
 {% endblock %} 
+{% block escudo%}{{institucion.escudo}}{% endblock%}
+{% block nombre%}{{institucion.nombre}}{% endblock%}
 {% block content %}
 	<div class="container">
 		<div class="row">
@@ -50,12 +52,19 @@
 					<div class="col-sm-10">
 						<select class="form-control" id="grado" name="grado">
 							<option value="0">--- Seleccione el grado al cual pertenece el documento ---</option>
- 							<option value="Sexto"> Sexto </option>
- 							<option value="Septimo"> Septimo </option>
- 							<option value="Octavo"> Octavo </option>
- 							<option value="Noveno"> Noveno </option>
- 							<option value="Decimo"> Decimo </option>
- 							<option value="Once"> Once </option>
+ 							<option value="Sexto A"> Sexto A</option>
+ 							<option value="Sexto B"> Sexto B</option>
+ 							<option value="Sexto C"> Sexto C</option>
+ 							<option value="Septimo A"> Septimo A </option>
+ 							<option value="Septimo B"> Septimo B </option>
+ 							<option value="Octavo A"> Octavo A </option>
+ 							<option value="Octavo B"> Octavo B </option>
+ 							<option value="Noveno A"> Noveno A </option>
+ 							<option value="Noveno B"> Noveno B </option>
+ 							<option value="Decimo A"> Decimo A </option>
+ 							<option value="Decimo B"> Decimo B </option>
+ 							<option value="Once A"> Once A </option>
+ 							<option value="Once B"> Once B </option>
 						  
 						</select>
 					</div>

@@ -1,9 +1,8 @@
 {% extends 'base.html'%}
 
-{% block title %}
-	Lista Estudiantes
-{% endblock %}
-
+{% block title %}Lista Estudiantes{% endblock %}
+{% block escudo%}{{institucion.escudo}}{% endblock%}
+{% block nombre%}{{institucion.nombre}}{% endblock%}
 {% block content %}
 	<div class="container">
 		<div class="row">
@@ -13,8 +12,8 @@
 				<div class="col-sm-12 col-md-5">
 					<select class="form-control" id="filtro_sede" name="tipo">
 						<option value="0">Todos los estudiantes</option>
-						<option value="identificacion">identificacion</option>
-						<option value="username">Nombre de usuario</option>
+						<option value="grado">Grado</option>
+						<option value="identificacion">Identificacion</option>
 					</select>
 				</div>
 				<div class="col-sm-12 col-md-5">
@@ -22,6 +21,7 @@
 				</div>
 				<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search "  aria-hidden="true"></span> Consultar </button>
 			</form>
+			<div class="col-sm-12"><a href="/registro" class="btn btn-primary">Crear nuevo estudiante</a></div>
 			{% if estudiantes %}
 			<div class="col-sm-12">
 				<table class="table table-hover text-center" >
@@ -32,7 +32,7 @@
 							<th class="th-align">Documento</th>
 							<th class="th-align">Nombres</th>
 							<th class="th-align">Apellidos</th>
-							<th class="th-align">Correo</th>
+							<th class="th-align">Grado</th>
 							<th class="th-align">Nombre Usuario</th>
 
 						</tr>
@@ -44,7 +44,7 @@
 							<td>{{p.identificacion}}</td>
 							<td>{{p.nombres}}</td>
 							<td>{{p.apellidos}}</td>
-							<td>{{p.correo}}</td>
+							<td>{{p.grado}}</td>
 							<td>{{p.user.username}}</td>							
 							<td><a href="/cambiar_password/{{p.user.id}}" class="btn btn-warning">Cambiar contraseña</a> <a href="/del_user/{{p.user.id}}" class="btn btn-danger">Eliminar</a></td>
 						</tr>

@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}
-	Noticias - John F. Kennedy
-{% endblock %}
+{% block title %}Noticias - {{institucion.nombre}}{% endblock %}
+{% block escudo%}{{institucion.escudo}}{% endblock%}
+{% block nombre%}{{institucion.nombre}}{% endblock%}
 
 {%block content %}
 

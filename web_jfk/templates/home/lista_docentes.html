@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}
-	Lista docentes
-{% endblock %}
+{% block title %}Lista docentes{% endblock %}
+{% block escudo%}{{institucion.escudo}}{% endblock%}
+{% block nombre%}{{institucion.nombre}}{% endblock%}
 {% block content %}
 	<div class="container">
 		<div class="row">

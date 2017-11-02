@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}
-	Inicio - John F. Kennedy
-{% endblock %}
-
+{% block title %}Inicio - {{institucion.nombre}}{% endblock %}
+{% block escudo%}{{institucion.escudo}}{% endblock%}
+{% block nombre%}{{institucion.nombre}}{% endblock%}
 {% block content %}
 
 	<div class="container">
@@ -123,7 +122,7 @@
 						<div align="center">
 						<img src="/media/{{p.imagen}}" class="img-modal">
 						</div>
-						<p class="text-info"><b>{{p.subtitulo}}</b></p>
+						<p class="text-muted"><b>{{p.copete}}</b></p>
 						<article class="text-justify text-warning">{{p.cuerpo}}</article>
 					</div>
 					<div class="modal-footer">

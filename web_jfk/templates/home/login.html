@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
-{% block title %}
-	Inicio de sesion
-{% endblock %}
+{% block title %}Inicio de sesion - {{institucion.nombre}}{% endblock %}
+{% block escudo%}{{institucion.escudo}}{% endblock%}
+{% block nombre%}{{institucion.nombre}}{% endblock%}
 
 
 {% block content %}
