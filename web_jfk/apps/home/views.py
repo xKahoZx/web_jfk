@@ -12,7 +12,7 @@ def consulta_institucion():
 	try:
 		query = institucion.objects.get(id = 1)
 	except:
-		return HttpResponseRedirect('/crear_institucion')
+		return None
 	return query
 def index_view(request):
 	noticias = noticia.objects.filter(estado = True).order_by('-id')[0:3]

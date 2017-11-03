@@ -14,7 +14,7 @@ def consulta_institucion():
 	try:
 		query = institucion.objects.get(id = 1)
 	except:
-		HttpResponseRedirect('/crear_institucion')
+		return None
 	return query
 #CRUD noticias
 #Crear nueva noticia
@@ -623,6 +623,10 @@ def del_user_view(request, id_user):
 #SEDE
 def add_sede_view(request):
 	if request.user.is_superuser:
+		try:
+			query = institucion.objects.get(id = 1)
+		except :
+			return HttpResponseRedirect('/crear_institucion')
 		if request.method == "POST":
 			new_sede = sede()
 			new_sede.nombre = request.POST['nombre']
