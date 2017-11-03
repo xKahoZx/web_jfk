@@ -8,10 +8,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import login, logout , authenticate
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from datetime import datetime
-
 def consulta_institucion():	
-	return institucion.objects.get(id = 1)
-
+	try:
+		query = institucion.objects.get(id = 1)
+	except:
+		HttpResponseRedirect('/crear_institucion')
+	return query
 def index_view(request):
 	noticias = noticia.objects.filter(estado = True).order_by('-id')[0:3]
 	noticias_aux = noticia.objects.filter(estado = True).order_by('-id')[0:3]

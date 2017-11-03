@@ -11,8 +11,11 @@ import openpyxl
 from web_jfk.settings import MEDIA_ROOT
 
 def consulta_institucion():	
-	return institucion.objects.get(id = 1)
-
+	try:
+		query = institucion.objects.get(id = 1)
+	except:
+		HttpResponseRedirect('/crear_institucion')
+	return query
 #CRUD noticias
 #Crear nueva noticia
 
@@ -630,7 +633,7 @@ def add_sede_view(request):
 			new_sede.correo = request.POST['correo']
 			new_sede.institucion = institucion.objects.get(id = 1)
 			new_sede.save()
-			return HttpResponseRedirect('add_coordinador/%s' % new_sede.id)
+			return HttpResponseRedirect('/add_coordinador/%s' % new_sede.id)
 		ctx = {'institucion':consulta_institucion()}
 		return render_to_response('administracion/admin_sede.html', ctx, context_instance = RequestContext(request))
 	else:	
