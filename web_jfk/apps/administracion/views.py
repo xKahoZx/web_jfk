@@ -14,7 +14,7 @@ def consulta_institucion():
 	try:
 		query = institucion.objects.get(id = 1)
 	except:
-		return None
+		query = []
 	return query
 #CRUD noticias
 #Crear nueva noticia
