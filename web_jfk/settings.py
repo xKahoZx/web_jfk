@@ -16,7 +16,7 @@ DATABASES = {
         'NAME': 'jfk_db',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': 'root',
-        'PASSWORD': '1061692955',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '3306',                      # Set to empty string for default.
     }
@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     'web_jfk.apps.administracion',
     'web_jfk.apps.reporte',
     'web_jfk.apps.pei',
+    'web_jfk.apps.matricula',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:

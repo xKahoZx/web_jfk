@@ -1,5 +1,6 @@
 from django.contrib import admin
 from web_jfk.apps.administracion.models import *
+from web_jfk.apps.matricula.models import *
 
 admin.site.register(noticia)
 admin.site.register(album)
@@ -15,3 +16,9 @@ admin.site.register(administrador)
 admin.site.register(institucion)
 admin.site.register(sede)
 admin.site.register(estudiante)
+admin.site.register(acudiente)
+admin.site.register(matricula_estudiante)
+admin.site.register(grado)
+admin.site.register(jornada)
+admin.site.register(genero)
+admin.site.register(tipo_documento)
